@@ -1,0 +1,12 @@
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+tqdm
+pyyaml
+SimpleITK
+nibabel
+torch
+monai
+jupyter

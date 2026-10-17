@@ -1,0 +1,14 @@
+# Default experiment config — copy and edit per experiment.
+seed: 42
+
+data:
+  root: data/processed
+  split_file: data/splits/patients.json
+
+model:
+  name: baseline   # baseline | displacement | heatmap
+
+train:
+  batch_size: 2
+  epochs: 50
+  lr: 1.0e-4

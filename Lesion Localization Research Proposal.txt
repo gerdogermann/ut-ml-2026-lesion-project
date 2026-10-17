@@ -1,0 +1,17 @@
+desc: "Given two CT scans of the same patient and the known location of a lesion in the first scan, train a model to predict the location of that lesion in the follow-up scan. Possible approaches include predicting the 3D displacement (Δx, Δy, Δz) or a probability heatmap of the follow-up location. The task focuses on lesion localisation, not segmentation.
+
+ 
+
+ Use the public longitudinal CT dataset linked below. Confirm how corresponding lesions across scans are identified, compare with a simple localisation baseline, and evaluate on held-out patients. Agree how to handle lesions that are not visible at follow-up.
+
+ 
+
+ Dataset paper: https://www.nature.com/articles/s41597-026-07466-y"
+
+Dataset file: https://fdat.uni-tuebingen.de/records/qe950-g4h94
+
+ 
+
+Instructors assesment: High implementation complexity. Plan for GPU/HPC access and 3D image preparation. Computer-vision experience helps. Keep patients separate between training and testing. Partner estimate: 30 hours per student.
+
+UT courses page: https://courses.cs.ut.ee/2026/ml/fall/Main/Projects

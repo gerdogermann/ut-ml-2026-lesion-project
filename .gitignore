@@ -1,0 +1,45 @@
+# Data, models and outputs — never commit
+data/*
+!data/README.md
+outputs/
+runs/
+checkpoints/
+wandb/
+mlruns/
+lightning_logs/
+*.nii
+*.nii.gz
+*.dcm
+*.mha
+*.nrrd
+*.npz
+*.npy
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Reference papers (copyrighted, kept local)
+papers/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
