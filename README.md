@@ -75,4 +75,4 @@ page on compute for the agreed setup.
 | Gerdo Germann | [@gerdogermann](https://github.com/gerdogermann) |
 | Imre Saks | [@imresaks](https://github.com/imresaks) |
 | Kristian Tamm | [@kristiantamm](https://github.com/kristiantamm) |
-| | |
+| Karl Väärtnõu | [@vaartnou](https://github.com/vaartnou) |
