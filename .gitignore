@@ -1,24 +1,3 @@
-# Data, models and outputs — never commit
-outputs/
-runs/
-checkpoints/
-wandb/
-mlruns/
-lightning_logs/
-*.nii
-*.nii.gz
-*.dcm
-*.mha
-*.nrrd
-*.npz
-*.npy
-*.h5
-*.hdf5
-*.pt
-*.pth
-*.ckpt
-*.onnx
-
 # Reference papers (copyrighted, kept local)
 papers/
 
