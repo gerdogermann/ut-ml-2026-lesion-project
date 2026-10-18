@@ -1,0 +1,302 @@
+06eb133bbf {'skip_type': 2}
+0777d5c17d {'skip_type': 1}
+07e1cd7dca {'skip_type': 2}
+01161aaa0b {'has_propagated': 3, 'kept': 3, 'skip_type': 7}
+03c6b06952 {'skip_type': 7, 'has_propagated': 1, 'kept': 1}
+006f52e910 {'has_propagated': 1, 'kept': 1}
+0aa1883c64 {'skip_type': 1}
+06eb61b839 {'no_propagated': 8, 'skip_outside_window': 8, 'skip_type': 1}
+02522a2b27 {'has_propagated': 4, 'kept': 4, 'skip_type': 2}
+06138bc5af {'has_propagated': 3, 'kept': 3}
+045117b0e0 {'has_propagated': 3, 'kept': 3}
+07cdfd2337 {'skip_type': 7, 'has_propagated': 6, 'kept': 6}
+069059b7ef {'has_propagated': 3, 'kept': 3}
+0640966322 {'skip_type': 6, 'has_propagated': 2, 'kept': 2}
+03b90eb112 {'has_propagated': 11, 'kept': 11, 'skip_type': 41}
+091d584fce {'has_propagated': 1, 'kept': 1}
+013d407166 {'has_propagated': 12, 'kept': 12, 'no_propagated': 1, 'skip_outside_window': 1, 'skip_type': 1}
+077e29b11b {'has_propagated': 7, 'kept': 7, 'skip_type': 1}
+0a09c8844b {'has_propagated': 4, 'kept': 4}
+0266e33d3f {'has_propagated': 11, 'kept': 11, 'skip_type': 29}
+0e65972dce {'skip_type': 2, 'has_propagated': 3, 'kept': 3}
+0f49c89d1e {'skip_type': 4, 'has_propagated': 5, 'kept': 5}
+0e51011a4c {'skip_type': 10, 'has_propagated': 10, 'kept': 10}
+0e01938fc4 {'has_propagated': 9, 'kept': 9}
+11b9842e0a {'has_propagated': 4, 'kept': 4}
+060ad92489 {'has_propagated': 29, 'kept': 29, 'skip_type': 2}
+11364907cf {'skip_type': 18, 'has_propagated': 6, 'kept': 6}
+115f895031 {'skip_type': 22, 'has_propagated': 5, 'kept': 5}
+13c022b0b3 {'has_propagated': 2, 'kept': 2}
+084b6fbb10 {'has_propagated': 28, 'kept': 28, 'skip_type': 7}
+13fe9d8431 {'has_propagated': 5, 'kept': 5, 'skip_type': 5}
+19f3cd308f {'skip_type': 1, 'has_propagated': 2, 'kept': 2}
+1385974ed5 {'has_propagated': 5, 'kept': 5, 'skip_type': 1}
+1afa34a7f9 {'has_propagated': 4, 'kept': 4}
+1700002963 {'has_propagated': 6, 'kept': 6, 'skip_type': 5}
+1732cb4372 {'has_propagated': 3, 'kept': 3}
+140f6969d5 {'has_propagated': 2, 'kept': 2, 'skip_type': 1}
+1534b76d32 {'has_propagated': 11, 'kept': 11, 'no_propagated': 1, 'skip_outside_window': 1, 'skip_type': 8}
+207f466f93 {'has_propagated': 1, 'kept': 1}
+21addf5898 {'has_propagated': 6, 'kept': 6, 'skip_type': 2}
+158f3069a4 {'has_propagated': 22, 'kept': 22, 'skip_type': 7}
+2618045a3a {'has_propagated': 5, 'kept': 5}
+2723d092b6 {'skip_type': 2, 'has_propagated': 2, 'kept': 2}
+26e359e838 {'has_propagated': 3, 'kept': 3}
+1d7f7abc18 {'has_propagated': 1, 'kept': 1}
+274ad4786c {'skip_type': 2, 'has_propagated': 4, 'kept': 4}
+18bbcaa5ef {'skip_type': 26, 'has_propagated': 25, 'kept': 25}
+289dff0766 {'skip_type': 11, 'has_propagated': 1, 'kept': 1}
+28fd0fbd33 {'skip_type': 8, 'has_propagated': 8, 'kept': 8}
+275a967a52 {'has_propagated': 11, 'kept': 11, 'skip_type': 9}
+2a452c50d7 {'skip_type': 15, 'has_propagated': 11, 'kept': 11}
+2b24d49505 {'skip_type': 16, 'has_propagated': 2, 'kept': 2}
+2b44928ae1 {'has_propagated': 3, 'kept': 3}
+31b7b72368 {'has_propagated': 1, 'kept': 1}
+307fd7f231 {'has_propagated': 2, 'kept': 2}
+1ff8a7b5dc {'has_propagated': 38, 'kept': 38, 'skip_type': 32, 'no_propagated': 2, 'skip_outside_window': 2}
+2c62105ee1 {'has_propagated': 4, 'kept': 4, 'skip_type': 2}
+2a79ea27c2 {'skip_type': 1, 'has_propagated': 12, 'kept': 12}
+16a5cdae36 {'has_propagated': 42, 'kept': 42, 'skip_type': 6, 'no_propagated': 1, 'skip_outside_window': 1}
+2ba100d604 {'has_propagated': 13, 'kept': 13, 'skip_type': 3}
+31c8f1568c {'has_propagated': 8, 'kept': 8, 'skip_type': 5}
+38b18881fc {'has_propagated': 2, 'kept': 2, 'skip_type': 11}
+3636638817 {'has_propagated': 9, 'kept': 9, 'skip_type': 24}
+1c9ac0159c {'has_propagated': 24, 'kept': 24, 'skip_type': 19}
+3644a684f9 {'skip_type': 1, 'has_propagated': 2, 'kept': 2}
+2f1ee6251b {'has_propagated': 3, 'kept': 3, 'skip_type': 2}
+38af86134b {'has_propagated': 3, 'kept': 3, 'skip_type': 1}
+34ed066df3 {'skip_type': 17, 'has_propagated': 14, 'kept': 14}
+36660e5985 {'skip_type': 11, 'has_propagated': 11, 'kept': 11}
+38db3aed92 {'has_propagated': 2, 'kept': 2}
+37bc2f75bf {'skip_type': 31, 'has_propagated': 10, 'kept': 10}
+3994f23bfb {'skip_type': 17, 'has_propagated': 2, 'kept': 2}
+37bc1b6433 {'has_propagated': 11, 'kept': 11, 'skip_type': 8}
+3b8a614226 {'skip_type': 2, 'has_propagated': 2, 'kept': 2}
+39059724f7 {'skip_type': 2, 'has_propagated': 9, 'kept': 9}
+38b3eff8ba {'skip_type': 37, 'has_propagated': 13, 'kept': 13}
+3cec07e9ba {'has_propagated': 4, 'kept': 4, 'skip_type': 1}
+3def184ad8 {'has_propagated': 4, 'kept': 4}
+335f535208 {'has_propagated': 11, 'kept': 11, 'skip_type': 2}
+31fefc0e57 {'has_propagated': 12, 'kept': 12, 'skip_type': 4}
+42a0e188f5 {'skip_type': 14, 'has_propagated': 2, 'kept': 2}
+3fe94a0023 {'has_propagated': 11, 'kept': 11, 'skip_type': 10}
+3988c7f88e {'has_propagated': 26, 'kept': 19, 'skip_outside_window': 7, 'skip_type': 23}
+441954d29a {'has_propagated': 8, 'kept': 8, 'skip_type': 5}
+48aedb8880 {'has_propagated': 5, 'kept': 5, 'skip_type': 1}
+49182f81e6 {'has_propagated': 4, 'kept': 4}
+432aca3a1e {'skip_type': 38, 'has_propagated': 1, 'kept': 1}
+47d1e99058 {'has_propagated': 3, 'kept': 3}
+502e4a1693 {'has_propagated': 1, 'kept': 1}
+4734ba6f3d {'skip_type': 7, 'has_propagated': 15, 'kept': 15}
+45fbc6d3e0 {'has_propagated': 8, 'kept': 8, 'skip_type': 1}
+5878a7ab84 {'skip_type': 2}
+5072d348b2 {'has_propagated': 3, 'kept': 3, 'skip_type': 2}
+4c5bde74a8 {'skip_type': 9, 'has_propagated': 12, 'kept': 12}
+46ba9f2a69 {'has_propagated': 3, 'kept': 3}
+56d9ba4ec6 {'has_propagated': 3, 'kept': 3, 'skip_type': 1}
+53c3bce66e {'skip_type': 2, 'has_propagated': 8, 'kept': 8}
+4c56ff4ce4 {'has_propagated': 27, 'kept': 27, 'skip_type': 1}
+568628e0d9 {'skip_type': 53, 'has_propagated': 6, 'kept': 6}
+577ef1154f {'has_propagated': 7, 'kept': 6, 'skip_outside_window': 1, 'skip_type': 2}
+57aeee35c9 {'has_propagated': 2, 'kept': 2, 'skip_type': 1}
+555d6702c9 {'skip_type': 58, 'has_propagated': 6, 'kept': 6}
+577bcc914f {'skip_type': 19, 'has_propagated': 10, 'kept': 10, 'no_propagated': 1, 'skip_outside_window': 1}
+37a749d808 {'has_propagated': 77, 'kept': 75, 'skip_outside_window': 2, 'skip_type': 12}
+6883966fd8 {'skip_type': 3}
+5759d9ff2a {'has_propagated': 3, 'kept': 3, 'skip_type': 3}
+65cfedc125 {'has_propagated': 6, 'kept': 6}
+5ef059938b {'has_propagated': 2, 'kept': 2}
+621bf66ddb {'skip_type': 3, 'has_propagated': 2, 'kept': 2}
+5f93f98352 {'has_propagated': 4, 'kept': 4}
+5737c6ec2e {'has_propagated': 19, 'kept': 19, 'skip_type': 10, 'no_propagated': 1, 'skip_outside_window': 1}
+496e05e1ae {'has_propagated': 40, 'kept': 40, 'skip_type': 6}
+65b9eea6e1 {'has_propagated': 3, 'kept': 3, 'skip_type': 1}
+5c7d5705ab {'has_propagated': 7, 'kept': 7, 'skip_type': 1}
+682670d9ab {'skip_type': 2, 'has_propagated': 1, 'kept': 1}
+64b2c11867 {'has_propagated': 4, 'kept': 4}
+671f8ff3e6 {'skip_type': 17, 'has_propagated': 14, 'kept': 14}
+705f217283 {'skip_type': 4, 'has_propagated': 1, 'kept': 1}
+65ded5353c {'has_propagated': 17, 'kept': 17, 'skip_type': 5}
+69adc1e107 {'has_propagated': 3, 'kept': 3, 'skip_type': 1}
+6da9003b74 {'skip_type': 2, 'has_propagated': 4, 'kept': 4}
+6974ce5ac6 {'has_propagated': 12, 'kept': 12, 'skip_type': 7}
+6a9aeddfc6 {'has_propagated': 10, 'kept': 9, 'skip_type': 1, 'skip_outside_window': 1}
+6c4b761a28 {'has_propagated': 9, 'kept': 9}
+6f3ef77ac0 {'skip_type': 9, 'has_propagated': 4, 'kept': 4}
+757b505cfd {'has_propagated': 1, 'kept': 1}
+73278a4a86 {'skip_type': 3, 'has_propagated': 1, 'kept': 1}
+6cdd60ea00 {'has_propagated': 2, 'kept': 2}
+738cccd4fd {'has_propagated': 3, 'kept': 3, 'skip_type': 1}
+73f7634ab3 {'has_propagated': 4, 'kept': 4, 'no_propagated': 9, 'skip_outside_window': 9, 'skip_type': 7}
+5b8add2a5d {'has_propagated': 53, 'kept': 53, 'skip_type': 20}
+698d51a19d {'has_propagated': 30, 'kept': 30}
+7d06a9cf10 {'skip_type': 2, 'has_propagated': 2, 'kept': 2}
+74db120f0a {'has_propagated': 4, 'kept': 4, 'skip_type': 16}
+6c9882bbac {'has_propagated': 1, 'kept': 1}
+7ba15e3f07 {'skip_type': 21, 'has_propagated': 6, 'kept': 6}
+7e7757b1e1 {'has_propagated': 3, 'kept': 3, 'skip_type': 4}
+6d4a60c0cd {'has_propagated': 26, 'kept': 26}
+7a614fd06c {'has_propagated': 10, 'kept': 10, 'skip_type': 1}
+76dc611d6e {'has_propagated': 3, 'kept': 3}
+8216124282 {'has_propagated': 2, 'kept': 2}
+7eabe3a164 {'has_propagated': 7, 'kept': 7, 'skip_type': 16}
+84150c44ef {'skip_type': 14, 'has_propagated': 2, 'kept': 2}
+758874998f {'has_propagated': 22, 'kept': 22, 'skip_type': 4}
+84d9ee44e4 {'skip_type': 2, 'has_propagated': 2, 'kept': 2}
+7f100b7b36 {'skip_type': 4, 'has_propagated': 6, 'kept': 6}
+7f6ffaa6bb {'skip_type': 4, 'has_propagated': 3, 'kept': 3}
+7ef605fc8d {'has_propagated': 1, 'kept': 1}
+842f3298f9 {'skip_type': 3, 'has_propagated': 1, 'kept': 1}
+7f1de29e6d {'skip_type': 5, 'has_propagated': 3, 'kept': 3}
+84eb13cfed {'skip_type': 1, 'has_propagated': 1, 'kept': 1}
+82aa4b0af3 {'has_propagated': 5, 'kept': 5}
+7f5144f962 {'has_propagated': 10, 'kept': 10}
+854d6fae5e {'has_propagated': 3, 'kept': 3, 'skip_type': 1}
+85d8ce590a {'skip_type': 9, 'has_propagated': 6, 'kept': 6}
+8fc4c7ab44 {'has_propagated': 2, 'kept': 1, 'skip_outside_window': 1}
+8c19f571e2 {'has_propagated': 9, 'kept': 9}
+8f53295a73 {'skip_type': 12, 'has_propagated': 2, 'kept': 2}
+58a2fc6ed3 {'has_propagated': 45, 'kept': 46, 'no_propagated': 1, 'skip_type': 28}
+8e98d81f82 {'no_propagated': 3, 'skip_outside_window': 3, 'skip_type': 8}
+839ab46820 {'has_propagated': 29, 'kept': 29, 'skip_type': 9}
+903ce9225f {'has_propagated': 3, 'kept': 3}
+8d5e957f29 {'skip_type': 1, 'has_propagated': 2, 'kept': 2}
+871c14878f {'has_propagated': 25, 'kept': 25, 'skip_type': 4}
+914b62192c {'has_propagated': 5, 'kept': 5}
+8f121ce07d {'has_propagated': 22, 'kept': 22, 'skip_type': 14}
+8f03ad02c6 {'has_propagated': 19, 'kept': 19, 'skip_type': 2}
+8f85517967 {'skip_type': 3, 'has_propagated': 5, 'kept': 5}
+8d3bba7425 {'has_propagated': 19, 'kept': 19, 'skip_type': 16}
+7658d0d211 {'has_propagated': 18, 'kept': 18, 'skip_type': 8}
+918317b579 {'has_propagated': 10, 'kept': 10}
+92c8c96e4c {'skip_type': 4, 'has_propagated': 7, 'kept': 7}
+95b3019dea {'has_propagated': 4, 'kept': 4, 'skip_type': 1}
+979d472a84 {'has_propagated': 1, 'kept': 1}
+8c9611718f {'has_propagated': 14, 'kept': 14, 'skip_type': 4}
+950a4152c2 {'skip_type': 16, 'has_propagated': 4, 'kept': 4}
+96da2f590c {'has_propagated': 6, 'kept': 6, 'skip_type': 1}
+9c3ce93643 {'skip_type': 1, 'has_propagated': 1, 'kept': 1}
+9b04d15284 {'has_propagated': 3, 'kept': 3}
+94f6d7e04a {'has_propagated': 13, 'kept': 13}
+9766527f2b {'skip_type': 1, 'has_propagated': 4, 'kept': 4}
+9872ed9fc2 {'has_propagated': 4, 'kept': 4, 'skip_type': 1}
+93dd4de5cd {'has_propagated': 2, 'kept': 2}
+9ac05befca {'has_propagated': 8, 'kept': 8}
+9188905e74 {'has_propagated': 26, 'kept': 26, 'skip_type': 22}
+a3c65c2974 {'skip_type': 1}
+9b8619251a {'has_propagated': 15, 'kept': 15, 'skip_type': 3}
+962e611a0f {'has_propagated': 3, 'kept': 3, 'skip_type': 2}
+9dfcd5e558 {'has_propagated': 9, 'kept': 9, 'skip_type': 1}
+9e94b15ed3 {'has_propagated': 4, 'kept': 4, 'skip_type': 3}
+9dcb88e013 {'has_propagated': 5, 'kept': 5, 'skip_type': 2}
+a27ef1c79c {'skip_type': 1, 'has_propagated': 1, 'kept': 1}
+9fc3d7152b {'has_propagated': 3, 'kept': 3, 'skip_type': 2}
+a13ee062ef {'skip_type': 1, 'has_propagated': 3, 'kept': 3}
+a0a080f42e {'has_propagated': 2, 'kept': 2, 'no_propagated': 1, 'skip_outside_window': 1, 'skip_type': 1}
+a8c88a0055 {'skip_type': 9}
+a4f23670e1 {'skip_type': 5, 'has_propagated': 3, 'kept': 3}
+9cfdf10e8f {'has_propagated': 29, 'kept': 29}
+a5e0013237 {'has_propagated': 2, 'kept': 2}
+a861405761 {'has_propagated': 7, 'kept': 7}
+a597e50502 {'has_propagated': 1, 'kept': 1}
+a2557a7b2e {'no_propagated': 23, 'skip_outside_window': 25, 'has_propagated': 27, 'kept': 25, 'skip_type': 5}
+a4a042cf4f {'has_propagated': 5, 'kept': 5}
+9f9cee5b98 {'skip_type': 2, 'has_propagated': 2, 'kept': 2}
+9fd81843ad {'has_propagated': 31, 'kept': 31, 'skip_type': 3}
+9c838d2e45 {'has_propagated': 10, 'kept': 10}
+a7228a7d88 {'has_propagated': 8, 'kept': 8, 'skip_type': 16}
+a91f7d0f27 {'has_propagated': 3, 'kept': 3}
+b73ce398c3 {'skip_type': 3}
+a666587afd {'has_propagated': 23, 'kept': 23, 'skip_type': 12}
+a8baa56554 {'has_propagated': 16, 'kept': 16}
+ac1dd209cb {'skip_type': 17, 'has_propagated': 4, 'kept': 4}
+a97da629b0 {'skip_type': 9, 'has_propagated': 13, 'kept': 13}
+b1e0a5a7b0 {'has_propagated': 5, 'kept': 5, 'skip_type': 3}
+a8f15eda80 {'has_propagated': 20, 'kept': 20, 'skip_type': 2}
+b6aea7af56 {'has_propagated': 5, 'kept': 5}
+b1a59b315f {'skip_type': 4, 'has_propagated': 2, 'kept': 2}
+af032fbcb0 {'skip_type': 8, 'has_propagated': 12, 'kept': 10, 'skip_outside_window': 2}
+b2eb734903 {'has_propagated': 8, 'kept': 8, 'skip_type': 1}
+a3458cbbcc {'has_propagated': 5, 'kept': 5, 'skip_type': 24}
+bbf14f4f9b {'has_propagated': 2, 'kept': 2}
+b3e3e393c7 {'skip_type': 2, 'has_propagated': 1, 'kept': 1}
+b34f33d0bc {'has_propagated': 25, 'kept': 25, 'skip_type': 30, 'no_propagated': 2, 'skip_outside_window': 2}
+ba55ff88bd {'skip_type': 46, 'has_propagated': 3, 'kept': 3}
+bf8229696f {'has_propagated': 1, 'kept': 1}
+be83ab3ecd {'skip_type': 9, 'has_propagated': 1, 'kept': 1}
+c6f057b865 {'skip_type': 7}
+bd4c9ab730 {'has_propagated': 1, 'kept': 1}
+bd686fd640 {'skip_type': 14, 'has_propagated': 7, 'kept': 7}
+b7923fe9af {'has_propagated': 15, 'kept': 15, 'skip_type': 4}
+c45147dee7 {'skip_type': 1, 'has_propagated': 1, 'kept': 1}
+c0e190d826 {'has_propagated': 2, 'kept': 2, 'skip_type': 1}
+bc6dc48b74 {'has_propagated': 19, 'kept': 19, 'skip_type': 7}
+c24cd76e1c {'has_propagated': 4, 'kept': 4}
+bf97f24695 {'no_propagated': 8, 'skip_outside_window': 8, 'has_propagated': 13, 'kept': 13, 'skip_type': 2}
+cfa0860e83 {'skip_type': 9}
+bcbe3365e6 {'has_propagated': 7, 'kept': 7, 'skip_type': 8}
+a71d83915f {'has_propagated': 43, 'kept': 43, 'no_propagated': 21, 'skip_outside_window': 21, 'skip_type': 55}
+c8ffe9a587 {'has_propagated': 2, 'kept': 2}
+d296c101da {'skip_type': 1}
+bff82d1886 {'has_propagated': 23, 'kept': 23, 'skip_type': 5}
+c4258e0f53 {'no_propagated': 2, 'skip_outside_window': 2, 'has_propagated': 4, 'kept': 4, 'skip_type': 3}
+c52f1bd66c {'skip_type': 6, 'has_propagated': 2, 'kept': 2}
+d947bf06a8 {'skip_type': 13}
+c4de9fe968 {'skip_type': 46, 'has_propagated': 8, 'kept': 8, 'no_propagated': 1, 'skip_outside_window': 1}
+ca46c1b951 {'has_propagated': 7, 'kept': 7}
+b1d10e7baf {'has_propagated': 6, 'kept': 6}
+cfecdb276f {'has_propagated': 4, 'kept': 4}
+ce08becc73 {'skip_type': 84, 'has_propagated': 2, 'kept': 2}
+cf2e4f52be {'has_propagated': 4, 'kept': 4, 'skip_type': 1}
+d5f038a453 {'skip_type': 43, 'has_propagated': 3, 'kept': 3}
+caf1a3dfb5 {'has_propagated': 51, 'skip_outside_window': 30, 'kept': 21}
+d2490f048d {'has_propagated': 2, 'kept': 2}
+d395771085 {'has_propagated': 14, 'skip_outside_window': 8, 'kept': 7, 'no_propagated': 1, 'skip_type': 4}
+e56954b4f6 {'skip_type': 1}
+e165421110 {'has_propagated': 2, 'kept': 2, 'skip_type': 10}
+d2716515bd {'has_propagated': 20, 'kept': 18, 'skip_outside_window': 4, 'no_propagated': 2, 'skip_type': 4}
+d6baf65e0b {'has_propagated': 12, 'kept': 12, 'skip_type': 3}
+cedebb6e87 {'has_propagated': 45, 'kept': 35, 'skip_outside_window': 10}
+ea20a043c0 {'skip_type': 5}
+e1eee5e2b4 {'skip_type': 2, 'has_propagated': 2, 'kept': 2}
+e46d0ac1f1 {'skip_type': 9, 'has_propagated': 5, 'kept': 5}
+cb70ab3756 {'has_propagated': 23, 'kept': 23}
+dc5e819e18 {'has_propagated': 18, 'skip_outside_window': 1, 'kept': 17, 'skip_type': 10}
+e7db56dbec {'has_propagated': 3, 'kept': 3, 'skip_type': 2}
+e00da03b68 {'has_propagated': 7, 'kept': 7, 'skip_type': 1}
+e4a6222cdb {'has_propagated': 6, 'kept': 6}
+eb160de1de {'skip_type': 4, 'has_propagated': 1, 'kept': 1}
+db8e1af0cb {'has_propagated': 11, 'kept': 11, 'no_propagated': 1, 'skip_outside_window': 1, 'skip_type': 3}
+ebf11048b1 {'has_propagated': 3, 'kept': 3}
+c9e1074f5b {'has_propagated': 25, 'kept': 25, 'skip_type': 1}
+eae27d77ca {'has_propagated': 5, 'kept': 5, 'skip_type': 6}
+e64770ac6b {'has_propagated': 4, 'kept': 4, 'skip_type': 1}
+e96ed478da {'has_propagated': 2, 'kept': 2, 'skip_type': 1}
+ec8ce6abb3 {'has_propagated': 2, 'kept': 2}
+e88a49bccd {'skip_type': 32, 'has_propagated': 16, 'kept': 16}
+eecca5b636 {'has_propagated': 3, 'kept': 3}
+dc5c7986da {'has_propagated': 40, 'kept': 40, 'skip_type': 7}
+ec5decca5e {'skip_type': 27, 'has_propagated': 1, 'skip_outside_window': 1}
+f2217062e9 {'has_propagated': 5, 'kept': 5}
+e2c0be2456 {'has_propagated': 39, 'kept': 39, 'no_propagated': 11, 'skip_outside_window': 11, 'skip_type': 1}
+ef0d3930a7 {'skip_type': 4, 'has_propagated': 5, 'kept': 5}
+defd402043 {'has_propagated': 13, 'kept': 13, 'skip_type': 32}
+fc22130974 {'skip_type': 2}
+eda80a3d5b {'has_propagated': 7, 'kept': 7}
+f340f1b1f6 {'has_propagated': 9, 'kept': 9}
+f43686bab1 {'has_propagated': 7, 'kept': 7}
+f7e6c85504 {'skip_type': 1, 'has_propagated': 2, 'kept': 2}
+f899139df5 {'has_propagated': 6, 'kept': 6, 'skip_type': 1}
+f803dfeb35 {'skip_type': 14, 'has_propagated': 8, 'kept': 8}
+fe131d7f5a {'skip_type': 24, 'has_propagated': 5, 'kept': 5}
+fa7cdfad1a {'has_propagated': 5, 'kept': 5}
+fb9ce87f03 {'skip_type': 6, 'has_propagated': 6, 'kept': 6}
+f7664060cc {'has_propagated': 12, 'kept': 12, 'skip_type': 13}
+f90f2aca5c {'has_propagated': 13, 'kept': 13, 'skip_type': 5}
+f718499c1c {'has_propagated': 8, 'kept': 8, 'skip_type': 1}
+eb16372791 {'has_propagated': 5, 'kept': 5}
+f157be1f00 {'has_propagated': 7, 'kept': 7, 'skip_type': 19}
+fb8490a950 {'skip_type': 13, 'has_propagated': 43, 'kept': 43}
+f2fc990265 {'has_propagated': 12, 'kept': 12, 'skip_type': 2}
+TOTAL {'skip_type': 1969, 'has_propagated': 2568, 'kept': 2502, 'no_propagated': 101, 'skip_outside_window': 167}
+SPLIT {'train': 224, 'val': 28, 'test': 29}

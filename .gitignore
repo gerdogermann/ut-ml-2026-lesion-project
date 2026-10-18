@@ -1,6 +1,4 @@
 # Data, models and outputs — never commit
-data/*
-!data/README.md
 outputs/
 runs/
 checkpoints/
