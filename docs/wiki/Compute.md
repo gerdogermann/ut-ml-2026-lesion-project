@@ -15,7 +15,10 @@ Cluster: UT HPC. Partition `gpu`, one GPU per job; a GPU subtype is required: `-
 module load python
 python -m venv ~/venvs/lesion            # skip if it already exists (preprocessing uses the same venv)
 source ~/venvs/lesion/bin/activate
-pip install numpy pandas SimpleITK torch pytest
+pip install numpy pandas SimpleITK pytest
+# V100 (`tesla`, CC 7.0) is not supported by the default CUDA 13 torch wheel; use the CUDA 12.6 build
+# (also runs on A100/H200, but not on B200 which needs cu128+):
+pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126
 ```
 
 ### Run a job
@@ -45,6 +48,6 @@ Model `LesionNet` (`src/lesionloc/model.py`), 0.32 M parameters, input `(B,2,64,
 
 | Batch | ms/step | Peak GPU memory | GPU |
 |-------|---------|-----------------|-----|
-| 2 | _TBD_ | _TBD_ | _TBD_ |
-| 8 | _TBD_ | _TBD_ | _TBD_ |
-| 16 | _TBD_ | _TBD_ | _TBD_ |
+| 2 | 4.4 | 0.04 GiB | V100-PCIE-32GB |
+| 8 | 11.1 | 0.10 GiB | V100-PCIE-32GB |
+| 16 | 20.1 | 0.18 GiB | V100-PCIE-32GB |
