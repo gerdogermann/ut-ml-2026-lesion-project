@@ -27,6 +27,7 @@ git pull
 mkdir -p logs
 sbatch scripts/train.sbatch                                   # data from the default path
 DATA=/path/to/Longitudinal-CT-processed sbatch scripts/train.sbatch   # other data location
+VENV=/path/to/venv sbatch scripts/train.sbatch                # other venv (e.g. the shared one in the project dir)
 squeue -u $USER                                               # job state
 tail -f logs/train-<jobid>.out                                # output
 ```
