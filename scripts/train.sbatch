@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J lesion_train
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:tesla:1
 #SBATCH -t 00:30:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G

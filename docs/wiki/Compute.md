@@ -7,7 +7,7 @@ The instructors expect GPU/HPC to be needed for 3D image preparation and trainin
 
 ## GPU training
 
-Cluster: UT HPC. Partition `gpu`, one GPU per job (`--gres=gpu:1`). Check what is available with `sinfo -s`.
+Cluster: UT HPC. Partition `gpu`, one GPU per job; a GPU subtype is required: `--gres=gpu:<subtype>:1`. Subtypes: `tesla` (falcon1-6), `a100-40g` (pegasus), `a100-80g` (pegasus2), `h200-141g` (firefly1-3), `b200-180g` (shepard2-3). `train.sbatch` uses `tesla`; override with `sbatch --gres=gpu:a100-40g:1 scripts/train.sbatch`.
 
 ### One-time setup (login node; compute nodes may lack internet)
 
