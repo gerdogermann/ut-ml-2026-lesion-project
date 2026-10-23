@@ -36,15 +36,19 @@ tail -f logs/train-<jobid>.out                                # output
 ```
 
 `scripts/train.sbatch` runs, in order:
-1. A benchmark on random tensors at batch sizes 2, 8 and 16 (time per step, peak GPU memory).
-2. An overfit run on the two example files in `data/example_lesions/`.
-3. An overfit run on 100 training-set lesions taken from `$DATA/lesions` + `$DATA/split.json`.
+1. An overfit check on the two example files in `data/example_lesions/` (error should go to ~0 mm).
+2. Training on the `train` split of `$DATA` (`LesionDataset` with flip augmentation), 30 epochs, with val
+   metrics printed every epoch and the best checkpoint saved to `runs/<jobid>/best.pt`.
+   Add `--test` to also report the test split with the best checkpoint (only for final numbers).
 
-Locally (CPU) the same script works: `PYTHONPATH=src python scripts/train.py data/example_lesions/*.npz --steps 150`.
+GPU benchmark only: `python scripts/train.py --bench --batch-size 8`.
+
+Locally (CPU) the same script works: `PYTHONPATH=src python scripts/train.py data/example_lesions/*.npz --epochs 150 --batch-size 2`.
 
 ### Measured
 
-Model `LesionNet` (`src/lesionloc/model.py`), 0.32 M parameters, input `(B,2,64,64,64)`.
+First model version (plain conv blocks, 0.32 M parameters), input `(B,2,64,64,64)`. The current residual
+version has 0.92 M parameters; rerun `--bench` to update.
 
 | Batch | ms/step | Peak GPU memory | GPU |
 |-------|---------|-----------------|-----|
