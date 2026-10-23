@@ -1,0 +1,2 @@
+lesion_id,cog_bl,cog_backpropagated,img_id_bl,cog_propagated,cog_fu,img_id_fu,lesion_type,topology_class,merged_into,volume_bl,volume_fu,target_lesion,use_for_challenge,linking_unclear
+1,224.884684320852 226.042529664032 281.434521817727,,0,233.02377186875304 253.28227383241486 238.72587414045518,263.201213171577 244.764075266155 228.797647932657,0,Soft tissue / Skin,UNCHANGED,,230297.78260424244,18983.6793465151,True,True,False

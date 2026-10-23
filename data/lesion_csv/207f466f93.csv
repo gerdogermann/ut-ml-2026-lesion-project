@@ -1,0 +1,2 @@
+lesion_id,cog_bl,cog_backpropagated,img_id_bl,cog_propagated,cog_fu,img_id_fu,lesion_type,topology_class,merged_into,volume_bl,volume_fu,target_lesion,use_for_challenge,linking_unclear
+1,236.33300589391 156.985265225933 29.8811394891945,,0,263.3893378952319 203.35019076576566 214.1215196018768,265.337944664032 212.306324110672 215.373517786561,0,Liver,UNCHANGED,,1454.0180397033691,458.6628723144531,True,True,False

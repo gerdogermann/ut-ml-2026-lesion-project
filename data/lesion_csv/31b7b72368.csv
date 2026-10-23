@@ -1,0 +1,2 @@
+lesion_id,cog_bl,cog_backpropagated,img_id_bl,cog_propagated,cog_fu,img_id_fu,lesion_type,topology_class,merged_into,volume_bl,volume_fu,target_lesion,use_for_challenge,linking_unclear
+1,264.589607965152 304.988487865588 20.0220908525202,,0,258.16195993964084 272.71115898559015 136.69607080447474,256.695402298851 271.218390804598 135.772988505747,0,Lymph node,UNCHANGED,,2227.181945800781,653.2367706298828,True,True,False

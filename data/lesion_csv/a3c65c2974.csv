@@ -1,0 +1,2 @@
+lesion_id,cog_bl,cog_backpropagated,img_id_bl,cog_propagated,cog_fu,img_id_fu,lesion_type,topology_class,merged_into,volume_bl,volume_fu,target_lesion,use_for_challenge,linking_unclear
+1,233.063657465812 218.048914878834 456.254620159071,,0,243.78677183670263 215.18048580734282 137.9921360807889,,0,Others,DISAPPEARING,,547350.2813720703,0.0,True,True,False
