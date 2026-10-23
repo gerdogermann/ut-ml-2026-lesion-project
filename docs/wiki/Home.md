@@ -8,6 +8,7 @@ UT Machine Learning, Fall 2026 course project.
 - [[Dataset]]: source, structure, how lesion correspondences are defined
 - [[Decisions]]: agreed choices (splits, missing lesions, metrics)
 - [[Experiments]]: log of runs and results
+- [[Teams]]: two sub-teams, goals and step-by-step plans
 - [[Compute]]: GPU/HPC access and environment setup
 - [[Meeting Notes]]
 
