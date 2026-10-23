@@ -5,6 +5,16 @@ The instructors expect GPU/HPC to be needed for 3D image preparation and trainin
 - [ ] Who has access to UT HPC (Rocket)? Request accounts early.
 - [ ] Where does the data live on the cluster?
 
+## Locations on the cluster
+
+- Shared project directory: `/gpfs/helios/projects/ml_project_lesion_tracking/`
+  (Unix group `cl_mlc_lesion_tracking`; check membership with `id`).
+- Data, for now: `/gpfs/helios/home/kristiat/data/Longitudinal-CT/` (raw) and
+  `/gpfs/helios/home/kristiat/data/Longitudinal-CT-processed/` (patches + `split.json`), see `data/README.md`.
+  Moving it into the project directory is planned.
+- Project directory contents: `data/` (Karl's copy of the data), `dataset.zip` (raw download, 51 GB),
+  `ut-ml-2026-lesion-project/` (Karl's clone of the repo). No shared venv yet; use `~/venvs/lesion` (see below).
+
 ## GPU training
 
 Cluster: UT HPC. Partition `gpu`, one GPU per job; a GPU subtype is required: `--gres=gpu:<subtype>:1`. Subtypes: `tesla` (falcon1-6), `a100-40g` (pegasus), `a100-80g` (pegasus2), `h200-141g` (firefly1-3), `b200-180g` (shepard2-3). `train.sbatch` uses `tesla`; override with `sbatch --gres=gpu:a100-40g:1 scripts/train.sbatch`.
