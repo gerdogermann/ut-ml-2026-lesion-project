@@ -25,3 +25,16 @@ Goal: for each lesion in the baseline (BL) scan, predict where it is in the foll
    (kept and each skip reason).
 9. **Split**: official `data_split.json`, filtered to patients with samples, written to `split.json`.
    The script fails if a processed patient is missing from the official split.
+## Team 2 data (`scripts/preprocess_team2.sbatch`)
+
+Output: `/gpfs/helios/home/kristiat/data/Longitudinal-CT-processed-team2/`. Same steps as above, run with
+`--centre fu`: the FU window is centred on the true FU lesion plus a random offset (Gaussian, sd 8 mm per axis,
+clipped to ±24 mm, fixed per lesion by `--seed`), which simulates Team 1's error. So `target_mm = -jitter_mm`.
+
+Extra fields per npz:
+- `bl_mask`, `fu_mask`: uint8 (z, y, x), 1 for this lesion's instance only (nearest-neighbour resampling).
+  For `MERGING` lesions the FU mask is the lesion it merged into (`merged_into`).
+- `jitter_mm`: the offset of the window centre from the true FU position, mm, (x, y, z).
+
+Extra log counters: `skip_no_mask` (mask file missing), `skip_empty_mask` (label not in BL or FU patch),
+`warn_mask_cog_far` (FU mask centre of mass > 4 mm from `target_mm`; a large count means a label or axis bug).
