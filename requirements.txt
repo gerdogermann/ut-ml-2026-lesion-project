@@ -10,3 +10,4 @@ nibabel
 torch
 monai
 jupyter
+pytest
