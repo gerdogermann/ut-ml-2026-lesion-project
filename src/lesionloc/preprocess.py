@@ -1,7 +1,7 @@
 """Raw Longitudinal-CT -> one small .npz per lesion pair + patient split.
 
 Usage: python -m lesionloc.preprocess RAW_DIR OUT_DIR [--workers N] [--centre fu --jitter-sd 8]
-RAW_DIR must contain inputsTr/ (images, masks, csv) and data_split.json (official split).
+RAW_DIR must contain inputsTr/ (images, BL masks, csv), targetsTr/ (FU masks) and data_split.json (official split).
 --centre propagated: FU window at the registration guess (Experiment 1 data).
 --centre fu: FU window at the true FU lesion plus a random offset (Team 2 data; simulates Team 1's error).
 """
@@ -67,7 +67,11 @@ def do_patient(args):
 
     def load(tag, i, kind="img"):
         if (tag, i, kind) not in cache:
-            cache[(tag, i, kind)] = sitk.ReadImage(str(raw / "inputsTr" / f"{pid}_{tag}_{kind}_{int(i):02d}.nii.gz"))
+            name = f"{pid}_{tag}_{kind}_{int(i):02d}.nii.gz"
+            f = raw / "inputsTr" / name
+            if not f.exists():  # FU masks are the challenge targets: they live in targetsTr/
+                f = raw / "targetsTr" / name
+            cache[(tag, i, kind)] = sitk.ReadImage(str(f))
         return cache[(tag, i, kind)]
 
     for _, r in df.iterrows():

@@ -12,7 +12,7 @@
 #   pip install numpy pandas SimpleITK
 # Team 2 data: FU window centred on the true FU lesion + random offset (sd 8 mm, max 24 mm per axis), with masks.
 # Raw data is shared (read-only for the team); processed data goes next to it, also shared.
-# Run ONCE, as the owner (kristiat). Teammates just read OUT.
+# Run ONCE. Teammates just read OUT.
 # Submit from the repo root:  mkdir -p logs && sbatch scripts/preprocess_team2.sbatch
 
 set -euo pipefail
@@ -21,8 +21,8 @@ module purge
 module load python
 source ~/venvs/lesion/bin/activate
 
-RAW=${RAW:-/gpfs/helios/home/kristiat/data/Longitudinal-CT}            # must contain inputsTr/
-OUT=${OUT:-/gpfs/helios/home/kristiat/data/Longitudinal-CT-processed-team2}
+RAW=${RAW:-/gpfs/helios/projects/ml_project_lesion_tracking/data}            # must contain inputsTr/, targetsTr/
+OUT=${OUT:-/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2}
 
 PYTHONPATH=src python -m lesionloc.preprocess "$RAW" "$OUT" --workers "$SLURM_CPUS_PER_TASK" \
     --centre fu --jitter-sd 8 --jitter-max 24 --seed 42

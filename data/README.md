@@ -1,7 +1,7 @@
 
 ```
-RAW DATA(readable to everybody): /gpfs/helios/home/kristiat/data/Longitudinal-CT/
-PREPROCESSED DATA (readable to everybody): /gpfs/helios/home/kristiat/data/Longitudinal-CT-processed/
+RAW DATA(readable to everybody): /gpfs/helios/projects/ml_project_lesion_tracking/data/
+PREPROCESSED DATA (readable to everybody): /gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed/
   lesions/
 ```
 
@@ -27,7 +27,7 @@ Goal: for each lesion in the baseline (BL) scan, predict where it is in the foll
    The script fails if a processed patient is missing from the official split.
 ## Team 2 data (`scripts/preprocess_team2.sbatch`)
 
-Output: `/gpfs/helios/home/kristiat/data/Longitudinal-CT-processed-team2/`. Same steps as above, run with
+Output: `/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/`. Same steps as above, run with
 `--centre fu`: the FU window is centred on the true FU lesion plus a random offset (Gaussian, sd 8 mm per axis,
 clipped to ±24 mm, fixed per lesion by `--seed`), which simulates Team 1's error. So `target_mm = -jitter_mm`.
 
