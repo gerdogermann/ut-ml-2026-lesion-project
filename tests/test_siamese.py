@@ -81,3 +81,22 @@ def test_dataset_masks_flip_with_images(tmp_path):
         x, _, _ = ds[0]
         assert x.shape == (4, 64, 64, 64)
         assert torch.equal(x[2], (x[0] > 0.5).float()) and torch.equal(x[3], x[2])
+
+
+def test_rejitter_target_matches_window(tmp_path):
+    (tmp_path / "split.json").write_text('{"train": ["aaaaaaaaaa"]}')
+    z, y, x = np.meshgrid(*[np.arange(88)] * 3, indexing="ij")
+    zero = np.zeros((64, 64, 64), np.float16)
+    np.savez(tmp_path / "aaaaaaaaaa_1.npz", bl=zero, fu=zero, bl_mask=zero, fu_mask=zero,
+             fu_big=(x + 100 * y).astype(np.float32), fu_mask_big=z.astype(np.uint8),  # index-coded: window is readable
+             target_mm=np.float32([1, 2, 3]), has_propagated=True)
+    ds = LesionDataset(tmp_path, tmp_path / "split.json", "train", masks=True, rejitter_sd=8)
+    np.random.seed(0)
+    seen = set()
+    for _ in range(20):
+        xx, t, _ = ds[0]
+        corner = xx[1, 0, 0, 0].item()
+        s = np.array([corner % 100, corner // 100, xx[3, 0, 0, 0].item()]) - 12  # window shift, voxels (x,y,z)
+        assert np.all(np.abs(s) <= 12) and torch.equal(t, torch.tensor(-2.0 * s, dtype=torch.float32))
+        seen.add(tuple(s))
+    assert len(seen) > 10  # fresh offset per load

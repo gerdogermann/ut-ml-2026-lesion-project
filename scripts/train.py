@@ -99,6 +99,8 @@ def main():
     ap.add_argument("--bl-mask", action="store_true", help="siamese: BL mask as input + mask-pooled template")
     ap.add_argument("--lambda-hm", type=float, default=0.0, help="siamese: heatmap CE weight")
     ap.add_argument("--lambda-mask", type=float, default=0.0, help="siamese: FU mask-mass weight")
+    ap.add_argument("--rejitter-sd", type=float, default=0.0,
+                    help="train split only: fresh FU offset each load, mm sd per axis (needs fu_big); 0 = stored jitter")
     ap.add_argument("--dist-warmup", type=int, default=0,
                     help="siamese: distance loss off for N epochs, then ramped in over N; 0 = always on")
     ap.add_argument("--bench", action="store_true", help="random tensors, report time and memory per step")
@@ -120,7 +122,7 @@ def main():
     if a.files:  # overfit check: train and "val" are the same files, no augmentation
         train_ds = val_ds = load_files(a.files, masks)
     else:
-        train_ds = LesionDataset(a.root, a.split_file, "train", augment=True, masks=masks)
+        train_ds = LesionDataset(a.root, a.split_file, "train", augment=True, masks=masks, rejitter_sd=a.rejitter_sd)
         val_ds = LesionDataset(a.root, a.split_file, "val", masks=masks)
     print(f"train {len(train_ds)} lesions, val {len(val_ds)} lesions")
     loader = lambda ds, shuffle: DataLoader(ds, a.batch_size, shuffle=shuffle, num_workers=0 if a.files else a.workers,

@@ -12,6 +12,7 @@
 #   sbatch scripts/train_siamese.sbatch --lambda-hm 1 --dist-warmup 5     # run 3
 #   sbatch scripts/train_siamese.sbatch --lambda-hm 1 --dist-warmup 5 --bl-mask                    # run 4
 #   sbatch scripts/train_siamese.sbatch --lambda-hm 1 --dist-warmup 5 --bl-mask --lambda-mask 0.5  # run 5
+#   ... --rejitter-sd 8                                                   # fresh FU offset every epoch
 # Setup and venv: see scripts/train.sbatch. Submit from the repo root.
 
 set -euo pipefail

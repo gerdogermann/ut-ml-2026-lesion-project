@@ -34,19 +34,19 @@ def to_mm(img, voxel_xyz):
     return np.array(img.TransformContinuousIndexToPhysicalPoint(voxel_xyz.tolist()))
 
 
-def patch(img, center_mm):
-    """Cut SIZE^3 cube at SPACING, centred on center_mm, axes aligned to patient (not scanner)."""
-    origin = center_mm - SPACING * (SIZE - 1) / 2
-    out = sitk.Resample(img, [SIZE] * 3, sitk.Transform(), sitk.sitkLinear, origin.tolist(),
+def patch(img, center_mm, size=SIZE):
+    """Cut size^3 cube at SPACING, centred on center_mm, axes aligned to patient (not scanner)."""
+    origin = center_mm - SPACING * (size - 1) / 2
+    out = sitk.Resample(img, [size] * 3, sitk.Transform(), sitk.sitkLinear, origin.tolist(),
                         [SPACING] * 3, (1, 0, 0, 0, 1, 0, 0, 0, 1), -1024.0, sitk.sitkFloat32)
     a = np.clip(sitk.GetArrayFromImage(out), HU_MIN, HU_MAX)
     return ((a - HU_MIN) / (HU_MAX - HU_MIN)).astype(np.float16)  # [0,1], axes (z,y,x)
 
 
-def mask_patch(mask, center_mm, label):
+def mask_patch(mask, center_mm, label, size=SIZE):
     """Same grid as patch(), nearest neighbour; 1 where the mask has this lesion's instance label."""
-    origin = center_mm - SPACING * (SIZE - 1) / 2
-    out = sitk.Resample(mask, [SIZE] * 3, sitk.Transform(), sitk.sitkNearestNeighbor, origin.tolist(),
+    origin = center_mm - SPACING * (size - 1) / 2
+    out = sitk.Resample(mask, [size] * 3, sitk.Transform(), sitk.sitkNearestNeighbor, origin.tolist(),
                         [SPACING] * 3, (1, 0, 0, 0, 1, 0, 0, 0, 1), 0, sitk.sitkUInt16)
     return (sitk.GetArrayFromImage(out) == label).astype(np.uint8)  # axes (z,y,x)
 
@@ -115,7 +115,11 @@ def do_patient(args):
             continue
         if np.linalg.norm(com_offset_mm(fu_mask) - target) > 4:  # wrong label or axis order would show here
             stats["warn_mask_cog_far"] += 1
-        np.savez_compressed(out / "lesions" / f"{pid}_{lid}.npz",
+        big = {}
+        if centre == "fu":  # FU cube centred on the true lesion, room for any jitter: lets training re-draw it
+            n = SIZE + 2 * int(np.ceil(jitter_max / SPACING))
+            big = dict(fu_big=patch(ifu, fu_mm, n), fu_mask_big=mask_patch(mfu, fu_mm, fu_label, n))
+        np.savez_compressed(out / "lesions" / f"{pid}_{lid}.npz", **big,
                             bl=patch(ibl, bl_mm), fu=patch(ifu, centre_fu), bl_mask=bl_mask, fu_mask=fu_mask,
                             target_mm=target.astype(np.float32), jitter_mm=jitter.astype(np.float32),
                             has_propagated=prop is not None)

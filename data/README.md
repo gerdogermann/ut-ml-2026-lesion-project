@@ -35,6 +35,9 @@ Extra fields per npz:
 - `bl_mask`, `fu_mask`: uint8 (z, y, x), 1 for this lesion's instance only (nearest-neighbour resampling).
   For `MERGING` lesions the FU mask is the lesion it merged into (`merged_into`).
 - `jitter_mm`: the offset of the window centre from the true FU position, mm, (x, y, z).
+- `fu_big`, `fu_mask_big`: 88³ FU CT and mask centred exactly on the true FU lesion (64 + 2·12 voxels, room for the
+  ±24 mm jitter). `train.py --rejitter-sd 8` cuts the 64³ window from these at a fresh offset every epoch
+  (train split only; val/test keep the stored `fu`, `fu_mask`, `target_mm`).
 
 Extra log counters: `skip_no_mask` (mask file missing), `skip_empty_mask` (label not in BL or FU patch),
 `warn_mask_cog_far` (FU mask centre of mass > 4 mm from `target_mm`; a large count means a label or axis bug).
