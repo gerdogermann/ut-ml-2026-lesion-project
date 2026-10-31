@@ -13,6 +13,8 @@
 #   sbatch scripts/train_siamese.sbatch --lambda-hm 1 --dist-warmup 5 --bl-mask                    # run 4
 #   sbatch scripts/train_siamese.sbatch --lambda-hm 1 --dist-warmup 5 --bl-mask --lambda-mask 0.5  # run 5
 #   ... --rejitter-sd 8                                                   # fresh FU offset every epoch
+# Full model (run 5): --rejitter-sd 8 --lambda-hm 1 --dist-warmup 5 --bl-mask --lambda-mask 0.5
+# + augmented train data (run 6): add --aug-root "$DATA-aug/lesions" (made by scripts/augment_team2.sbatch)
 # Setup and venv: see scripts/train.sbatch. Submit from the repo root.
 
 set -euo pipefail
@@ -29,3 +31,5 @@ python scripts/train.py $(ls "$DATA"/lesions/*.npz | head -10) --model siamese -
   --out "runs/$SLURM_JOB_ID-overfit" "$@"                                                # sanity: should reach ~0 mm
 python scripts/train.py --root "$DATA/lesions" --split-file "$DATA/split.json" --model siamese --epochs 150 \
   --batch-size 16 --lr 3e-4 --workers "$SLURM_CPUS_PER_TASK" --out "runs/$SLURM_JOB_ID" "$@"
+python scripts/worst_cases.py --ckpt "runs/$SLURM_JOB_ID/best.pt" --root "$DATA/lesions" \
+  --split-file "$DATA/split.json" "$@"                                                   # for notebooks/worst_cases.ipynb
