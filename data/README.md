@@ -41,3 +41,12 @@ Extra fields per npz:
 
 Extra log counters: `skip_no_mask` (mask file missing), `skip_empty_mask` (label not in BL or FU patch),
 `warn_mask_cog_far` (FU mask centre of mass > 4 mm from `target_mm`; a large count means a label or axis bug).
+
+## Augmented train data (`scripts/augment_team2.sbatch`)
+
+Output: `/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug/`, train-split
+patients only. Per train lesion, 4 files `<patient>_<lesion>_a<k>.npz` with the same keys as the Team 2 data.
+BL and FU are each re-sampled from the raw scan with their own random rotation (up to 15°, random axis) and
+scale (0.9–1.1). Offsets are in patch mm (2 mm per patch voxel), the units the model sees. The fixed FU window is
+the lesion's stored jitter rounded to whole voxels. Use with `train.py --aug-root <dir>/lesions`
+(added to the train split only).

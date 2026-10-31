@@ -26,7 +26,8 @@ class LesionDataset(Dataset):
 
     def __init__(self, root, split_file, split, augment=False, masks=False, rejitter_sd=0.0):
         patients = set(load_split(split_file)[split])
-        self.files = sorted(f for f in Path(root).glob("*.npz") if f.name.split("_")[0] in patients)
+        roots = [root] if isinstance(root, (str, Path)) else root  # list: e.g. [lesions/, augmented lesions/]
+        self.files = sorted(f for r in roots for f in Path(r).glob("*.npz") if f.name.split("_")[0] in patients)
         self.augment = augment
         self.keys = ["bl", "fu", "bl_mask", "fu_mask"] if masks else ["bl", "fu"]
         self.rejitter_sd = rejitter_sd

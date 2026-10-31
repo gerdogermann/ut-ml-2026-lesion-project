@@ -13,6 +13,8 @@
 #   sbatch scripts/train_siamese.sbatch --lambda-hm 1 --dist-warmup 5 --bl-mask                    # run 4
 #   sbatch scripts/train_siamese.sbatch --lambda-hm 1 --dist-warmup 5 --bl-mask --lambda-mask 0.5  # run 5
 #   ... --rejitter-sd 8                                                   # fresh FU offset every epoch
+# Full model (run 5): --rejitter-sd 8 --lambda-hm 1 --dist-warmup 5 --bl-mask --lambda-mask 0.5
+# + augmented train data (run 6): add --aug-root "$DATA-aug/lesions" (made by scripts/augment_team2.sbatch)
 # Setup and venv: see scripts/train.sbatch. Submit from the repo root.
 
 set -euo pipefail
