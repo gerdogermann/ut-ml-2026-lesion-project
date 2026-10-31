@@ -1,0 +1,302 @@
+03b90eb112 {'skip_not_train': 1}
+045117b0e0 {'skip_not_train': 1}
+06138bc5af {'skip_not_train': 1}
+06eb133bbf {'skip_type': 2}
+0777d5c17d {'skip_type': 1}
+07e1cd7dca {'skip_not_train': 1}
+0aa1883c64 {'skip_type': 1}
+03c6b06952 {'skip_type': 7, 'has_propagated': 1, 'kept': 4}
+006f52e910 {'has_propagated': 1, 'kept': 4}
+0e65972dce {'skip_not_train': 1}
+0f49c89d1e {'skip_not_train': 1}
+01161aaa0b {'has_propagated': 3, 'kept': 12, 'skip_type': 7}
+091d584fce {'has_propagated': 1, 'kept': 4}
+0640966322 {'skip_type': 6, 'has_propagated': 2, 'kept': 8}
+02522a2b27 {'has_propagated': 4, 'kept': 16, 'skip_type': 2}
+069059b7ef {'has_propagated': 3, 'kept': 12}
+0a09c8844b {'has_propagated': 4, 'kept': 16}
+07cdfd2337 {'skip_type': 7, 'has_propagated': 6, 'kept': 24}
+1534b76d32 {'skip_not_train': 1}
+11b9842e0a {'has_propagated': 4, 'kept': 16}
+077e29b11b {'has_propagated': 7, 'kept': 28, 'skip_type': 1}
+11364907cf {'skip_type': 18, 'has_propagated': 6, 'kept': 19, 'skip_empty_mask': 2}
+115f895031 {'skip_type': 22, 'has_propagated': 5, 'kept': 20}
+13c022b0b3 {'has_propagated': 2, 'kept': 8}
+06eb61b839 {'no_propagated': 8, 'kept': 32, 'skip_type': 1}
+0e51011a4c {'skip_type': 10, 'has_propagated': 10, 'kept': 40}
+0e01938fc4 {'has_propagated': 9, 'kept': 36}
+1d7f7abc18 {'skip_not_train': 1}
+13fe9d8431 {'has_propagated': 5, 'kept': 20, 'skip_type': 5}
+013d407166 {'has_propagated': 12, 'kept': 52, 'no_propagated': 1, 'skip_type': 1}
+21addf5898 {'skip_not_train': 1}
+2618045a3a {'skip_not_train': 1}
+1385974ed5 {'has_propagated': 5, 'kept': 20, 'skip_type': 1}
+0266e33d3f {'has_propagated': 11, 'kept': 44, 'skip_type': 29}
+19f3cd308f {'skip_type': 1, 'has_propagated': 2, 'kept': 8}
+140f6969d5 {'has_propagated': 2, 'kept': 8, 'skip_type': 1}
+1afa34a7f9 {'has_propagated': 4, 'kept': 16}
+1732cb4372 {'has_propagated': 3, 'kept': 12}
+207f466f93 {'has_propagated': 1, 'kept': 4}
+1700002963 {'has_propagated': 6, 'kept': 24, 'skip_type': 5}
+2723d092b6 {'skip_type': 2, 'has_propagated': 2, 'kept': 8}
+26e359e838 {'has_propagated': 3, 'kept': 12}
+2ba100d604 {'skip_not_train': 1}
+289dff0766 {'skip_type': 11, 'has_propagated': 1, 'kept': 4}
+274ad4786c {'skip_type': 2, 'has_propagated': 4, 'kept': 16}
+307fd7f231 {'skip_not_train': 1}
+2b24d49505 {'skip_type': 16, 'has_propagated': 2, 'skip_empty_mask': 1, 'kept': 4}
+2b44928ae1 {'has_propagated': 3, 'kept': 12}
+31fefc0e57 {'skip_not_train': 1}
+31b7b72368 {'has_propagated': 1, 'kept': 4}
+060ad92489 {'has_propagated': 29, 'kept': 116, 'skip_type': 2}
+28fd0fbd33 {'skip_type': 8, 'has_propagated': 8, 'kept': 32}
+2c62105ee1 {'has_propagated': 4, 'kept': 16, 'skip_type': 2}
+275a967a52 {'has_propagated': 11, 'kept': 44, 'skip_type': 9}
+084b6fbb10 {'has_propagated': 28, 'kept': 112, 'skip_type': 7}
+2a452c50d7 {'skip_type': 15, 'has_propagated': 11, 'kept': 44}
+3644a684f9 {'skip_type': 1, 'has_propagated': 2, 'kept': 8}
+2a79ea27c2 {'skip_type': 1, 'has_propagated': 12, 'kept': 48}
+38b18881fc {'skip_not_train': 1}
+2f1ee6251b {'has_propagated': 3, 'kept': 12, 'skip_type': 2}
+38db3aed92 {'skip_not_train': 1}
+39059724f7 {'skip_not_train': 1}
+3988c7f88e {'skip_not_train': 1}
+3994f23bfb {'skip_not_train': 1}
+158f3069a4 {'has_propagated': 22, 'skip_empty_mask': 6, 'kept': 76, 'skip_type': 7}
+31c8f1568c {'has_propagated': 8, 'kept': 30, 'skip_empty_mask': 2, 'skip_type': 5}
+3636638817 {'has_propagated': 9, 'kept': 36, 'skip_type': 24}
+18bbcaa5ef {'skip_type': 26, 'has_propagated': 25, 'kept': 96, 'skip_empty_mask': 1}
+38af86134b {'has_propagated': 3, 'kept': 12, 'skip_type': 1}
+3b8a614226 {'skip_type': 2, 'has_propagated': 2, 'kept': 8}
+36660e5985 {'skip_type': 11, 'has_propagated': 11, 'kept': 44}
+42a0e188f5 {'skip_type': 14, 'has_propagated': 2, 'kept': 8}
+3cec07e9ba {'has_propagated': 4, 'kept': 16, 'skip_type': 1}
+37bc1b6433 {'has_propagated': 11, 'kept': 44, 'skip_type': 8}
+3def184ad8 {'has_propagated': 4, 'kept': 16}
+48aedb8880 {'skip_not_train': 1}
+1c9ac0159c {'has_propagated': 24, 'kept': 92, 'skip_type': 19, 'skip_empty_mask': 1}
+496e05e1ae {'skip_not_train': 1}
+4c56ff4ce4 {'skip_not_train': 1}
+37bc2f75bf {'skip_type': 31, 'has_propagated': 10, 'kept': 40}
+34ed066df3 {'skip_type': 17, 'has_propagated': 14, 'kept': 56}
+335f535208 {'has_propagated': 11, 'kept': 44, 'skip_type': 2}
+53c3bce66e {'skip_not_train': 1}
+432aca3a1e {'skip_type': 38, 'has_propagated': 1, 'kept': 4}
+38b3eff8ba {'skip_type': 37, 'has_propagated': 13, 'kept': 52}
+502e4a1693 {'has_propagated': 1, 'kept': 4}
+1ff8a7b5dc {'has_propagated': 38, 'kept': 160, 'skip_type': 32, 'no_propagated': 2}
+47d1e99058 {'has_propagated': 3, 'kept': 12}
+3fe94a0023 {'has_propagated': 11, 'kept': 44, 'skip_type': 10}
+577ef1154f {'skip_not_train': 1}
+49182f81e6 {'has_propagated': 4, 'kept': 16}
+5878a7ab84 {'skip_type': 2}
+5072d348b2 {'has_propagated': 3, 'kept': 12, 'skip_type': 2}
+46ba9f2a69 {'has_propagated': 3, 'kept': 12}
+5c7d5705ab {'skip_not_train': 1}
+45fbc6d3e0 {'has_propagated': 8, 'kept': 32, 'skip_type': 1}
+5f93f98352 {'skip_not_train': 1}
+441954d29a {'has_propagated': 8, 'kept': 32, 'skip_type': 5}
+64b2c11867 {'skip_not_train': 1}
+56d9ba4ec6 {'has_propagated': 3, 'kept': 12, 'skip_type': 1}
+555d6702c9 {'skip_type': 58, 'has_propagated': 6, 'kept': 24}
+57aeee35c9 {'has_propagated': 2, 'kept': 8, 'skip_type': 1}
+568628e0d9 {'skip_type': 53, 'has_propagated': 6, 'kept': 24}
+5759d9ff2a {'has_propagated': 3, 'kept': 12, 'skip_type': 3}
+6883966fd8 {'skip_not_train': 1}
+4c5bde74a8 {'skip_type': 9, 'has_propagated': 12, 'kept': 48}
+5ef059938b {'has_propagated': 2, 'kept': 8}
+621bf66ddb {'skip_type': 3, 'has_propagated': 2, 'kept': 8}
+682670d9ab {'skip_type': 2, 'has_propagated': 1, 'kept': 4}
+16a5cdae36 {'has_propagated': 42, 'kept': 170, 'skip_type': 6, 'skip_empty_mask': 2, 'no_propagated': 1}
+65b9eea6e1 {'has_propagated': 3, 'kept': 12, 'skip_type': 1}
+65cfedc125 {'has_propagated': 6, 'kept': 24}
+577bcc914f {'skip_type': 19, 'has_propagated': 10, 'kept': 44, 'no_propagated': 1}
+69adc1e107 {'has_propagated': 3, 'kept': 12, 'skip_type': 1}
+4734ba6f3d {'skip_type': 7, 'has_propagated': 15, 'kept': 60}
+705f217283 {'skip_type': 4, 'has_propagated': 1, 'kept': 4}
+6da9003b74 {'skip_type': 2, 'has_propagated': 4, 'kept': 16}
+671f8ff3e6 {'skip_type': 17, 'has_propagated': 14, 'kept': 52, 'skip_empty_mask': 1}
+6a9aeddfc6 {'has_propagated': 10, 'kept': 40, 'skip_type': 1}
+6cdd60ea00 {'has_propagated': 2, 'kept': 8}
+6c4b761a28 {'has_propagated': 9, 'kept': 36}
+6f3ef77ac0 {'skip_type': 9, 'has_propagated': 4, 'kept': 16}
+6974ce5ac6 {'has_propagated': 12, 'kept': 47, 'skip_empty_mask': 1, 'skip_type': 7}
+6c9882bbac {'has_propagated': 1, 'kept': 4}
+65ded5353c {'has_propagated': 17, 'kept': 68, 'skip_type': 5}
+757b505cfd {'has_propagated': 1, 'kept': 4}
+5737c6ec2e {'has_propagated': 19, 'kept': 80, 'skip_type': 10, 'no_propagated': 1}
+73278a4a86 {'skip_type': 3, 'has_propagated': 1, 'kept': 4}
+738cccd4fd {'has_propagated': 3, 'kept': 12, 'skip_type': 1}
+7ef605fc8d {'skip_not_train': 1}
+74db120f0a {'has_propagated': 4, 'kept': 16, 'skip_type': 16}
+7d06a9cf10 {'skip_type': 2, 'has_propagated': 2, 'kept': 8}
+76dc611d6e {'has_propagated': 3, 'kept': 12}
+7f6ffaa6bb {'skip_not_train': 1}
+7e7757b1e1 {'has_propagated': 3, 'kept': 12, 'skip_type': 4}
+7ba15e3f07 {'skip_type': 21, 'has_propagated': 6, 'kept': 24}
+7a614fd06c {'has_propagated': 10, 'kept': 40, 'skip_type': 1}
+84150c44ef {'skip_not_train': 1}
+7f100b7b36 {'skip_type': 4, 'has_propagated': 6, 'kept': 24}
+8216124282 {'has_propagated': 2, 'kept': 8}
+7f1de29e6d {'skip_type': 5, 'has_propagated': 3, 'kept': 12}
+73f7634ab3 {'has_propagated': 4, 'warn_mask_cog_far': 37, 'kept': 52, 'no_propagated': 9, 'skip_type': 7}
+85d8ce590a {'skip_not_train': 1}
+7eabe3a164 {'has_propagated': 7, 'kept': 28, 'skip_type': 16}
+84d9ee44e4 {'skip_type': 2, 'has_propagated': 2, 'kept': 8}
+84eb13cfed {'skip_type': 1, 'has_propagated': 1, 'kept': 4}
+82aa4b0af3 {'has_propagated': 5, 'kept': 17, 'skip_empty_mask': 3}
+842f3298f9 {'skip_type': 3, 'has_propagated': 1, 'kept': 4}
+6d4a60c0cd {'has_propagated': 26, 'kept': 104}
+8f03ad02c6 {'skip_not_train': 1}
+8f121ce07d {'skip_not_train': 1}
+698d51a19d {'has_propagated': 30, 'kept': 120}
+854d6fae5e {'has_propagated': 3, 'kept': 12, 'skip_type': 1}
+758874998f {'has_propagated': 22, 'kept': 88, 'skip_type': 4}
+7f5144f962 {'has_propagated': 10, 'kept': 40}
+8f53295a73 {'skip_type': 12, 'has_propagated': 2, 'kept': 8}
+8fc4c7ab44 {'has_propagated': 2, 'kept': 8}
+8d5e957f29 {'skip_type': 1, 'has_propagated': 2, 'kept': 8}
+8e98d81f82 {'no_propagated': 3, 'kept': 12, 'skip_type': 8}
+903ce9225f {'has_propagated': 3, 'kept': 12}
+94f6d7e04a {'skip_not_train': 1}
+8f85517967 {'skip_type': 3, 'has_propagated': 5, 'kept': 20}
+8c19f571e2 {'has_propagated': 9, 'kept': 36}
+37a749d808 {'has_propagated': 77, 'kept': 299, 'skip_type': 12, 'skip_empty_mask': 3}
+7658d0d211 {'has_propagated': 18, 'kept': 72, 'skip_type': 8}
+9766527f2b {'skip_not_train': 1}
+914b62192c {'has_propagated': 5, 'kept': 20}
+9872ed9fc2 {'skip_not_train': 1}
+979d472a84 {'has_propagated': 1, 'kept': 4}
+5b8add2a5d {'has_propagated': 53, 'kept': 210, 'skip_empty_mask': 2, 'skip_type': 20}
+95b3019dea {'has_propagated': 4, 'kept': 16, 'skip_type': 1}
+918317b579 {'has_propagated': 10, 'kept': 40}
+950a4152c2 {'skip_type': 16, 'has_propagated': 4, 'kept': 16, 'warn_mask_cog_far': 7}
+93dd4de5cd {'has_propagated': 2, 'kept': 8}
+8d3bba7425 {'has_propagated': 19, 'kept': 68, 'skip_type': 16, 'skip_empty_mask': 2}
+96da2f590c {'has_propagated': 6, 'kept': 24, 'skip_type': 1}
+871c14878f {'has_propagated': 25, 'kept': 100, 'skip_type': 4}
+9f9cee5b98 {'skip_not_train': 1}
+9c3ce93643 {'skip_type': 1, 'has_propagated': 1, 'kept': 4}
+8c9611718f {'has_propagated': 14, 'kept': 56, 'skip_type': 4}
+92c8c96e4c {'skip_type': 4, 'has_propagated': 7, 'kept': 28}
+a13ee062ef {'skip_not_train': 1}
+839ab46820 {'has_propagated': 29, 'kept': 116, 'skip_type': 9}
+9b04d15284 {'has_propagated': 3, 'kept': 12}
+962e611a0f {'has_propagated': 3, 'kept': 12, 'skip_type': 2}
+a3c65c2974 {'skip_type': 1}
+a27ef1c79c {'skip_type': 1, 'has_propagated': 1, 'kept': 4}
+9ac05befca {'has_propagated': 8, 'kept': 32}
+a597e50502 {'skip_not_train': 1}
+9fc3d7152b {'has_propagated': 3, 'kept': 11, 'skip_empty_mask': 1, 'skip_type': 2}
+58a2fc6ed3 {'has_propagated': 45, 'kept': 184, 'no_propagated': 1, 'skip_type': 28}
+9e94b15ed3 {'has_propagated': 4, 'kept': 15, 'skip_type': 3, 'skip_empty_mask': 1}
+a0a080f42e {'has_propagated': 2, 'kept': 12, 'no_propagated': 1, 'skip_type': 1}
+9dcb88e013 {'has_propagated': 5, 'kept': 20, 'skip_type': 2}
+9188905e74 {'has_propagated': 26, 'kept': 96, 'skip_type': 22, 'skip_empty_mask': 5, 'warn_mask_cog_far': 1}
+a8c88a0055 {'skip_type': 9}
+a8f15eda80 {'skip_not_train': 1}
+9dfcd5e558 {'has_propagated': 9, 'kept': 36, 'skip_type': 1}
+a5e0013237 {'has_propagated': 2, 'kept': 8}
+a4f23670e1 {'skip_type': 5, 'has_propagated': 3, 'kept': 12}
+af032fbcb0 {'skip_not_train': 1}
+9b8619251a {'has_propagated': 15, 'kept': 60, 'skip_type': 3}
+a91f7d0f27 {'has_propagated': 3, 'kept': 12}
+b1e0a5a7b0 {'skip_not_train': 1}
+a861405761 {'has_propagated': 7, 'kept': 28}
+a4a042cf4f {'has_propagated': 5, 'kept': 20}
+b3e3e393c7 {'skip_not_train': 1}
+9c838d2e45 {'has_propagated': 10, 'kept': 40}
+b73ce398c3 {'skip_type': 3}
+ac1dd209cb {'skip_type': 17, 'has_propagated': 4, 'kept': 16}
+a7228a7d88 {'has_propagated': 8, 'kept': 32, 'skip_type': 16}
+bbf14f4f9b {'skip_not_train': 1}
+b1a59b315f {'skip_type': 4, 'has_propagated': 2, 'kept': 8}
+a3458cbbcc {'has_propagated': 5, 'kept': 20, 'skip_type': 24}
+bd4c9ab730 {'skip_not_train': 1}
+a97da629b0 {'skip_type': 9, 'has_propagated': 13, 'kept': 52}
+be83ab3ecd {'skip_not_train': 1}
+b6aea7af56 {'has_propagated': 5, 'kept': 20}
+bf97f24695 {'skip_not_train': 1}
+bff82d1886 {'skip_not_train': 1}
+ba55ff88bd {'skip_type': 46, 'has_propagated': 3, 'kept': 12}
+b2eb734903 {'has_propagated': 8, 'kept': 32, 'skip_type': 1}
+c4258e0f53 {'skip_not_train': 1}
+c45147dee7 {'skip_not_train': 1}
+c4de9fe968 {'skip_not_train': 1}
+a8baa56554 {'has_propagated': 16, 'kept': 64}
+c6f057b865 {'skip_type': 7}
+9cfdf10e8f {'has_propagated': 29, 'kept': 116}
+bd686fd640 {'skip_type': 14, 'has_propagated': 7, 'kept': 28}
+bf8229696f {'has_propagated': 1, 'kept': 4}
+a666587afd {'has_propagated': 23, 'kept': 90, 'skip_type': 12, 'skip_empty_mask': 2}
+c0e190d826 {'has_propagated': 2, 'kept': 8, 'skip_type': 1}
+c24cd76e1c {'has_propagated': 4, 'kept': 16}
+bcbe3365e6 {'has_propagated': 7, 'kept': 28, 'skip_type': 8}
+cf2e4f52be {'skip_not_train': 1}
+cfa0860e83 {'skip_not_train': 1}
+c8ffe9a587 {'has_propagated': 2, 'kept': 8}
+c52f1bd66c {'skip_type': 6, 'has_propagated': 2, 'kept': 8}
+b1d10e7baf {'has_propagated': 6, 'kept': 24}
+d296c101da {'skip_type': 1}
+9fd81843ad {'has_propagated': 31, 'kept': 120, 'skip_type': 3, 'skip_empty_mask': 1}
+b7923fe9af {'has_propagated': 15, 'kept': 60, 'skip_type': 4}
+ce08becc73 {'skip_type': 84, 'has_propagated': 2, 'kept': 8}
+d947bf06a8 {'skip_type': 13}
+ca46c1b951 {'has_propagated': 7, 'kept': 28}
+cfecdb276f {'has_propagated': 4, 'kept': 16}
+d2490f048d {'has_propagated': 2, 'kept': 8}
+bc6dc48b74 {'has_propagated': 19, 'kept': 76, 'skip_type': 7}
+d5f038a453 {'skip_type': 43, 'has_propagated': 3, 'kept': 12}
+b34f33d0bc {'has_propagated': 25, 'kept': 108, 'skip_type': 30, 'no_propagated': 2}
+e165421110 {'has_propagated': 2, 'kept': 4, 'skip_type': 10, 'skip_empty_mask': 1}
+e2c0be2456 {'skip_not_train': 1}
+e1eee5e2b4 {'skip_type': 2, 'has_propagated': 2, 'kept': 8}
+a2557a7b2e {'no_propagated': 23, 'kept': 200, 'warn_mask_cog_far': 4, 'has_propagated': 27, 'skip_type': 5}
+e56954b4f6 {'skip_type': 1}
+d6baf65e0b {'has_propagated': 12, 'kept': 48, 'skip_type': 3}
+d395771085 {'has_propagated': 14, 'warn_mask_cog_far': 65, 'kept': 60, 'no_propagated': 1, 'skip_type': 4}
+e00da03b68 {'has_propagated': 7, 'kept': 28, 'skip_type': 1}
+e46d0ac1f1 {'skip_type': 9, 'has_propagated': 5, 'kept': 20}
+ea20a043c0 {'skip_type': 5}
+db8e1af0cb {'has_propagated': 11, 'kept': 48, 'no_propagated': 1, 'warn_mask_cog_far': 20, 'skip_type': 3}
+d2716515bd {'has_propagated': 20, 'kept': 88, 'warn_mask_cog_far': 19, 'no_propagated': 2, 'skip_type': 4}
+e7db56dbec {'has_propagated': 3, 'kept': 12, 'skip_type': 2}
+ebf11048b1 {'skip_not_train': 1}
+e96ed478da {'has_propagated': 2, 'kept': 8, 'skip_type': 1}
+eb160de1de {'skip_type': 4, 'has_propagated': 1, 'kept': 4}
+eda80a3d5b {'skip_not_train': 1}
+e4a6222cdb {'has_propagated': 6, 'kept': 24}
+dc5e819e18 {'has_propagated': 18, 'warn_mask_cog_far': 5, 'kept': 72, 'skip_type': 10}
+cb70ab3756 {'has_propagated': 23, 'kept': 92}
+defd402043 {'has_propagated': 13, 'kept': 52, 'skip_type': 32}
+f2fc990265 {'skip_not_train': 1}
+eae27d77ca {'has_propagated': 5, 'kept': 20, 'skip_type': 6}
+e64770ac6b {'has_propagated': 4, 'kept': 16, 'skip_type': 1}
+f718499c1c {'skip_not_train': 1}
+ec5decca5e {'skip_type': 27, 'has_propagated': 1, 'warn_mask_cog_far': 5, 'kept': 4}
+ec8ce6abb3 {'has_propagated': 2, 'kept': 8}
+eecca5b636 {'has_propagated': 3, 'kept': 12}
+c9e1074f5b {'has_propagated': 25, 'kept': 100, 'skip_type': 1}
+ef0d3930a7 {'skip_type': 4, 'has_propagated': 5, 'kept': 19, 'skip_empty_mask': 1}
+fa7cdfad1a {'skip_not_train': 1}
+f2217062e9 {'has_propagated': 5, 'kept': 20}
+fb9ce87f03 {'skip_not_train': 1}
+fc22130974 {'skip_type': 2}
+f7e6c85504 {'skip_type': 1, 'has_propagated': 2, 'kept': 8}
+e88a49bccd {'skip_type': 32, 'has_propagated': 16, 'kept': 64}
+eb16372791 {'has_propagated': 5, 'kept': 20}
+f340f1b1f6 {'has_propagated': 9, 'kept': 36}
+f43686bab1 {'has_propagated': 7, 'kept': 28}
+f899139df5 {'has_propagated': 6, 'kept': 24, 'warn_mask_cog_far': 5, 'skip_type': 1}
+fe131d7f5a {'skip_type': 24, 'has_propagated': 5, 'kept': 20}
+f803dfeb35 {'skip_type': 14, 'has_propagated': 8, 'kept': 32}
+caf1a3dfb5 {'has_propagated': 51, 'kept': 203, 'skip_empty_mask': 1}
+f7664060cc {'has_propagated': 12, 'kept': 48, 'skip_type': 13}
+cedebb6e87 {'has_propagated': 45, 'kept': 180}
+f157be1f00 {'has_propagated': 7, 'kept': 28, 'skip_type': 19}
+a71d83915f {'has_propagated': 43, 'kept': 256, 'no_propagated': 21, 'warn_mask_cog_far': 1, 'skip_type': 55}
+f90f2aca5c {'has_propagated': 13, 'kept': 52, 'skip_type': 5}
+dc5c7986da {'has_propagated': 40, 'kept': 160, 'skip_type': 7}
+fb8490a950 {'skip_type': 13, 'has_propagated': 43, 'kept': 172}
+TOTAL {'skip_not_train': 60, 'skip_type': 1685, 'has_propagated': 2095, 'kept': 8610, 'skip_empty_mask': 40, 'no_propagated': 78, 'warn_mask_cog_far': 169}
+SPLIT {'train': 227, 'val': 0, 'test': 0}
