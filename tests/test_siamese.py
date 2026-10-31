@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 from lesionloc.dataset import LesionDataset
 from lesionloc.losses import gaussian_target, team2_loss
-from lesionloc.model import GRID, SiameseNet, cell_mm, soft_argmax
+from lesionloc.model import GRID, SiameseNet, cell_mm, local_soft_argmax, soft_argmax
 
 
 def test_output_shapes():
@@ -100,3 +100,37 @@ def test_rejitter_target_matches_window(tmp_path):
         assert np.all(np.abs(s) <= 12) and torch.equal(t, torch.tensor(-2.0 * s, dtype=torch.float32))
         seen.add(tuple(s))
     assert len(seen) > 10  # fresh offset per load
+
+
+def test_local_soft_argmax_ignores_second_peak():
+    logits = torch.full((1, GRID, GRID, GRID), -1e4)
+    logits[0, 16, 16, 16], logits[0, 16, 16, 26] = 0.0, -0.1  # strong and slightly weaker peak, 40 mm apart in x
+    c = cell_mm()
+    assert soft_argmax(logits, c)[0, 0] > c[16] + 10  # plain readout lands between the two
+    assert torch.allclose(local_soft_argmax(logits, c, 8.0)[0], torch.stack([c[16], c[16], c[16]]))
+
+
+def test_centre_prior():
+    torch.manual_seed(0)
+    x = torch.rand(1, 4, 64, 64, 64)
+    torch.manual_seed(1)
+    off = SiameseNet()
+    torch.manual_seed(1)
+    on = SiameseNet(prior_sd=12.0)
+    (_, l0), (_, l1) = off(x), on(x)
+    d = l1 - l0  # 0 at the centre cells (+-2 mm), -(62^2 * 3) / (2 * 144) in the corners
+    assert torch.allclose(d[0, 15, 15, 15], torch.tensor(-3 * 4 / 288), atol=1e-4)
+    assert torch.allclose(d[0, 0, 0, 0], torch.tensor(-3 * 62 ** 2 / 288), atol=1e-2)
+    _, l5 = SiameseNet(k=5)(x)
+    assert l5.shape == l0.shape
+
+
+def test_mask_loss_skips_empty_masks():
+    torch.manual_seed(0)
+    logits, c, t = torch.randn(2, GRID, GRID, GRID), cell_mm(), torch.zeros(2, 3)
+    m = torch.zeros(2, 1, 64, 64, 64)
+    m[0, 0, 28:36, 28:36, 28:36] = 1  # sample 1 has an empty window
+    delta = soft_argmax(logits, c)
+    _, both = team2_loss(delta, logits, t, m, c, lambda_mask=1.0)
+    _, first = team2_loss(delta[:1], logits[:1], t[:1], m[:1], c, lambda_mask=1.0)
+    assert torch.allclose(both["mask"], first["mask"]) and both["mask"] < 100

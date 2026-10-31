@@ -35,6 +35,9 @@ def team2_loss(delta, logits, t, fu_mask, coords, lambda_hm=0.0, lambda_mask=0.0
         m = F.max_pool3d(fu_mask, 4, stride=2, padding=1)  # same grid as SiameseNet's stem
         small = (r < 5.0)[:, None, None, None, None]
         m = torch.where(small, F.max_pool3d(m, 3, stride=1, padding=1), m)  # tiny lesions: dilate 1 cell
-        terms["mask"] = -torch.logsumexp(logp.masked_fill(m.flatten(1) == 0, -1e4), 1).mean()
+        # skip samples whose window holds no FU mask (rare with re-drawn jitter): -1e4 fill would log a 1e4 loss
+        valid = m.flatten(1).any(1)
+        nll = -torch.logsumexp(logp.masked_fill(m.flatten(1) == 0, -1e4), 1) * valid
+        terms["mask"] = nll.sum() / valid.sum().clamp_min(1)
         total = total + lambda_mask * terms["mask"]
     return total, terms

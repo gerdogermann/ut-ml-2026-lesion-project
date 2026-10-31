@@ -5,7 +5,8 @@ Usage (from repo root):
   PYTHONPATH=src python scripts/train.py data/example_lesions/*.npz --epochs 150      # overfit check
   PYTHONPATH=src python scripts/train.py --bench --batch-size 8
 Team 2 (needs Longitudinal-CT-processed-team2, which has masks):
-  ... --model siamese [--lambda-hm 1 --dist-warmup 5] [--bl-mask] [--lambda-mask 0.5]
+  ... --model siamese [--lambda-hm 1 --dist-warmup 5] [--bl-mask] [--lambda-mask 0.5] [--template-k 5] [--prior-sd 12]
+      [--ema 0.999]
 """
 import argparse
 import time
@@ -99,6 +100,10 @@ def main():
     ap.add_argument("--bl-mask", action="store_true", help="siamese: BL mask as input + mask-pooled template")
     ap.add_argument("--lambda-hm", type=float, default=0.0, help="siamese: heatmap CE weight")
     ap.add_argument("--lambda-mask", type=float, default=0.0, help="siamese: FU mask-mass weight")
+    ap.add_argument("--template-k", type=int, default=3, help="siamese: BL template side in 4 mm cells (odd)")
+    ap.add_argument("--prior-sd", type=float, default=0.0, help="siamese: centre prior sd in mm; 0 = off")
+    ap.add_argument("--ema", type=float, default=0.0,
+                    help="validate and save an exponential moving average of the weights, e.g. 0.999; 0 = off")
     ap.add_argument("--aug-root", help="extra train-split npz dir (augment_team2.sbatch output)")
     ap.add_argument("--rejitter-sd", type=float, default=0.0,
                     help="train split only: fresh FU offset each load, mm sd per axis (needs fu_big); 0 = stored jitter")
@@ -114,7 +119,7 @@ def main():
     print("device", dev, torch.cuda.get_device_name() if dev.type == "cuda" else "")
     print("args", vars(a))
     masks = a.model == "siamese"
-    model = (SiameseNet(bl_mask=a.bl_mask) if masks else LesionNet()).to(dev)
+    model = (SiameseNet(bl_mask=a.bl_mask, k=a.template_k, prior_sd=a.prior_sd) if masks else LesionNet()).to(dev)
     print(f"params {sum(p.numel() for p in model.parameters()) / 1e6:.2f} M")
     opt = torch.optim.AdamW(model.parameters(), lr=a.lr, weight_decay=1e-4)
     if a.bench:
@@ -131,6 +136,10 @@ def main():
                                             pin_memory=dev.type == "cuda")
     train_dl, val_dl = loader(train_ds, True), loader(val_ds, False)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, a.epochs * len(train_dl))
+    # overfit mode takes 1 step per epoch: an EMA would lag far behind, so it is off there
+    ema = (torch.optim.swa_utils.AveragedModel(model, multi_avg_fn=torch.optim.swa_utils.get_ema_multi_avg_fn(a.ema))
+           if a.ema and not a.files else None)
+    evaluated = ema.module if ema else model
 
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -143,21 +152,23 @@ def main():
             loss.backward()
             opt.step()
             sched.step()
+            if ema:
+                ema.update_parameters(model)
             losses.append(loss.item())
             for k, v in parts.items():
                 terms.setdefault(k, []).append(v.item())
         parts = "".join(f" {k} {np.mean(v):.3f}" for k, v in terms.items())
         print(f"epoch {epoch} loss {np.mean(losses):.3f}{parts} ({time.perf_counter() - t0:.0f} s)", end="  ")
-        m = report("val", *predict(model, val_dl, dev))
+        m = report("val", *predict(evaluated, val_dl, dev))
         if m["Mean error"] < best:
             best = m["Mean error"]
-            torch.save(model.state_dict(), out / "best.pt")
+            torch.save(evaluated.state_dict(), out / "best.pt")
     print(f"best val mean error {best:.2f} mm, checkpoint {out / 'best.pt'}")
 
     if a.test:
-        model.load_state_dict(torch.load(out / "best.pt", map_location=dev))
+        evaluated.load_state_dict(torch.load(out / "best.pt", map_location=dev))
         test_dl = loader(LesionDataset(a.root, a.split_file, "test", masks=masks), False)
-        report("test", *predict(model, test_dl, dev))
+        report("test", *predict(evaluated, test_dl, dev))
 
 
 if __name__ == "__main__":

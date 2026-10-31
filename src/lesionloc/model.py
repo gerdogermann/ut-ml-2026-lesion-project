@@ -65,11 +65,20 @@ def soft_argmax(logits, coords):
                         (p.sum((2, 3)) * coords).sum(1)], 1)  # z
 
 
+def local_soft_argmax(logits, coords, r_mm):
+    """soft_argmax over only the cells within r_mm (per axis) of the arg-max cell: a second, weaker peak
+    can no longer pull the estimate to a point between two candidate lesions."""
+    i = logits.flatten(1).argmax(1)
+    near = lambda j: (coords[None] - coords[j][:, None]).abs() <= r_mm  # (B,32)
+    keep = near(i // GRID ** 2)[:, :, None, None] & near(i // GRID % GRID)[:, None, :, None] & near(i % GRID)[:, None, None, :]
+    return soft_argmax(logits.float().masked_fill(~keep, -1e4), coords)
+
+
 class SiameseNet(nn.Module):
     """x (B,4,64,64,64) = [bl, fu, bl_mask, fu_mask], (z,y,x). fu_mask is only for the loss, never an input.
     Returns (delta_mm (B,3), logits (B,32,32,32) over FU cells)."""
 
-    def __init__(self, width=16, bl_mask=False, k=3):
+    def __init__(self, width=16, bl_mask=False, k=3, prior_sd=0.0):
         super().__init__()
         w = width
         self.bl_mask, self.k = bl_mask, k
@@ -79,6 +88,9 @@ class SiameseNet(nn.Module):
         # cosine correlations lie in [-1, 1]; a softmax over 32^3 cells needs a sharper start than 1
         self.log_scale = nn.Parameter(torch.full((2,), math.log(10.0)))
         self.register_buffer("coords", cell_mm(), persistent=False)
+        # prior_sd > 0: fixed log-Gaussian centre prior on the logits; far cells start penalised (the window is near the lesion)
+        r2 = sum(torch.meshgrid(*[cell_mm() ** 2] * 3, indexing="ij"))
+        self.register_buffer("log_prior", -r2 / (2 * prior_sd ** 2) if prior_sd else torch.zeros(()), persistent=False)
 
     def forward(self, x):
         bl, fu, mbl = x[:, 0:1], x[:, 1:2], x[:, 2:3]
@@ -93,4 +105,5 @@ class SiameseNet(nn.Module):
             m = F.avg_pool3d(mbl, 4, stride=2, padding=1)  # same grid as the stem
             tm = F.normalize((f_bl * m).sum((2, 3, 4)) / m.sum((2, 3, 4)).clamp_min(1e-6), dim=1)
             logits = logits + self.log_scale[1].exp() * (f_fu * tm[:, :, None, None, None]).sum(1)
+        logits = logits + self.log_prior
         return soft_argmax(logits, self.coords), logits
