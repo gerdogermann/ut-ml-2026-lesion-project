@@ -66,8 +66,10 @@ def _method(fixed_mask, shrink, smooth_mm, sampling, seed=42):
 
 
 def _linear_optimizer(reg, iters):
-    reg.SetOptimizerAsGradientDescent(learningRate=1.0, numberOfIterations=iters,
-                                      convergenceMinimumValue=1e-6, convergenceWindowSize=10)
+    # Regular-step descent halves its step whenever the direction flips, so it settles. Plain gradient descent keeps a
+    # fixed learning rate: on the phantom in tests/test_team1.py it walked 60 mm away from an exact start.
+    reg.SetOptimizerAsRegularStepGradientDescent(learningRate=2.0, minStep=1e-3, numberOfIterations=iters,
+                                                 relaxationFactor=0.5)
     reg.SetOptimizerScalesFromPhysicalShift()
 
 
