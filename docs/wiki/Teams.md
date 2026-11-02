@@ -36,7 +36,7 @@ How to read it:
 
 ## Team 1: placing the window
 
-Members: _TBD_
+Members: Gerdo Germann, Imre Saks. Branch `team1`.
 
 **Goal:** put the FU window (64 × 64 × 64 voxels of 2 mm, i.e. a 128 mm cube) so that the lesion sits roughly in its centre. The distance from
 the window centre to the true FU lesion centre (`‖target_mm‖`) should be as small as possible. At minimum the lesion
@@ -47,25 +47,61 @@ breathing and scan range differ between the two scans.
 **Allowed inputs:** the BL and FU scans, and the BL lesion position and mask. `cog_propagated` is the reference to
 beat, not an input.
 
-**Metrics:** mean and median distance (mm) from window centre to true FU centre, share of lesions within 20 mm and
-within 56 mm. `compute_metrics` in `src/lesionloc/metrics.py` (Imre's branch) works with
-pred = window centre, true = FU centre.
+**Scored on all eligible lesions**, not only the 2502 npz patches: `lesions.csv` keeps the same filter as
+`preprocess.py` (UNCHANGED/MERGING, linking clear, both centres known) but not the 56 mm check, because keeping those
+lesions inside the window is Team 1's job. Nothing here is trained, so settings (mesh size, K, σ, λ) are chosen on
+train and reported on val; test only for final numbers.
 
-**Steps, simple to complex:**
-0. Same mm coordinates as in BL. Measure how bad this is; it is the number that motivates the team.
-1. `cog_propagated` from the dataset (registration guess). This is the bar to beat.
-2. Rigid or affine registration of the whole BL scan to the FU scan with SimpleITK (already a dependency).
-3. Organs as landmarks, using TotalSegmentator (Wasserthal et al., University Hospital Basel) organ masks on both scans:
-   - first, shift the window by the BL to FU centroid shift of the organ the lesion is in, or the nearest organ;
-   - then, fit a local affine transform from several nearby organs.
-4. Deformable registration (SimpleITK B-spline), optionally guided by the organ masks.
+**Metrics:** `window_metrics` in `src/lesionloc/metrics.py` (Imre's `compute_metrics` plus `In window@56`: share of
+lesions with every axis within 56 mm, the same rule as `skip_outside_window`). `scripts/team1_eval.py` prints one
+markdown row per split and method for [[Experiments]]; `--by-type` splits val by `lesion_type` (Lung, Liver, Lymph node, ...).
 
-**Notes:** this works on the full scans (raw `inputsTr/`), not on the patches. Run TotalSegmentator once per scan as
-a cluster job and cache the masks; do not recompute them in every experiment.
+**Steps, simple to complex.** Each step writes one centres file `centres/<method>.csv` (`patient, lesion, x_mm, y_mm, z_mm`):
+
+| Step | Method | Model | Code | centres file |
+|---|---|---|---|---|
+| 0 | same mm coordinates as BL | none | `team1_lesions.py` | `bl` |
+| 1 | `cog_propagated` from the dataset: **the bar to beat** | dataset's registration | `team1_lesions.py` | `propagated` |
+| 2a | rigid whole-scan registration (6 DoF) | SimpleITK, Mattes MI in a body mask | `team1_register.py` | `rigid` |
+| 2b | affine whole-scan registration (12 DoF) | SimpleITK | `team1_register.py` | `affine` |
+| 2c | affine + rigid correction in a 160 mm cube around each lesion | SimpleITK | `team1_register.py` | `local` |
+| 3a | shift by the host organ's BL → FU centroid shift (else nearest organ) | TotalSegmentator (117 structures) | `team1_organs.py` | `organ_shift` |
+| 3b | local affine from the K nearest organs, weights exp(−d/σ), ridge λ towards a pure shift | TotalSegmentator | `team1_organs.py` | `organ_affine_k*_s*_l*` |
+| 4 | deformable B-spline on top of affine | SimpleITK | `team1_register.py` | `bspline8` |
+| 5 | pretrained deformable registration, with and without instance optimisation | uniGradICON (Tian et al. 2024) | `team1_unigradicon.py` | `ugi_ioNone`, `ugi_io50` |
+
+Later, if time allows (no code yet):
+- **SAM, Self-supervised Anatomical eMbedding** (Yan et al. 2022): find the point in FU whose embedding matches the BL lesion. Deep Lesion Tracker uses it to place its window.
+- **VISTA3D** or MONAI `wholeBody_ct_segmentation`: alternative organ masks for step 3, if TotalSegmentator masks fail on some scans.
+- **LesionLocator** (Rokuss et al. 2025, in `papers/`): zero-shot tracking of the whole task, an outside baseline for the final joint evaluation.
+
+**Pitfalls built into the code:**
+- Registration runs with fixed = BL and moving = FU, so the transform maps BL points to FU points (`tx.TransformPoint(bl_mm)`). `tests/test_team1.py` checks this on a shifted phantom.
+- BL and FU often cover different body ranges, so rigid registration starts from the best of three starts (identity, image centres, body centroids), judged by the metric.
+- An organ cut off by the scan border has a centroid that moves with the cut, so such organs are never used as landmarks.
+- Tumours are often left out of their organ's mask, so the host organ is the most common label around the lesion when the lesion voxel itself is background.
+- Patient ids are hex strings (`0640966322`): every csv is read with `patient` as text.
+
+**Running it on the cluster.** All output goes to `/gpfs/helios/projects/ml_project_lesion_tracking/data/team1/`, group-writable:
+
+```bash
+sbatch scripts/team1_register.sbatch          # steps 0-2 and 4, CPU; PATIENTS=a,b for a quick check first
+sbatch scripts/totalseg.sbatch                # GPU, once per scan, cached
+sbatch --dependency=afterok:<totalseg id> scripts/team1_organs.sbatch   # step 3, CPU
+sbatch scripts/unigradicon.sbatch             # step 5, GPU; then IO=50 sbatch scripts/unigradicon.sbatch
+PYTHONPATH=src python scripts/team1_eval.py $T1/lesions.csv $T1/centres/*.csv --by-type
+```
+
+TotalSegmentator and uniGradICON each get their own venv (setup in the sbatch headers), so they cannot break the
+training venv.
+
+**Hand-over:** the best method's centres file is copied to `centres.csv`. Two things follow once Team 2's branch is on
+`main`: `preprocess.py` gets a `--centre csv --centres-csv` mode that cuts the FU window there, and Team 2 compares its
+training jitter (N(0, 8 mm) per axis) with Team 1's real val residuals before the joint evaluation.
 
 ## Team 2: finding the lesion in the patch
 
-Members: _TBD_
+Members: Kristian Tamm, Karl Väärtnõu. Branch `team2-training-data`.
 
 **Goal:** given a patch that is roughly in the right place, predict where the lesion is inside it
 (`target_mm`, the offset from the patch centre). The bar is the zero baseline: val mean error 14.51 mm.
