@@ -26,10 +26,15 @@ NEEDS = {"rigid": [], "affine": ["rigid"], "local": ["rigid", "affine"], "bsplin
 
 
 def cached(path, make):
-    if path.exists():  # Downcast: affine() needs the rigid transform's GetMatrix()
-        return sitk.ReadTransform(str(path)).Downcast()
+    if path.exists():
+        try:  # Downcast: affine() needs the rigid transform's GetMatrix()
+            return sitk.ReadTransform(str(path)).Downcast()
+        except RuntimeError:  # unreadable, e.g. half-written when an earlier job hit its time limit: redo it
+            path.unlink()
     tx = make()
-    sitk.WriteTransform(tx, str(path))
+    tmp = path.with_name(path.stem + ".tmp" + path.suffix)  # renamed only once complete
+    sitk.WriteTransform(tx, str(tmp))
+    tmp.replace(path)
     return tx
 
 
