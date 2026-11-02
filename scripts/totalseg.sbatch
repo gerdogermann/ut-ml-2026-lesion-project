@@ -12,10 +12,11 @@
 # One-time setup on the LOGIN node (compute nodes may lack internet); own venv, it pins its own nnU-Net:
 #   module load python
 #   python -m venv ~/venvs/totalseg && source ~/venvs/totalseg/bin/activate
-#   pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126   # V100 needs the cu126 build
+#   pip install torch==2.14.1 torchvision --index-url https://download.pytorch.org/whl/cu126   # V100: cu126 build;
+#     torchvision from the same index, or timm fails with "operator torchvision::nms does not exist"
 #   pip install TotalSegmentator
 #   export TOTALSEG_HOME_DIR=/gpfs/helios/projects/ml_project_lesion_tracking/totalseg_home
-#   totalseg_download_weights -h      # then download the weights for task total (and the --fast variant)
+#   TotalSegmentator -i <one scan> -o ~/ts_test.nii.gz --ml --fast --device cpu   # downloads the weights (fast: Task 297)
 # --fast (3 mm model) is enough for organ centroids and ~5x quicker; FAST=0 runs the full 1.5 mm model.
 # Submit from the repo root:  mkdir -p logs && sbatch scripts/totalseg.sbatch
 

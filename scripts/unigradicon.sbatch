@@ -8,13 +8,7 @@
 #SBATCH -o logs/t1-ugi-%j.out
 
 # Team 1 step 5: pretrained uniGradICON registration of every BL scan to its FU scan, no training.
-# One-time setup on the LOGIN node (the first run downloads the network weights, so do one pair there or on a
-# node with internet):
-#   module load python
-#   python -m venv ~/venvs/unigradicon && source ~/venvs/unigradicon/bin/activate
-#   pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126
-#   pip install unigradicon pandas SimpleITK
-#   unigradicon-register --help        # check the flags used in scripts/team1_unigradicon.py
+# One-time setup on the login node and a two-patient check on a GPU node: see scripts/unigradicon_check.sbatch.
 # Needs $OUT/lesions.csv from scripts/team1_register.sbatch (or scripts/team1_lesions.py).
 # Second run with instance optimisation:  IO=50 sbatch scripts/unigradicon.sbatch
 # Submit from the repo root:  mkdir -p logs && sbatch scripts/unigradicon.sbatch
