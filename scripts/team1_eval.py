@@ -1,10 +1,12 @@
 """Score Team 1 centres files against the true FU lesion centres.
 
-Usage: PYTHONPATH=src python scripts/team1_eval.py TEAM1_DIR/lesions.csv TEAM1_DIR/centres/*.csv [--test] [--by-type]
+Usage: PYTHONPATH=src python scripts/team1_eval.py TEAM1_DIR/lesions.csv TEAM1_DIR/centres/*.csv [--test] [--by-type] [--covered]
 Prints one markdown row per (split, method), ready for docs/wiki/Experiments.md. Error = ||window centre - true FU||.
 Tune a method's settings on train, report val; --test only for final numbers.
 A lesion missing from a centres file (registration failed, no organ found) is scored at its BL position and
-counted in the Missing column, so every method is scored on the same lesions.
+counted in the Missing column, so every method is scored on the same lesions. BL coordinates are unrelated to FU
+coordinates (errors of ~1 m), so a missing lesion is a miss. --covered instead scores only the lesions present in
+every given file: a paired comparison, and the readable view of a run on a few patients (PATIENTS=...).
 """
 import argparse
 from pathlib import Path
@@ -36,16 +38,21 @@ def main():
     ap.add_argument("centres", nargs="+")
     ap.add_argument("--test", action="store_true", help="also report the test split (final numbers only)")
     ap.add_argument("--by-type", action="store_true", help="also split val by lesion_type")
+    ap.add_argument("--covered", action="store_true", help="only lesions present in every centres file")
     a = ap.parse_args()
     les = read_lesions(a.lesions)
     true = les[cols("fu")].to_numpy()
     splits = ["train", "val"] + (["test"] if a.test else [])
+    preds = {Path(p).stem: predictions(les, p) for p in a.centres}
+    if a.covered:
+        keep = ~np.any([m for _, m in preds.values()], axis=0)
+        print(f"--covered: {int(keep.sum())} of {len(les)} lesions")
+        les, true = les[keep].reset_index(drop=True), true[keep]
+        preds = {n: (p[keep], m[keep]) for n, (p, m) in preds.items()}
 
     print("| Split | Method | N | Missing | Mean (mm) | Median (mm) | CPM@10 | CPM@20 | In window@56 |")
     print("|---|---|---|---|---|---|---|---|---|")
-    for path in a.centres:
-        name = Path(path).stem
-        pred, miss = predictions(les, path)
+    for name, (pred, miss) in preds.items():
         for s in splits:
             k = (les["split"] == s).to_numpy()
             print(row(s, name, int(k.sum()), int(miss[k].sum()), window_metrics(pred[k], true[k])))

@@ -73,18 +73,32 @@ def _linear_optimizer(reg, iters):
     reg.SetOptimizerScalesFromPhysicalShift()
 
 
-def initial_rigid(fixed, moving, fixed_mask, moving_mask):
-    """Best start of three by the metric at 8 mm: identity (same patient coordinates), image centres aligned,
-    body centroids aligned. BL and FU often cover different body ranges, so no single rule is safe."""
+def z_range(img):
+    """Physical z extent of the scan (axial CT: the index z axis runs head to feet)."""
+    zs = [img.TransformIndexToPhysicalPoint([0, 0, k])[2] for k in (0, img.GetSize()[2] - 1)]
+    return min(zs), max(zs)
+
+
+def initial_rigid(fixed, moving, fixed_mask, moving_mask, sweep_mm=400.0, step_mm=16.0):
+    """Best start by the metric at 8 mm. BL and FU coordinates are unrelated (offsets of ~1 m) and the two scans
+    often cover different body ranges (whole body vs chest), so body centroids line up in x and y but not
+    necessarily in z. Candidates: identity, image centres, and body centroids with z shifted by up to
+    +-sweep_mm. A shift that leaves the two scan ranges overlapping by less than half the shorter one is not
+    tried: with little overlap the metric sees few points and can score a wrong shift well."""
     c = centre_mm(fixed)
-    shifts = [np.zeros(3), centre_mm(moving) - c, mask_centroid(moving_mask) - mask_centroid(fixed_mask)]
+    body = mask_centroid(moving_mask) - mask_centroid(fixed_mask)
+    shifts = [np.zeros(3), centre_mm(moving) - c] + [body + [0, 0, dz] for dz in
+                                                      np.arange(-sweep_mm, sweep_mm + step_mm / 2, step_mm)]
+    (f0, f1), (m0, m1) = z_range(fixed), z_range(moving)
+    need = 0.5 * min(f1 - f0, m1 - m0)
+    ok = [s for s in shifts if min(f1 + s[2], m1) - max(f0 + s[2], m0) >= need] or shifts
     reg = _method(fixed_mask, [1], [0.0], 0.05)
     fs, ms = sitk.Shrink(fixed, [4] * 3), sitk.Shrink(moving, [4] * 3)
     best, best_v = None, np.inf
-    for s in shifts:
+    for s in ok:
         t = sitk.Euler3DTransform()
         t.SetCenter(c.tolist())
-        t.SetTranslation(s.tolist())
+        t.SetTranslation(np.asarray(s, dtype=float).tolist())
         reg.SetInitialTransform(t, inPlace=False)
         v = reg.MetricEvaluate(fs, ms)
         if v < best_v:

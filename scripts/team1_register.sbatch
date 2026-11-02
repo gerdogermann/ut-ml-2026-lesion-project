@@ -25,4 +25,4 @@ METHODS=${METHODS:-rigid,affine,local,bspline}
 [ -s "$OUT/lesions.csv" ] || PYTHONPATH=src python scripts/team1_lesions.py "$RAW" "$OUT"
 PYTHONPATH=src python scripts/team1_register.py "$RAW" "$OUT" --methods "$METHODS" --workers 8 \
     ${PATIENTS:+--patients "$PATIENTS"}
-PYTHONPATH=src python scripts/team1_eval.py "$OUT/lesions.csv" "$OUT"/centres/*.csv
+PYTHONPATH=src python scripts/team1_eval.py "$OUT/lesions.csv" "$OUT"/centres/*.csv ${PATIENTS:+--covered}
