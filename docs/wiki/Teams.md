@@ -69,7 +69,7 @@ markdown row per split and method for [[Experiments]]; `--by-type` splits val by
 | 3b | local affine from the K nearest organs, weights exp(−d/σ), ridge λ towards a pure shift | TotalSegmentator | `team1_organs.py` | `organ_affine_k*_s*_l*` |
 | 4 | deformable B-spline on top of affine | SimpleITK | `team1_register.py` | `bspline8` |
 | 5 | pretrained deformable registration, with and without instance optimisation | uniGradICON (Tian et al. 2024) | `team1_unigradicon.py` | `ugi_ioNone`, `ugi_io50` |
-
+| 5c | `ugi_io50` when within 25 mm of `local`, else `local` | uniGradICON + SimpleITK | `team1_combine.py` | `hybrid_ugi_local` |
 Later, if time allows (no code yet):
 - **SAM, Self-supervised Anatomical eMbedding** (Yan et al. 2022): find the point in FU whose embedding matches the BL lesion. Deep Lesion Tracker uses it to place its window.
 - **VISTA3D** or MONAI `wholeBody_ct_segmentation`: alternative organ masks for step 3, if TotalSegmentator masks fail on some scans.
@@ -98,6 +98,7 @@ training venv.
 **Hand-over:** the best method's centres file is copied to `centres.csv`. Two things follow once Team 2's branch is on
 `main`: `preprocess.py` gets a `--centre csv --centres-csv` mode that cuts the FU window there, and Team 2 compares its
 training jitter (N(0, 8 mm) per axis) with Team 1's real val residuals before the joint evaluation.
+**Hand-over:** `centres/hybrid_ugi_local.csv` (step 5c, τ = 25 mm) is copied to `$T1/centres.csv` (val mean 10.75 mm, median 6.71 mm, CPM@10 63.0%, 100% in window@56). `preprocess.py` now supports `--centre csv --centres-csv $T1/centres.csv` to cut the FU window there. Team 1's val residuals `(true_fu − c)` have per-axis standard deviations `(7.1, 8.2, 11.7) mm` (`(6.5, 6.5, 9.2) mm` on train) for `hybrid_ugi_local` and `(7.3, 8.8, 12.4) mm` for `local`, closely matching Team 2's N(0, 8 mm) training jitter on x and y with slightly larger z variance (~12 mm) along the axial scan direction.
 
 ## Team 2: finding the lesion in the patch
 
