@@ -9,6 +9,8 @@ pair's global transforms in TEAM1_DIR/transforms/<pid>_<bl>_<fu>_<method>.h5 so 
   local    affine, then a rigid correction inside a 160 mm cube around each lesion
   bspline  B-spline (--mesh control points per axis) on top of affine
 A pair that fails is logged and its lesions are left out; team1_eval.py then scores them at the BL position.
+A lesion whose 160 mm cube leaves the FU scan keeps its affine point in `local` (counted in the log).
+--patients reruns only those patients and replaces just their rows in the existing centres files.
 """
 import argparse
 import os
@@ -20,7 +22,7 @@ import pandas as pd
 import SimpleITK as sitk
 
 from lesionloc import registration as R
-from lesionloc.team1 import XYZ, cols, pairs, read_lesions, scan_path
+from lesionloc.team1 import XYZ, cols, pairs, read_centres, read_lesions, scan_path
 
 NEEDS = {"rigid": [], "affine": ["rigid"], "local": ["rigid", "affine"], "bspline": ["rigid", "affine"]}
 
@@ -36,6 +38,15 @@ def cached(path, make):
     sitk.WriteTransform(tx, str(tmp))
     tmp.replace(path)
     return tx
+
+
+def local_point(fixed, moving, init_tx, p):
+    """FU point from the per-lesion rigid correction, or None when the lesion's cube leaves the FU scan
+    (Mattes throws once no BL sample lands inside it), e.g. a lesion at the edge of the FU scan range."""
+    try:
+        return R.move_points(R.local_rigid(fixed, moving, init_tx, p), [p])[0]
+    except RuntimeError:
+        return None
 
 
 def do_pair(args):
@@ -59,7 +70,11 @@ def do_pair(args):
         out = {}
         for m in a.methods:
             if m == "local":
-                pts = [R.move_points(R.local_rigid(fixed, moving, tx["affine"], p), [p])[0] for p in bl]
+                pts = [local_point(fixed, moving, tx["affine"], p) for p in bl]
+                nfb = sum(p is None for p in pts)
+                pts = [R.move_points(tx["affine"], [b])[0] if p is None else p for p, b in zip(pts, bl)]
+                if nfb:
+                    print(pid, "local: affine point kept for", nfb, "of", len(bl), "lesions", flush=True)
             else:
                 pts = R.move_points(tx[m], bl)
             out[m] = pd.DataFrame(pts, columns=XYZ).assign(patient=pid, lesion=rows["lesion"].to_numpy())
@@ -103,9 +118,13 @@ def main():
     print("pairs", len(jobs), "failed", failed)
     for m, ds in res.items():
         name = f"bspline{a.mesh}" if m == "bspline" else m
-        if ds:
-            pd.concat(ds)[["patient", "lesion", *XYZ]].to_csv(out / "centres" / f"{name}.csv", index=False,
-                                                              float_format="%.3f")
+        f = out / "centres" / f"{name}.csv"
+        new = pd.concat(ds)[["patient", "lesion", *XYZ]] if ds else pd.DataFrame(columns=["patient", "lesion", *XYZ])
+        if f.exists():  # keep the rows of patients this run did not touch (a --patients rerun)
+            old = read_centres(f)
+            new = pd.concat([old[~old["patient"].isin(les["patient"])], new])
+        if len(new):
+            new.sort_values(["patient", "lesion"]).to_csv(f, index=False, float_format="%.3f")
 
 
 if __name__ == "__main__":

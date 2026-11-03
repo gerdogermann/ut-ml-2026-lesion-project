@@ -100,9 +100,14 @@ def initial_rigid(fixed, moving, fixed_mask, moving_mask, sweep_mm=400.0, step_m
         t.SetCenter(c.tolist())
         t.SetTranslation(np.asarray(s, dtype=float).tolist())
         reg.SetInitialTransform(t, inPlace=False)
-        v = reg.MetricEvaluate(fs, ms)
+        try:
+            v = reg.MetricEvaluate(fs, ms)
+        except RuntimeError:  # Mattes throws when no BL sample lands inside the FU scan: not a start at all
+            continue
         if v < best_v:
             best, best_v = t, v
+    if best is None:
+        raise RuntimeError("no start candidate overlaps the FU scan")
     return best
 
 
