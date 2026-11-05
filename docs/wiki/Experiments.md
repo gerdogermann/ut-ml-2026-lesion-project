@@ -17,6 +17,29 @@
 | 12 | 2026-11-01 | | Row 10 + centre prior, σ 12 mm (Team 2 run 6c) | row 10 + `--prior-sd 12` (job 3288502) | as row 10 | as row 10 | Best epoch 35: plain 6.16 / 3.92 mm, CPM@10 82.6%, per-patient 5.47. TTA 5.63 / 3.59 mm, 83.1%, per-patient 5.05 | Tie with row 10 on the mean (plain +0.04, TTA 0.00); the median is slightly better (TTA 3.59 vs 3.84). It doesn't pay for the risk that Team 1's window errors don't match our N(0, 8 mm) jitter. Dropped. Log: `logs/train-3288502.out` |
 
 
+## Planned: run 6b without training flips
+
+Prepared 2026-11-05; not submitted and no results yet.
+
+- Question: does preserving anatomical orientation during training improve localisation?
+- Change from run 6b (job 3288501): disable random flips with `--no-flips`.
+- Keep the same original and offline rotated/scaled train data, fresh 8 mm jitter,
+  BL mask, mask-loss weight 0.5, EMA 0.999, template size 5, batch size 16,
+  learning rate 3e-4, 50 epochs and existing fixed patient split. Training seed remains 0.
+- The small offline rotations (up to 15 degrees) remain enabled; no mirror flips are used.
+- Primary comparison: best **unflipped validation** mean/median error and CPM@10,
+  against run 6b's **5.81 / 3.79 mm and 84.1%**. Do not compare plain predictions
+  directly with run 6b's TTA result. Test split is not used.
+- Launch from the cluster repo root:
+
+  ```bash
+  mkdir -p logs
+  sbatch scripts/train_siamese_no_flips.sbatch
+  ```
+
+  Save the returned job ID here with the result. The job logs the Git commit,
+  working-tree status and full training arguments; checkpoint: `runs/<jobid>/best.pt`.
+
 # Imre's test stuff (some mock data with some real data features) (2026-10-22; needs formatting):
 
 $ # 1. Ran unit tests (hand-computed values + example lesion check)
