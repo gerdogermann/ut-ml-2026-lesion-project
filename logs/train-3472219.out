@@ -1,0 +1,326 @@
+Fri Nov  6 16:15:28 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-SXM2-32GB           Off |   00000000:3D:00.0 Off |                    0 |
+| N/A   31C    P0             41W /  300W |       0MiB /  32768MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+device cuda Tesla V100-SXM2-32GB
+args {'files': [], 'root': None, 'split_file': None, 'epochs': 50, 'batch_size': 16, 'lr': 0.001, 'workers': 4, 'out': 'runs', 'test': False, 'model': 'siamese', 'bl_mask': True, 'lambda_hm': 0.0, 'lambda_mask': 0.5, 'template_k': 5, 'prior_sd': 0.0, 'ema': 0.999, 'aug_root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug/lesions', 'rejitter_sd': 8.0, 'dist_warmup': 0, 'encoder': 'resenc', 'pretrained': None, 'coarse': False, 'enc_mask': False, 'freeze': 'none', 'enc_lr': None, 'warmup': 0.0, 'amp': True, 'bench': True, 'steps': 20}
+params 0.67 M, trainable 0.67 M
+bench batch=16: 311.3 ms/step, peak mem 5.22 GiB
+/gpfs/helios/projects/ml_project_lesion_tracking/ut-ml-2026-lesion-project/scripts/train.py:188: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  sched.step()
+device cuda Tesla V100-SXM2-32GB
+args {'files': ['/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/006f52e910_1.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/01161aaa0b_1.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/01161aaa0b_3.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/01161aaa0b_7.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/013d407166_1.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/013d407166_10.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/013d407166_11.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/013d407166_12.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/013d407166_13.npz', '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions/013d407166_2.npz'], 'root': None, 'split_file': None, 'epochs': 200, 'batch_size': 10, 'lr': 0.001, 'workers': 4, 'out': 'runs/3472219-overfit', 'test': False, 'model': 'siamese', 'bl_mask': True, 'lambda_hm': 0.0, 'lambda_mask': 0.5, 'template_k': 5, 'prior_sd': 0.0, 'ema': 0.999, 'aug_root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug/lesions', 'rejitter_sd': 8.0, 'dist_warmup': 0, 'encoder': 'resenc', 'pretrained': None, 'coarse': False, 'enc_mask': False, 'freeze': 'none', 'enc_lr': None, 'warmup': 0.0, 'amp': True, 'bench': False, 'steps': 20}
+params 0.67 M, trainable 0.67 M
+train 10 lesions, val 10 lesions
+epoch 1 loss 4.774 dist 3.073 mask 3.402 (1 s)  val: mean 24.58 mm, median 23.93 mm, CPM@10 0.0%  (zero baseline mean 10.71 mm)
+epoch 2 loss 4.774 dist 3.073 mask 3.402 (0 s)  val: mean 18.82 mm, median 17.19 mm, CPM@10 0.0%  (zero baseline mean 10.71 mm)
+epoch 3 loss 3.656 dist 2.352 mask 2.607 (0 s)  val: mean 16.91 mm, median 19.51 mm, CPM@10 40.0%  (zero baseline mean 10.71 mm)
+epoch 4 loss 3.119 dist 2.114 mask 2.011 (0 s)  val: mean 15.64 mm, median 13.46 mm, CPM@10 30.0%  (zero baseline mean 10.71 mm)
+epoch 5 loss 3.096 dist 1.955 mask 2.282 (0 s)  val: mean 15.64 mm, median 13.46 mm, CPM@10 30.0%  (zero baseline mean 10.71 mm)
+epoch 6 loss 3.096 dist 1.955 mask 2.282 (0 s)  val: mean 22.00 mm, median 19.83 mm, CPM@10 10.0%  (zero baseline mean 10.71 mm)
+epoch 7 loss 4.133 dist 2.750 mask 2.766 (0 s)  val: mean 18.63 mm, median 18.53 mm, CPM@10 30.0%  (zero baseline mean 10.71 mm)
+epoch 8 loss 3.678 dist 2.329 mask 2.697 (0 s)  val: mean 16.54 mm, median 16.79 mm, CPM@10 30.0%  (zero baseline mean 10.71 mm)
+epoch 9 loss 3.261 dist 2.068 mask 2.387 (0 s)  val: mean 13.49 mm, median 13.60 mm, CPM@10 40.0%  (zero baseline mean 10.71 mm)
+epoch 10 loss 2.670 dist 1.686 mask 1.969 (0 s)  val: mean 11.01 mm, median 10.49 mm, CPM@10 40.0%  (zero baseline mean 10.71 mm)
+epoch 11 loss 2.243 dist 1.376 mask 1.734 (0 s)  val: mean 8.92 mm, median 9.33 mm, CPM@10 50.0%  (zero baseline mean 10.71 mm)
+epoch 12 loss 1.874 dist 1.115 mask 1.518 (0 s)  val: mean 6.09 mm, median 7.35 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 13 loss 1.369 dist 0.761 mask 1.216 (0 s)  val: mean 4.83 mm, median 4.22 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 14 loss 1.183 dist 0.604 mask 1.158 (0 s)  val: mean 3.87 mm, median 3.20 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 15 loss 1.019 dist 0.484 mask 1.071 (0 s)  val: mean 3.12 mm, median 2.32 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 16 loss 0.847 dist 0.390 mask 0.914 (0 s)  val: mean 2.88 mm, median 2.23 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 17 loss 0.771 dist 0.360 mask 0.822 (0 s)  val: mean 2.64 mm, median 2.67 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 18 loss 0.696 dist 0.330 mask 0.731 (0 s)  val: mean 2.13 mm, median 1.83 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 19 loss 0.608 dist 0.267 mask 0.681 (0 s)  val: mean 1.80 mm, median 1.60 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 20 loss 0.524 dist 0.225 mask 0.597 (0 s)  val: mean 1.98 mm, median 1.57 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 21 loss 0.522 dist 0.247 mask 0.550 (0 s)  val: mean 1.80 mm, median 1.14 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 22 loss 0.488 dist 0.226 mask 0.523 (0 s)  val: mean 1.87 mm, median 1.78 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 23 loss 0.469 dist 0.234 mask 0.469 (0 s)  val: mean 1.68 mm, median 1.69 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 24 loss 0.429 dist 0.210 mask 0.437 (0 s)  val: mean 1.60 mm, median 0.92 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 25 loss 0.412 dist 0.201 mask 0.422 (0 s)  val: mean 1.26 mm, median 0.89 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 26 loss 0.346 dist 0.158 mask 0.376 (0 s)  val: mean 1.45 mm, median 1.16 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 27 loss 0.353 dist 0.182 mask 0.342 (0 s)  val: mean 1.07 mm, median 1.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 28 loss 0.288 dist 0.134 mask 0.307 (0 s)  val: mean 1.10 mm, median 0.82 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 29 loss 0.281 dist 0.139 mask 0.284 (0 s)  val: mean 0.89 mm, median 0.44 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 30 loss 0.239 dist 0.113 mask 0.253 (0 s)  val: mean 1.23 mm, median 0.66 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 31 loss 0.278 dist 0.155 mask 0.247 (0 s)  val: mean 0.96 mm, median 0.62 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 32 loss 0.230 dist 0.122 mask 0.216 (0 s)  val: mean 0.98 mm, median 0.80 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 33 loss 0.226 dist 0.124 mask 0.204 (0 s)  val: mean 0.93 mm, median 0.54 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 34 loss 0.214 dist 0.117 mask 0.193 (0 s)  val: mean 0.91 mm, median 0.72 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 35 loss 0.199 dist 0.115 mask 0.167 (0 s)  val: mean 0.86 mm, median 0.64 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 36 loss 0.189 dist 0.109 mask 0.160 (0 s)  val: mean 1.08 mm, median 0.76 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 37 loss 0.210 dist 0.136 mask 0.149 (0 s)  val: mean 0.99 mm, median 0.73 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 38 loss 0.193 dist 0.125 mask 0.135 (0 s)  val: mean 0.96 mm, median 0.66 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 39 loss 0.186 dist 0.121 mask 0.130 (0 s)  val: mean 0.86 mm, median 0.68 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 40 loss 0.161 dist 0.108 mask 0.105 (0 s)  val: mean 0.84 mm, median 0.51 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 41 loss 0.155 dist 0.107 mask 0.096 (0 s)  val: mean 0.87 mm, median 0.51 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 42 loss 0.158 dist 0.110 mask 0.095 (0 s)  val: mean 0.82 mm, median 0.53 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 43 loss 0.150 dist 0.103 mask 0.093 (0 s)  val: mean 0.58 mm, median 0.42 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 44 loss 0.116 dist 0.074 mask 0.083 (0 s)  val: mean 0.78 mm, median 0.46 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 45 loss 0.145 dist 0.099 mask 0.091 (0 s)  val: mean 0.66 mm, median 0.59 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 46 loss 0.126 dist 0.084 mask 0.084 (0 s)  val: mean 0.68 mm, median 0.40 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 47 loss 0.124 dist 0.086 mask 0.076 (0 s)  val: mean 0.61 mm, median 0.45 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 48 loss 0.114 dist 0.078 mask 0.072 (0 s)  val: mean 0.50 mm, median 0.48 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 49 loss 0.099 dist 0.064 mask 0.071 (0 s)  val: mean 0.66 mm, median 0.35 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 50 loss 0.119 dist 0.083 mask 0.072 (0 s)  val: mean 0.53 mm, median 0.45 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 51 loss 0.097 dist 0.067 mask 0.058 (0 s)  val: mean 0.54 mm, median 0.37 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 52 loss 0.095 dist 0.069 mask 0.054 (0 s)  val: mean 0.43 mm, median 0.33 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 53 loss 0.083 dist 0.057 mask 0.052 (0 s)  val: mean 0.38 mm, median 0.31 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 54 loss 0.077 dist 0.050 mask 0.054 (0 s)  val: mean 0.36 mm, median 0.21 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 55 loss 0.073 dist 0.047 mask 0.052 (0 s)  val: mean 0.43 mm, median 0.32 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 56 loss 0.082 dist 0.056 mask 0.052 (0 s)  val: mean 0.34 mm, median 0.27 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 57 loss 0.070 dist 0.045 mask 0.051 (0 s)  val: mean 0.34 mm, median 0.29 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 58 loss 0.067 dist 0.045 mask 0.046 (0 s)  val: mean 0.34 mm, median 0.27 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 59 loss 0.066 dist 0.044 mask 0.043 (0 s)  val: mean 0.36 mm, median 0.38 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 60 loss 0.069 dist 0.048 mask 0.043 (0 s)  val: mean 0.39 mm, median 0.30 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 61 loss 0.071 dist 0.051 mask 0.040 (0 s)  val: mean 0.32 mm, median 0.29 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 62 loss 0.063 dist 0.043 mask 0.039 (0 s)  val: mean 0.39 mm, median 0.29 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 63 loss 0.072 dist 0.051 mask 0.041 (0 s)  val: mean 0.31 mm, median 0.24 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 64 loss 0.060 dist 0.041 mask 0.038 (0 s)  val: mean 0.45 mm, median 0.33 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 65 loss 0.075 dist 0.058 mask 0.034 (0 s)  val: mean 0.40 mm, median 0.28 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 66 loss 0.069 dist 0.053 mask 0.032 (0 s)  val: mean 0.38 mm, median 0.31 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 67 loss 0.066 dist 0.051 mask 0.031 (0 s)  val: mean 0.24 mm, median 0.24 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 68 loss 0.049 dist 0.032 mask 0.032 (0 s)  val: mean 0.44 mm, median 0.34 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 69 loss 0.075 dist 0.057 mask 0.036 (0 s)  val: mean 0.38 mm, median 0.26 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 70 loss 0.067 dist 0.050 mask 0.034 (0 s)  val: mean 0.33 mm, median 0.33 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 71 loss 0.059 dist 0.044 mask 0.029 (0 s)  val: mean 0.34 mm, median 0.27 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 72 loss 0.059 dist 0.045 mask 0.028 (0 s)  val: mean 0.37 mm, median 0.25 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 73 loss 0.062 dist 0.048 mask 0.028 (0 s)  val: mean 0.34 mm, median 0.34 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 74 loss 0.060 dist 0.046 mask 0.029 (0 s)  val: mean 0.29 mm, median 0.19 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 75 loss 0.055 dist 0.039 mask 0.031 (0 s)  val: mean 0.33 mm, median 0.22 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 76 loss 0.059 dist 0.044 mask 0.030 (0 s)  val: mean 0.41 mm, median 0.31 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 77 loss 0.066 dist 0.053 mask 0.027 (0 s)  val: mean 0.34 mm, median 0.24 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 78 loss 0.058 dist 0.046 mask 0.025 (0 s)  val: mean 0.25 mm, median 0.19 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 79 loss 0.047 dist 0.034 mask 0.026 (0 s)  val: mean 0.25 mm, median 0.19 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 80 loss 0.048 dist 0.034 mask 0.028 (0 s)  val: mean 0.24 mm, median 0.19 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 81 loss 0.047 dist 0.033 mask 0.027 (0 s)  val: mean 0.25 mm, median 0.19 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 82 loss 0.047 dist 0.035 mask 0.025 (0 s)  val: mean 0.23 mm, median 0.14 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 83 loss 0.045 dist 0.032 mask 0.024 (0 s)  val: mean 0.22 mm, median 0.17 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 84 loss 0.043 dist 0.031 mask 0.025 (0 s)  val: mean 0.27 mm, median 0.18 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 85 loss 0.051 dist 0.037 mask 0.027 (0 s)  val: mean 0.23 mm, median 0.23 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 86 loss 0.046 dist 0.033 mask 0.026 (0 s)  val: mean 0.18 mm, median 0.16 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 87 loss 0.038 dist 0.027 mask 0.023 (0 s)  val: mean 0.22 mm, median 0.15 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 88 loss 0.043 dist 0.032 mask 0.023 (0 s)  val: mean 0.20 mm, median 0.18 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 89 loss 0.040 dist 0.029 mask 0.022 (0 s)  val: mean 0.15 mm, median 0.12 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 90 loss 0.035 dist 0.024 mask 0.023 (0 s)  val: mean 0.15 mm, median 0.12 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 91 loss 0.035 dist 0.024 mask 0.023 (0 s)  val: mean 0.14 mm, median 0.13 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 92 loss 0.034 dist 0.023 mask 0.022 (0 s)  val: mean 0.17 mm, median 0.17 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 93 loss 0.036 dist 0.025 mask 0.022 (0 s)  val: mean 0.11 mm, median 0.11 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 94 loss 0.030 dist 0.019 mask 0.022 (0 s)  val: mean 0.15 mm, median 0.16 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 95 loss 0.033 dist 0.023 mask 0.021 (0 s)  val: mean 0.14 mm, median 0.13 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 96 loss 0.033 dist 0.023 mask 0.021 (0 s)  val: mean 0.11 mm, median 0.12 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 97 loss 0.030 dist 0.019 mask 0.021 (0 s)  val: mean 0.14 mm, median 0.10 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 98 loss 0.032 dist 0.022 mask 0.019 (0 s)  val: mean 0.13 mm, median 0.09 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 99 loss 0.032 dist 0.022 mask 0.019 (0 s)  val: mean 0.10 mm, median 0.09 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 100 loss 0.029 dist 0.019 mask 0.020 (0 s)  val: mean 0.11 mm, median 0.09 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 101 loss 0.028 dist 0.019 mask 0.019 (0 s)  val: mean 0.12 mm, median 0.11 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 102 loss 0.030 dist 0.021 mask 0.018 (0 s)  val: mean 0.14 mm, median 0.10 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 103 loss 0.031 dist 0.022 mask 0.018 (0 s)  val: mean 0.10 mm, median 0.09 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 104 loss 0.027 dist 0.018 mask 0.018 (0 s)  val: mean 0.11 mm, median 0.09 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 105 loss 0.029 dist 0.020 mask 0.018 (0 s)  val: mean 0.10 mm, median 0.08 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 106 loss 0.027 dist 0.018 mask 0.017 (0 s)  val: mean 0.12 mm, median 0.10 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 107 loss 0.029 dist 0.021 mask 0.017 (0 s)  val: mean 0.08 mm, median 0.08 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 108 loss 0.025 dist 0.016 mask 0.017 (0 s)  val: mean 0.12 mm, median 0.09 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 109 loss 0.029 dist 0.020 mask 0.017 (0 s)  val: mean 0.10 mm, median 0.06 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 110 loss 0.027 dist 0.019 mask 0.016 (0 s)  val: mean 0.08 mm, median 0.07 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 111 loss 0.025 dist 0.017 mask 0.016 (0 s)  val: mean 0.06 mm, median 0.06 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 112 loss 0.023 dist 0.015 mask 0.016 (0 s)  val: mean 0.08 mm, median 0.07 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 113 loss 0.025 dist 0.017 mask 0.016 (0 s)  val: mean 0.06 mm, median 0.06 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 114 loss 0.023 dist 0.015 mask 0.015 (0 s)  val: mean 0.07 mm, median 0.06 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 115 loss 0.024 dist 0.017 mask 0.016 (0 s)  val: mean 0.05 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 116 loss 0.022 dist 0.014 mask 0.015 (0 s)  val: mean 0.06 mm, median 0.06 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 117 loss 0.023 dist 0.015 mask 0.015 (0 s)  val: mean 0.05 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 118 loss 0.022 dist 0.015 mask 0.015 (0 s)  val: mean 0.06 mm, median 0.05 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 119 loss 0.022 dist 0.015 mask 0.015 (0 s)  val: mean 0.06 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 120 loss 0.022 dist 0.015 mask 0.015 (0 s)  val: mean 0.06 mm, median 0.05 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 121 loss 0.022 dist 0.015 mask 0.014 (0 s)  val: mean 0.05 mm, median 0.04 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 122 loss 0.022 dist 0.015 mask 0.014 (0 s)  val: mean 0.04 mm, median 0.04 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 123 loss 0.021 dist 0.014 mask 0.014 (0 s)  val: mean 0.06 mm, median 0.04 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 124 loss 0.022 dist 0.015 mask 0.014 (0 s)  val: mean 0.05 mm, median 0.04 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 125 loss 0.021 dist 0.014 mask 0.014 (0 s)  val: mean 0.05 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 126 loss 0.021 dist 0.014 mask 0.014 (0 s)  val: mean 0.04 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 127 loss 0.021 dist 0.014 mask 0.014 (0 s)  val: mean 0.05 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 128 loss 0.022 dist 0.015 mask 0.014 (0 s)  val: mean 0.04 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 129 loss 0.021 dist 0.014 mask 0.013 (0 s)  val: mean 0.03 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 130 loss 0.020 dist 0.014 mask 0.013 (0 s)  val: mean 0.03 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 131 loss 0.020 dist 0.014 mask 0.013 (0 s)  val: mean 0.03 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 132 loss 0.020 dist 0.013 mask 0.013 (0 s)  val: mean 0.03 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 133 loss 0.020 dist 0.014 mask 0.013 (0 s)  val: mean 0.03 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 134 loss 0.020 dist 0.013 mask 0.013 (0 s)  val: mean 0.04 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 135 loss 0.020 dist 0.014 mask 0.013 (0 s)  val: mean 0.03 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 136 loss 0.020 dist 0.014 mask 0.013 (0 s)  val: mean 0.04 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 137 loss 0.020 dist 0.014 mask 0.013 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 138 loss 0.019 dist 0.013 mask 0.013 (0 s)  val: mean 0.02 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 139 loss 0.019 dist 0.013 mask 0.013 (0 s)  val: mean 0.02 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 140 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 141 loss 0.019 dist 0.013 mask 0.013 (0 s)  val: mean 0.03 mm, median 0.03 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 142 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 143 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 144 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 145 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 146 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 147 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 148 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 149 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.02 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 150 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.02 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 151 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 152 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 153 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 154 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 155 loss 0.018 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 156 loss 0.019 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 157 loss 0.018 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 158 loss 0.018 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 159 loss 0.018 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 160 loss 0.018 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 161 loss 0.018 dist 0.013 mask 0.012 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 162 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 163 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 164 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 165 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 166 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 167 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 168 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 169 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 170 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 171 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 172 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 173 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 174 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 175 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 176 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 177 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 178 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 179 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 180 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 181 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 182 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 183 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 184 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 185 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.01 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 186 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 187 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 188 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 189 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.01 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 190 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 191 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 192 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 193 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 194 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 195 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 196 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 197 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 198 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 199 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+epoch 200 loss 0.018 dist 0.013 mask 0.011 (0 s)  val: mean 0.00 mm, median 0.00 mm, CPM@10 100.0%  (zero baseline mean 10.71 mm)
+best val mean error 0.00 mm, checkpoint runs/3472219-overfit/best.pt
+device cuda Tesla V100-SXM2-32GB
+args {'files': [], 'root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions', 'split_file': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/split.json', 'epochs': 50, 'batch_size': 16, 'lr': 0.0003, 'workers': 8, 'out': 'runs/3472219', 'test': False, 'model': 'siamese', 'bl_mask': True, 'lambda_hm': 0.0, 'lambda_mask': 0.5, 'template_k': 5, 'prior_sd': 0.0, 'ema': 0.999, 'aug_root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug/lesions', 'rejitter_sd': 8.0, 'dist_warmup': 0, 'encoder': 'resenc', 'pretrained': None, 'coarse': False, 'enc_mask': False, 'freeze': 'none', 'enc_lr': None, 'warmup': 0.0, 'amp': True, 'bench': False, 'steps': 20}
+params 0.67 M, trainable 0.67 M
+train 10769 lesions, val 207 lesions
+epoch 1 loss 2.228 dist 1.524 mask 1.408 (222 s)  val: mean 12.65 mm, median 11.69 mm, CPM@10 43.5%, has_propagated mean 12.49 mm  (zero baseline mean 12.47 mm)
+epoch 2 loss 1.556 dist 1.134 mask 0.843 (219 s)  val: mean 9.90 mm, median 7.67 mm, CPM@10 58.9%, has_propagated mean 9.84 mm  (zero baseline mean 12.47 mm)
+epoch 3 loss 1.340 dist 1.002 mask 0.676 (219 s)  val: mean 9.03 mm, median 6.28 mm, CPM@10 65.7%, has_propagated mean 8.85 mm  (zero baseline mean 12.47 mm)
+epoch 4 loss 1.195 dist 0.917 mask 0.556 (219 s)  val: mean 8.40 mm, median 5.26 mm, CPM@10 70.5%, has_propagated mean 8.09 mm  (zero baseline mean 12.47 mm)
+epoch 5 loss 1.106 dist 0.859 mask 0.494 (218 s)  val: mean 8.03 mm, median 5.04 mm, CPM@10 71.5%, has_propagated mean 7.75 mm  (zero baseline mean 12.47 mm)
+epoch 6 loss 1.039 dist 0.816 mask 0.447 (219 s)  val: mean 7.88 mm, median 4.59 mm, CPM@10 72.5%, has_propagated mean 7.62 mm  (zero baseline mean 12.47 mm)
+epoch 7 loss 0.985 dist 0.781 mask 0.409 (219 s)  val: mean 7.69 mm, median 4.15 mm, CPM@10 73.4%, has_propagated mean 7.47 mm  (zero baseline mean 12.47 mm)
+epoch 8 loss 0.926 dist 0.740 mask 0.372 (218 s)  val: mean 7.35 mm, median 4.16 mm, CPM@10 75.4%, has_propagated mean 7.12 mm  (zero baseline mean 12.47 mm)
+epoch 9 loss 0.915 dist 0.738 mask 0.355 (218 s)  val: mean 7.34 mm, median 3.92 mm, CPM@10 74.4%, has_propagated mean 7.08 mm  (zero baseline mean 12.47 mm)
+epoch 10 loss 0.880 dist 0.714 mask 0.332 (218 s)  val: mean 7.09 mm, median 3.84 mm, CPM@10 73.4%, has_propagated mean 6.81 mm  (zero baseline mean 12.47 mm)
+epoch 11 loss 0.857 dist 0.697 mask 0.320 (218 s)  val: mean 6.82 mm, median 3.70 mm, CPM@10 75.8%, has_propagated mean 6.58 mm  (zero baseline mean 12.47 mm)
+epoch 12 loss 0.812 dist 0.666 mask 0.292 (218 s)  val: mean 6.88 mm, median 3.70 mm, CPM@10 75.4%, has_propagated mean 6.66 mm  (zero baseline mean 12.47 mm)
+epoch 13 loss 0.771 dist 0.638 mask 0.267 (218 s)  val: mean 6.75 mm, median 3.48 mm, CPM@10 76.3%, has_propagated mean 6.55 mm  (zero baseline mean 12.47 mm)
+epoch 14 loss 0.744 dist 0.622 mask 0.243 (218 s)  val: mean 6.80 mm, median 3.55 mm, CPM@10 77.3%, has_propagated mean 6.66 mm  (zero baseline mean 12.47 mm)
+epoch 15 loss 0.725 dist 0.605 mask 0.241 (218 s)  val: mean 6.79 mm, median 3.67 mm, CPM@10 75.4%, has_propagated mean 6.71 mm  (zero baseline mean 12.47 mm)
+epoch 16 loss 0.703 dist 0.592 mask 0.223 (218 s)  val: mean 6.70 mm, median 3.33 mm, CPM@10 76.8%, has_propagated mean 6.63 mm  (zero baseline mean 12.47 mm)
+epoch 17 loss 0.678 dist 0.574 mask 0.210 (218 s)  val: mean 6.61 mm, median 3.56 mm, CPM@10 78.3%, has_propagated mean 6.55 mm  (zero baseline mean 12.47 mm)
+epoch 18 loss 0.658 dist 0.560 mask 0.195 (218 s)  val: mean 6.60 mm, median 3.37 mm, CPM@10 78.7%, has_propagated mean 6.56 mm  (zero baseline mean 12.47 mm)
+epoch 19 loss 0.632 dist 0.542 mask 0.179 (218 s)  val: mean 6.64 mm, median 3.40 mm, CPM@10 77.8%, has_propagated mean 6.61 mm  (zero baseline mean 12.47 mm)
+epoch 20 loss 0.624 dist 0.537 mask 0.175 (218 s)  val: mean 6.74 mm, median 3.31 mm, CPM@10 76.8%, has_propagated mean 6.72 mm  (zero baseline mean 12.47 mm)
+epoch 21 loss 0.602 dist 0.523 mask 0.157 (218 s)  val: mean 6.72 mm, median 3.56 mm, CPM@10 77.3%, has_propagated mean 6.71 mm  (zero baseline mean 12.47 mm)
+epoch 22 loss 0.594 dist 0.518 mask 0.153 (218 s)  val: mean 6.54 mm, median 3.57 mm, CPM@10 77.8%, has_propagated mean 6.51 mm  (zero baseline mean 12.47 mm)
+epoch 23 loss 0.566 dist 0.495 mask 0.143 (218 s)  val: mean 6.41 mm, median 3.32 mm, CPM@10 79.2%, has_propagated mean 6.37 mm  (zero baseline mean 12.47 mm)
+epoch 24 loss 0.555 dist 0.489 mask 0.132 (219 s)  val: mean 6.45 mm, median 3.20 mm, CPM@10 78.7%, has_propagated mean 6.41 mm  (zero baseline mean 12.47 mm)
+epoch 25 loss 0.541 dist 0.477 mask 0.128 (219 s)  val: mean 6.39 mm, median 3.10 mm, CPM@10 80.7%, has_propagated mean 6.36 mm  (zero baseline mean 12.47 mm)
+epoch 26 loss 0.529 dist 0.471 mask 0.116 (218 s)  val: mean 6.34 mm, median 3.07 mm, CPM@10 78.7%, has_propagated mean 6.33 mm  (zero baseline mean 12.47 mm)
+epoch 27 loss 0.512 dist 0.457 mask 0.109 (218 s)  val: mean 6.36 mm, median 2.98 mm, CPM@10 78.7%, has_propagated mean 6.34 mm  (zero baseline mean 12.47 mm)
+epoch 28 loss 0.500 dist 0.448 mask 0.102 (218 s)  val: mean 6.23 mm, median 2.92 mm, CPM@10 78.3%, has_propagated mean 6.22 mm  (zero baseline mean 12.47 mm)
+epoch 29 loss 0.492 dist 0.442 mask 0.099 (218 s)  val: mean 6.09 mm, median 2.95 mm, CPM@10 82.1%, has_propagated mean 6.07 mm  (zero baseline mean 12.47 mm)
+epoch 30 loss 0.472 dist 0.426 mask 0.091 (218 s)  val: mean 6.12 mm, median 2.95 mm, CPM@10 81.2%, has_propagated mean 6.08 mm  (zero baseline mean 12.47 mm)
+epoch 31 loss 0.462 dist 0.420 mask 0.083 (218 s)  val: mean 6.19 mm, median 3.08 mm, CPM@10 80.7%, has_propagated mean 6.17 mm  (zero baseline mean 12.47 mm)
+epoch 32 loss 0.459 dist 0.418 mask 0.083 (218 s)  val: mean 6.23 mm, median 2.99 mm, CPM@10 81.2%, has_propagated mean 6.19 mm  (zero baseline mean 12.47 mm)
+epoch 33 loss 0.444 dist 0.407 mask 0.075 (218 s)  val: mean 6.24 mm, median 2.94 mm, CPM@10 80.7%, has_propagated mean 6.22 mm  (zero baseline mean 12.47 mm)
+epoch 34 loss 0.436 dist 0.399 mask 0.074 (218 s)  val: mean 6.23 mm, median 2.98 mm, CPM@10 79.2%, has_propagated mean 6.20 mm  (zero baseline mean 12.47 mm)
+epoch 35 loss 0.427 dist 0.391 mask 0.071 (218 s)  val: mean 6.26 mm, median 3.01 mm, CPM@10 79.7%, has_propagated mean 6.25 mm  (zero baseline mean 12.47 mm)
+epoch 36 loss 0.421 dist 0.389 mask 0.064 (218 s)  val: mean 6.37 mm, median 3.01 mm, CPM@10 79.2%, has_propagated mean 6.36 mm  (zero baseline mean 12.47 mm)
+epoch 37 loss 0.412 dist 0.380 mask 0.063 (218 s)  val: mean 6.48 mm, median 3.01 mm, CPM@10 77.3%, has_propagated mean 6.47 mm  (zero baseline mean 12.47 mm)
+epoch 38 loss 0.409 dist 0.378 mask 0.062 (218 s)  val: mean 6.52 mm, median 2.88 mm, CPM@10 77.3%, has_propagated mean 6.52 mm  (zero baseline mean 12.47 mm)
+epoch 39 loss 0.403 dist 0.374 mask 0.059 (218 s)  val: mean 6.36 mm, median 2.86 mm, CPM@10 78.7%, has_propagated mean 6.35 mm  (zero baseline mean 12.47 mm)
+epoch 40 loss 0.398 dist 0.369 mask 0.058 (218 s)  val: mean 6.31 mm, median 2.93 mm, CPM@10 78.3%, has_propagated mean 6.30 mm  (zero baseline mean 12.47 mm)
+epoch 41 loss 0.393 dist 0.365 mask 0.056 (218 s)  val: mean 6.36 mm, median 2.85 mm, CPM@10 78.3%, has_propagated mean 6.37 mm  (zero baseline mean 12.47 mm)
+epoch 42 loss 0.389 dist 0.361 mask 0.055 (218 s)  val: mean 6.38 mm, median 2.87 mm, CPM@10 77.8%, has_propagated mean 6.39 mm  (zero baseline mean 12.47 mm)
+epoch 43 loss 0.383 dist 0.358 mask 0.051 (217 s)  val: mean 6.39 mm, median 2.85 mm, CPM@10 77.8%, has_propagated mean 6.39 mm  (zero baseline mean 12.47 mm)
+epoch 44 loss 0.384 dist 0.358 mask 0.051 (217 s)  val: mean 6.40 mm, median 2.91 mm, CPM@10 77.3%, has_propagated mean 6.38 mm  (zero baseline mean 12.47 mm)
+epoch 45 loss 0.382 dist 0.356 mask 0.052 (217 s)  val: mean 6.36 mm, median 2.87 mm, CPM@10 78.3%, has_propagated mean 6.33 mm  (zero baseline mean 12.47 mm)
+epoch 46 loss 0.381 dist 0.355 mask 0.051 (217 s)  val: mean 6.36 mm, median 2.89 mm, CPM@10 78.7%, has_propagated mean 6.35 mm  (zero baseline mean 12.47 mm)
+epoch 47 loss 0.378 dist 0.352 mask 0.051 (217 s)  val: mean 6.38 mm, median 2.90 mm, CPM@10 77.8%, has_propagated mean 6.36 mm  (zero baseline mean 12.47 mm)
+epoch 48 loss 0.376 dist 0.351 mask 0.050 (217 s)  val: mean 6.39 mm, median 2.90 mm, CPM@10 77.3%, has_propagated mean 6.38 mm  (zero baseline mean 12.47 mm)
+epoch 49 loss 0.376 dist 0.351 mask 0.051 (217 s)  val: mean 6.40 mm, median 2.90 mm, CPM@10 77.8%, has_propagated mean 6.39 mm  (zero baseline mean 12.47 mm)
+epoch 50 loss 0.376 dist 0.351 mask 0.050 (217 s)  val: mean 6.41 mm, median 2.89 mm, CPM@10 78.3%, has_propagated mean 6.40 mm  (zero baseline mean 12.47 mm)
+best val mean error 6.09 mm, checkpoint runs/3472219/best.pt
+val: 207 lesions, mean 6.09 mm, median 2.95 mm; wrote runs/3472219/worst/errors.csv, heatmaps.npz (top 20)
+       lesion  err_mm      tx      ty      tz      px      py      pz  fu_radius_mm  peak_prob  has_propagated  err_local  err_tta  err_tta_local
+3988c7f88e_20  36.316   5.539 -12.743   0.193 -18.372  14.395  -3.075        32.562      0.118            True     45.201   33.577         33.980
+e2c0be2456_31  35.171  10.391  20.851  -5.883   1.333 -12.286   1.658         9.951      0.114            True     32.503   29.548         30.223
+ eda80a3d5b_3  34.945  -3.147   0.453 -17.388   8.366   3.007  15.507         3.767      0.276            True     35.542   31.489         35.307
+ 85d8ce590a_5  31.190  -9.345  -2.916  -1.051  16.272  14.524  -4.576        11.068      0.101            True     42.424   31.000         37.236
+ e2c0be2456_4  29.242  14.065   4.251  -1.786   3.245  24.595 -19.790        10.072      0.499            True     31.038   24.809         31.417
+3988c7f88e_17  29.171   4.576   8.678  -0.652  12.901 -18.821   4.388         7.328      0.244            True     34.524   24.071         26.307
+e2c0be2456_11  25.603  -6.719  24.000  -0.118 -17.843   6.001  14.297        10.103      0.179            True     33.523   15.567         13.379
+e2c0be2456_14  24.659  -4.980   7.233   7.047 -13.770  -9.102  -9.200        16.070      0.051            True     29.750   23.154         28.158
+ e2c0be2456_5  24.355  -4.076  13.486   0.051 -11.978  -8.651  -6.326        16.685      0.087            True     33.926   17.412         15.027
+e2c0be2456_21  23.227  -2.500  14.004  -8.049   0.764   1.022  10.933        15.673      0.090            True     38.238   15.599         18.883
+3988c7f88e_44  21.369   3.026   6.559  -0.413  -0.914   2.290 -20.977        32.593      0.179            True     25.143    5.926          3.906
+e2c0be2456_10  20.875   4.874  -1.808   1.571   7.123 -11.912 -16.556         9.225      0.059            True     33.436   18.194         19.728
+e2c0be2456_16  19.416  -0.753   1.311   4.538  -3.291   6.842 -13.900         8.388      0.075            True      8.971   14.972          7.640
+ 7ef605fc8d_1  19.131   2.306   1.185  -0.456 -10.388 -13.128  -0.525        16.526      0.112            True     36.546   17.623         28.604
+1534b76d32_13  19.041   5.598   1.320   2.071  -9.964   9.938  -4.720         2.581      0.659            True     19.046   18.965         18.384
+ 84150c44ef_2  18.505   0.722   3.296   4.399   4.384   9.360 -12.696        31.335      0.144            True     23.991   15.023         17.296
+e2c0be2456_29  18.024  -0.460   8.997  -1.904  -9.096  -6.411   1.689         9.284      0.097            True      9.693   12.071         10.013
+e2c0be2456_28  17.103   5.464 -19.292 -12.063   8.485  -2.544 -10.376        12.386      0.064            True     20.626   19.591         23.261
+ 2ba100d604_4  16.728  -0.062   4.295  -5.394   5.929  -7.704 -15.392         1.969      0.238            True     15.675   15.371         16.350
+ e2c0be2456_7  15.989 -12.437  15.432   2.074 -14.000  -0.144   5.330        20.100      0.068           False      4.330   15.421         14.766
+
+readout (local = +-8 mm around the peak; per-patient = mean of 28 patient means):
+  plain      mean 6.09 mm, median 2.95 mm, CPM@10 82.1%, per-patient mean 5.09 mm
+  local      mean 7.47 mm, median 2.79 mm, CPM@10 79.7%, per-patient mean 7.47 mm
+  tta        mean 5.55 mm, median 2.69 mm, CPM@10 82.6%, per-patient mean 4.91 mm
+  tta_local  mean 6.08 mm, median 2.60 mm, CPM@10 80.7%, per-patient mean 5.79 mm
+
+worst patients (plain readout):
+            count  mean  median
+lesion                         
+7ef605fc8d      1 19.13   19.13
+84150c44ef      2 12.07   12.07
+e2c0be2456     50  9.63    7.16
+85d8ce590a      6  8.86    2.50
+ebf11048b1      3  7.65    4.07
+38b18881fc      2  7.63    7.63
+eda80a3d5b      7  7.10    2.61
+f2fc990265     12  6.67    5.84
