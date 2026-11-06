@@ -116,6 +116,8 @@ def main():
     ap.add_argument("--ema", type=float, default=0.0,
                     help="validate and save an exponential moving average of the weights, e.g. 0.999; 0 = off")
     ap.add_argument("--aug-root", help="extra train-split npz dir (augment_team2.sbatch output)")
+    ap.add_argument("--no-flips", action="store_true",
+                    help="disable random training flips; does not disable rotations stored in --aug-root")
     ap.add_argument("--rejitter-sd", type=float, default=0.0,
                     help="train split only: fresh FU offset each load, mm sd per axis (needs fu_big); 0 = stored jitter")
     ap.add_argument("--dist-warmup", type=int, default=0,
@@ -162,7 +164,8 @@ def main():
         train_ds = val_ds = load_files(a.files, masks)
     else:
         roots = [a.root, a.aug_root] if a.aug_root else a.root
-        train_ds = LesionDataset(roots, a.split_file, "train", augment=True, masks=masks, rejitter_sd=a.rejitter_sd)
+        train_ds = LesionDataset(roots, a.split_file, "train", augment=not a.no_flips,
+                                 masks=masks, rejitter_sd=a.rejitter_sd)
         val_ds = LesionDataset(a.root, a.split_file, "val", masks=masks)
     print(f"train {len(train_ds)} lesions, val {len(val_ds)} lesions")
     loader = lambda ds, shuffle: DataLoader(ds, a.batch_size, shuffle=shuffle, num_workers=0 if a.files else a.workers,

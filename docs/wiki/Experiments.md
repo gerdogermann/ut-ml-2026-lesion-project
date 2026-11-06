@@ -1,5 +1,14 @@
 # Experiments
 
+Joint experiment (branch `karl-joint-alignment-localisation`): implementation ready;
+cluster run pending. Compare dataset propagation and Team 1's hybrid centres,
+each alone and with frozen Team 2 run 6b (plain / flip TTA), on the same val cohort.
+See `docs/Joint-experiment.md` and `scripts/evaluate_joint.sbatch`. No joint accuracy
+result has been measured yet.
+Restart without an old checkpoint: `sbatch scripts/train_joint.sbatch` trains a
+fresh run 6b model, then evaluates its new best checkpoint automatically. This
+restart has not been submitted or measured yet.
+
 | # | Date | Issue | Model | Config | Split | Metric(s) | Result | Notes |
 |---|------|-------|-------|--------|-------|-----------|--------|-------|
 | 0 | 2026-10-22 | | LesionNet (0.32 M params) | scripts/train.sbatch | train only | mean error (mm) | 2 files: 0.00 mm (zero baseline 14.04). 100 train files, 2000 steps, bs 8: 2.41 mm (zero baseline 4.78) | Overfit sanity check, not a real result. 100-file run not yet fully overfit; try smaller smooth-L1 beta / LR decay. Log: logs/train-2941892.out |
@@ -21,6 +30,29 @@
 | 16 | 2026-11-06 | | Same architecture as row 15, random init, all trainable (Team 2 run P3-rand) | `submit_pretrained.sh` (job 3472221): row 11 flags + `--encoder resenc --coarse --warmup 0.1 --amp`, lr 3e-4 for all | as row 10 | as row 10 | Best epoch 18: plain 4.57 / 2.51 mm, CPM@10 88.9%, per-patient 4.00. **TTA 4.44 / 2.54 mm**, 88.4%, per-patient 3.88. Epoch 50: 5.38 / 2.41 | **Best so far.** vs row 11: TTA −1.14 mm, CI [−1.85, −0.56]; 74 lesions better by > 1 mm, 26 worse. vs row 14: −1.12 mm, CI [−1.68, −0.44], so the gain comes from the 8 mm map. Gains on small lesions (r < 5 mm: 4.29 → 2.94) and on patient 3988c7f88e (7.10 → 4.75); none on e2c0be2456 (6.74 → 6.75, 24% of val) or on lesions with r > 20 mm (11.7 → 11.6). 19 lesions are > 10 mm in both row 11 and this run. Peak prob < 0.2: 38 lesions, mean 9.40 mm vs 3.32. Overfits early: 25–30 epochs are enough. 4.00 M params. Bench 365 ms/step, 5.84 GiB; 255 s/epoch. Log: `logs/train-3472221.out`; per-lesion errors `runs/3472221/worst/errors.csv` |
 | 17 | 2026-11-06 | | Row 15 + BL mask as zero-initialised 2nd stem channel (Team 2 run P4) | `submit_pretrained.sh` (job 3472222): row 15 flags + `--enc-mask` | as row 10 | as row 10 | Best epoch 13: plain 4.67 / 2.70 mm, CPM@10 86.0%, per-patient 4.24. TTA 4.45 / 2.51 mm, 89.9%, per-patient 4.00. Epoch 50: 5.15 / 2.45 | Not a test of the mask channel: `--freeze early` also freezes the stem, so the mask weights stay 0 and the model computes the same function as row 15. It is a second seed of row 15: −0.11 mm, CI [−0.60, +0.51], best epoch 13 vs 28. That is the run-to-run noise. Mean of the plain predictions of rows 15–17: 4.27 / 2.39 mm (seed ensemble, no TTA). Retest with a trainable stem. Log: `logs/train-3472222.out` |
 
+
+## Planned: run 6b without training flips
+
+Prepared 2026-11-05; not submitted and no results yet.
+
+- Question: does preserving anatomical orientation during training improve localisation?
+- Change from run 6b (job 3288501): disable random flips with `--no-flips`.
+- Keep the same original and offline rotated/scaled train data, fresh 8 mm jitter,
+  BL mask, mask-loss weight 0.5, EMA 0.999, template size 5, batch size 16,
+  learning rate 3e-4, 50 epochs and existing fixed patient split. Training seed remains 0.
+- The small offline rotations (up to 15 degrees) remain enabled; no mirror flips are used.
+- Primary comparison: best **unflipped validation** mean/median error and CPM@10,
+  against run 6b's **5.81 / 3.79 mm and 84.1%**. Do not compare plain predictions
+  directly with run 6b's TTA result. Test split is not used.
+- Launch from the cluster repo root:
+
+  ```bash
+  mkdir -p logs
+  sbatch scripts/train_siamese_no_flips.sbatch
+  ```
+
+  Save the returned job ID here with the result. The job logs the Git commit,
+  working-tree status and full training arguments; checkpoint: `runs/<jobid>/best.pt`.
 
 # Imre's test stuff (some mock data with some real data features) (2026-10-22; needs formatting):
 
@@ -82,3 +114,27 @@ Train mean target_mm (x, y, z): [ 0.117 -0.945  0.661] mm
 | test (mock) | Baseline B (Train Mean) | has_propagated=True | 53 | 5.50 | 5.45 | 2.70 | 2.98 | 2.47 | 43.4% | 96.2% | 100.0% |
 | test (mock) | Baseline B (Train Mean) | has_propagated=False | 7 | 23.47 | 22.46 | 12.74 | 10.92 | 10.82 | 0.0% | 14.3% | 28.6% |
 $ 
+
+
+## Team 1 results
+
+
+All rows: every eligible lesion (`lesions.csv`, 2669 = the 2502 npz lesions + 167 that `skip_outside_window` dropped),
+error = ‖window centre − true FU centre‖ in mm, `scripts/team1_eval.py`. Val = 208 lesions / 28 patients; train =
+2173 / 227. Nothing is trained; settings are chosen on train, methods compared on val, test not used yet.
+In window@56 = every axis within 56 mm, i.e. the lesion survives `preprocess.py`. Full table:
+`/gpfs/helios/projects/ml_project_lesion_tracking/data/team1/eval_all.md`.
+
+| # | Date | Method | Code / job | Val mean / median (mm) | Val CPM@10 / CPM@20 | Val in window | Train median, in window | Notes |
+|---|------|--------|------------|------------------------|---------------------|---------------|-------------------------|-------|
+| T1-0 | 2026-11-03 | Same mm coordinates as BL | `team1_lesions.py` | 1094.64 / 984.11 | 0.0% / 0.0% | 6.7% | 575.69, 4.9% | BL and FU patient coordinates are unrelated (origins ~1 m apart). Not a usable baseline: every method needs a registration step |
+| T1-1 | 2026-11-03 | `cog_propagated` from the dataset (**the bar**), BL position when missing | `team1_lesions.py` | 142.35 / 11.44 | 46.2% / 63.5% | 89.4% | 4.82, 93.8% | Precise when it works (train median 4.8 mm), but 101 lesions have no propagated point (BL fallback, ~1 m) and some are far off: ~11% of val lesions fall outside the window |
+| T1-2a | 2026-11-03 | Rigid whole-scan registration | `team1_register.py`, job 3330170 | 17.02 / 12.97 | 40.9% / 68.3% | 99.5% | 9.08, 98.2% | SimpleITK, Mattes MI in a body mask, regular-step GD, 8→4→2 mm; start = best of identity, image centres, body centroids ± z sweep of 400 mm. 2 train pairs failed (46ba9f2a69, 6cdd60ea00): their 2 lesions scored at BL in 2a–2c and 4 |
+| T1-2b | 2026-11-03 | Affine whole-scan registration | same | 15.42 / 11.58 | 45.2% / 75.5% | 99.5% | 9.33, 98.0% | From rigid |
+| T1-2c | 2026-11-03 | Affine + rigid correction in a 160 mm cube around each lesion | same | **12.28** / 9.36 | 53.8% / 85.1% | **100%** | 6.54, 98.1% | Best val mean and in-window together. **Hand-over candidate** for `centres.csv` |
+| T1-3a | 2026-11-03 | Organ shift: BL→FU centroid shift of the host organ, else nearest | `team1_organs.py`, jobs 3330252 (TotalSegmentator `--fast`) + 3330695 | 12.39 / 10.59 | 45.7% / **85.6%** | **100%** | 7.65, 98.7% | 1912 / 2669 lesions moved by their host organ; 5 had no usable organ (BL kept). Organs cut by the scan range are never used |
+| T1-3b | 2026-11-03 | Organ affine: K nearest organs, weights exp(−d/σ), ridge λ towards a pure shift | same | 13.40 / 10.20 | 48.1% / 80.3% | **100%** | 7.02, 98.6% | K=8, σ=50 mm, λ=10⁴, picked on train from 12 settings (best train median and CPM@10). λ=10⁴ beat λ=10² for every K and σ: a near-pure weighted shift beats a full local affine |
+| T1-4 | 2026-11-03 | B-spline (8³ control grid) on top of affine | `team1_register.py`, job 3330170 | 13.56 / 10.71 | 47.6% / 82.2% | 99.5% | 6.53, 97.7% | Ties local on train, slightly behind on val |
+| T1-5a | 2026-11-03 | uniGradICON, network only | `team1_unigradicon.py`, job 3330685 | 45.41 / 11.00 | 46.6% / 63.9% | 81.7% | 8.69, 86.5% | Pretrained, no training. Heavy tail: ~18% of val lesions outside the window |
+| T1-5b | 2026-11-03 | uniGradICON + 50 instance-optimisation steps | jobs 3330731 (4-way array) + 3330738 | 38.77 / **7.73** | **56.7%** / 71.2% | 87.0% | 5.49, 91.0% | Best median and CPM@10 of all methods, but 13% of val lesions outside the window: either very close or badly off. Next: use it only where it agrees with T1-2c |
+| T1-5c | 2026-11-03 | `ugi_io50` gated by `local` ($\tau=25\text{ mm}$), fallback to `local` | `team1_combine.py` | **10.75** / **6.71** | **63.0%** / **86.1%** | **100%** | 5.08, 97.7% | Uses `ugi_io50` when within 25 mm of `local` (75.5% of val lesions), else `local`. Best val mean, median, CPM@10, CPM@20, and 100% in-window together. **Selected for `centres.csv` hand-over** |

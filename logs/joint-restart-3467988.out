@@ -1,0 +1,83 @@
+Input: 2159 train patches in /gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2
+Input: 207 val patches in /gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2
+Input: 8610 train patches in /gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug
+Alignment: 208 validation centres
+Training from scratch; new checkpoint: runs/joint-restart-3467988/model/best.pt
+device cuda Tesla V100-SXM2-32GB
+args {'files': [], 'root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/lesions', 'split_file': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/split.json', 'epochs': 50, 'batch_size': 16, 'lr': 0.0003, 'workers': 8, 'out': 'runs/joint-restart-3467988/model', 'test': False, 'model': 'siamese', 'bl_mask': True, 'lambda_hm': 0.0, 'lambda_mask': 0.5, 'template_k': 5, 'prior_sd': 0.0, 'ema': 0.999, 'aug_root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug/lesions', 'no_flips': False, 'rejitter_sd': 8.0, 'dist_warmup': 0, 'bench': False, 'steps': 20}
+params 0.12 M
+train 10769 lesions, val 207 lesions
+epoch 1 loss 1.680 dist 1.185 mask 0.990 (220 s)  val: mean 10.15 mm, median 9.31 mm, CPM@10 56.0%, has_propagated mean 10.09 mm  (zero baseline mean 12.47 mm)
+epoch 2 loss 1.296 dist 0.997 mask 0.597 (213 s)  val: mean 8.70 mm, median 8.12 mm, CPM@10 66.2%, has_propagated mean 8.67 mm  (zero baseline mean 12.47 mm)
+epoch 3 loss 1.144 dist 0.907 mask 0.474 (213 s)  val: mean 8.17 mm, median 7.16 mm, CPM@10 72.0%, has_propagated mean 8.13 mm  (zero baseline mean 12.47 mm)
+epoch 4 loss 1.044 dist 0.847 mask 0.394 (213 s)  val: mean 7.71 mm, median 6.71 mm, CPM@10 74.9%, has_propagated mean 7.65 mm  (zero baseline mean 12.47 mm)
+epoch 5 loss 0.988 dist 0.815 mask 0.347 (213 s)  val: mean 7.24 mm, median 6.19 mm, CPM@10 76.3%, has_propagated mean 7.12 mm  (zero baseline mean 12.47 mm)
+epoch 6 loss 0.941 dist 0.784 mask 0.314 (213 s)  val: mean 6.91 mm, median 5.63 mm, CPM@10 79.7%, has_propagated mean 6.81 mm  (zero baseline mean 12.47 mm)
+epoch 7 loss 0.892 dist 0.750 mask 0.286 (213 s)  val: mean 6.67 mm, median 4.87 mm, CPM@10 80.2%, has_propagated mean 6.63 mm  (zero baseline mean 12.47 mm)
+epoch 8 loss 0.864 dist 0.734 mask 0.260 (213 s)  val: mean 6.54 mm, median 4.62 mm, CPM@10 80.7%, has_propagated mean 6.49 mm  (zero baseline mean 12.47 mm)
+epoch 9 loss 0.843 dist 0.716 mask 0.254 (213 s)  val: mean 6.46 mm, median 4.49 mm, CPM@10 80.2%, has_propagated mean 6.41 mm  (zero baseline mean 12.47 mm)
+epoch 10 loss 0.808 dist 0.695 mask 0.227 (213 s)  val: mean 6.33 mm, median 4.22 mm, CPM@10 81.2%, has_propagated mean 6.25 mm  (zero baseline mean 12.47 mm)
+epoch 11 loss 0.778 dist 0.672 mask 0.211 (213 s)  val: mean 6.28 mm, median 4.28 mm, CPM@10 81.6%, has_propagated mean 6.20 mm  (zero baseline mean 12.47 mm)
+epoch 12 loss 0.773 dist 0.666 mask 0.213 (213 s)  val: mean 6.26 mm, median 4.33 mm, CPM@10 81.2%, has_propagated mean 6.15 mm  (zero baseline mean 12.47 mm)
+epoch 13 loss 0.773 dist 0.669 mask 0.208 (213 s)  val: mean 6.17 mm, median 4.03 mm, CPM@10 80.2%, has_propagated mean 6.06 mm  (zero baseline mean 12.47 mm)
+epoch 14 loss 0.743 dist 0.645 mask 0.195 (213 s)  val: mean 6.16 mm, median 3.96 mm, CPM@10 80.7%, has_propagated mean 6.03 mm  (zero baseline mean 12.47 mm)
+epoch 15 loss 0.719 dist 0.628 mask 0.181 (213 s)  val: mean 6.07 mm, median 3.96 mm, CPM@10 81.6%, has_propagated mean 5.94 mm  (zero baseline mean 12.47 mm)
+epoch 16 loss 0.702 dist 0.617 mask 0.169 (213 s)  val: mean 6.00 mm, median 4.01 mm, CPM@10 81.2%, has_propagated mean 5.87 mm  (zero baseline mean 12.47 mm)
+epoch 17 loss 0.693 dist 0.611 mask 0.164 (213 s)  val: mean 5.92 mm, median 3.98 mm, CPM@10 82.6%, has_propagated mean 5.78 mm  (zero baseline mean 12.47 mm)
+epoch 18 loss 0.672 dist 0.598 mask 0.150 (213 s)  val: mean 5.86 mm, median 3.86 mm, CPM@10 82.6%, has_propagated mean 5.73 mm  (zero baseline mean 12.47 mm)
+epoch 19 loss 0.664 dist 0.592 mask 0.143 (213 s)  val: mean 5.79 mm, median 3.86 mm, CPM@10 82.6%, has_propagated mean 5.67 mm  (zero baseline mean 12.47 mm)
+epoch 20 loss 0.653 dist 0.582 mask 0.142 (213 s)  val: mean 5.76 mm, median 3.89 mm, CPM@10 84.5%, has_propagated mean 5.67 mm  (zero baseline mean 12.47 mm)
+epoch 21 loss 0.649 dist 0.577 mask 0.144 (213 s)  val: mean 5.80 mm, median 4.11 mm, CPM@10 84.5%, has_propagated mean 5.73 mm  (zero baseline mean 12.47 mm)
+epoch 22 loss 0.638 dist 0.570 mask 0.136 (213 s)  val: mean 5.69 mm, median 3.92 mm, CPM@10 84.5%, has_propagated mean 5.63 mm  (zero baseline mean 12.47 mm)
+epoch 23 loss 0.631 dist 0.566 mask 0.131 (213 s)  val: mean 5.71 mm, median 3.81 mm, CPM@10 85.5%, has_propagated mean 5.65 mm  (zero baseline mean 12.47 mm)
+epoch 24 loss 0.616 dist 0.554 mask 0.124 (214 s)  val: mean 5.76 mm, median 3.82 mm, CPM@10 84.1%, has_propagated mean 5.69 mm  (zero baseline mean 12.47 mm)
+epoch 25 loss 0.615 dist 0.553 mask 0.123 (213 s)  val: mean 5.79 mm, median 3.83 mm, CPM@10 84.1%, has_propagated mean 5.73 mm  (zero baseline mean 12.47 mm)
+epoch 26 loss 0.602 dist 0.545 mask 0.115 (213 s)  val: mean 5.75 mm, median 3.85 mm, CPM@10 84.5%, has_propagated mean 5.68 mm  (zero baseline mean 12.47 mm)
+epoch 27 loss 0.591 dist 0.533 mask 0.116 (213 s)  val: mean 5.71 mm, median 3.80 mm, CPM@10 85.5%, has_propagated mean 5.61 mm  (zero baseline mean 12.47 mm)
+epoch 28 loss 0.583 dist 0.531 mask 0.105 (213 s)  val: mean 5.74 mm, median 3.76 mm, CPM@10 86.0%, has_propagated mean 5.61 mm  (zero baseline mean 12.47 mm)
+epoch 29 loss 0.572 dist 0.521 mask 0.101 (213 s)  val: mean 5.74 mm, median 3.80 mm, CPM@10 85.5%, has_propagated mean 5.62 mm  (zero baseline mean 12.47 mm)
+epoch 30 loss 0.572 dist 0.521 mask 0.102 (213 s)  val: mean 5.65 mm, median 3.75 mm, CPM@10 87.0%, has_propagated mean 5.51 mm  (zero baseline mean 12.47 mm)
+epoch 31 loss 0.557 dist 0.510 mask 0.095 (213 s)  val: mean 5.59 mm, median 3.75 mm, CPM@10 87.0%, has_propagated mean 5.45 mm  (zero baseline mean 12.47 mm)
+epoch 32 loss 0.550 dist 0.505 mask 0.090 (213 s)  val: mean 5.58 mm, median 3.72 mm, CPM@10 86.0%, has_propagated mean 5.44 mm  (zero baseline mean 12.47 mm)
+epoch 33 loss 0.550 dist 0.503 mask 0.095 (213 s)  val: mean 5.63 mm, median 4.03 mm, CPM@10 86.0%, has_propagated mean 5.50 mm  (zero baseline mean 12.47 mm)
+epoch 34 loss 0.546 dist 0.502 mask 0.088 (213 s)  val: mean 5.69 mm, median 3.97 mm, CPM@10 87.0%, has_propagated mean 5.58 mm  (zero baseline mean 12.47 mm)
+epoch 35 loss 0.547 dist 0.501 mask 0.093 (213 s)  val: mean 5.74 mm, median 3.84 mm, CPM@10 86.0%, has_propagated mean 5.65 mm  (zero baseline mean 12.47 mm)
+epoch 36 loss 0.532 dist 0.489 mask 0.086 (213 s)  val: mean 5.65 mm, median 3.75 mm, CPM@10 86.0%, has_propagated mean 5.57 mm  (zero baseline mean 12.47 mm)
+epoch 37 loss 0.528 dist 0.486 mask 0.084 (213 s)  val: mean 5.65 mm, median 3.89 mm, CPM@10 86.5%, has_propagated mean 5.56 mm  (zero baseline mean 12.47 mm)
+epoch 38 loss 0.527 dist 0.487 mask 0.081 (213 s)  val: mean 5.69 mm, median 3.82 mm, CPM@10 86.0%, has_propagated mean 5.60 mm  (zero baseline mean 12.47 mm)
+epoch 39 loss 0.524 dist 0.484 mask 0.080 (213 s)  val: mean 5.78 mm, median 3.81 mm, CPM@10 86.0%, has_propagated mean 5.70 mm  (zero baseline mean 12.47 mm)
+epoch 40 loss 0.516 dist 0.478 mask 0.076 (213 s)  val: mean 5.79 mm, median 3.90 mm, CPM@10 85.0%, has_propagated mean 5.70 mm  (zero baseline mean 12.47 mm)
+epoch 41 loss 0.512 dist 0.475 mask 0.075 (213 s)  val: mean 5.77 mm, median 3.82 mm, CPM@10 86.0%, has_propagated mean 5.67 mm  (zero baseline mean 12.47 mm)
+epoch 42 loss 0.513 dist 0.475 mask 0.076 (213 s)  val: mean 5.78 mm, median 3.93 mm, CPM@10 86.5%, has_propagated mean 5.67 mm  (zero baseline mean 12.47 mm)
+epoch 43 loss 0.511 dist 0.475 mask 0.071 (213 s)  val: mean 5.78 mm, median 3.92 mm, CPM@10 86.0%, has_propagated mean 5.66 mm  (zero baseline mean 12.47 mm)
+epoch 44 loss 0.504 dist 0.469 mask 0.070 (213 s)  val: mean 5.77 mm, median 3.84 mm, CPM@10 85.5%, has_propagated mean 5.63 mm  (zero baseline mean 12.47 mm)
+epoch 45 loss 0.504 dist 0.468 mask 0.072 (213 s)  val: mean 5.76 mm, median 3.91 mm, CPM@10 85.5%, has_propagated mean 5.63 mm  (zero baseline mean 12.47 mm)
+epoch 46 loss 0.500 dist 0.464 mask 0.071 (213 s)  val: mean 5.76 mm, median 3.86 mm, CPM@10 85.5%, has_propagated mean 5.63 mm  (zero baseline mean 12.47 mm)
+epoch 47 loss 0.500 dist 0.466 mask 0.069 (213 s)  val: mean 5.75 mm, median 3.98 mm, CPM@10 85.5%, has_propagated mean 5.63 mm  (zero baseline mean 12.47 mm)
+epoch 48 loss 0.502 dist 0.467 mask 0.071 (213 s)  val: mean 5.75 mm, median 3.98 mm, CPM@10 85.5%, has_propagated mean 5.63 mm  (zero baseline mean 12.47 mm)
+epoch 49 loss 0.507 dist 0.471 mask 0.071 (213 s)  val: mean 5.74 mm, median 3.94 mm, CPM@10 86.0%, has_propagated mean 5.62 mm  (zero baseline mean 12.47 mm)
+epoch 50 loss 0.498 dist 0.463 mask 0.069 (213 s)  val: mean 5.73 mm, median 3.92 mm, CPM@10 86.0%, has_propagated mean 5.62 mm  (zero baseline mean 12.47 mm)
+best val mean error 5.58 mm, checkpoint runs/joint-restart-3467988/model/best.pt
+Running joint smoke test
+          method  n  patients  fallbacks  patient_mean_mm  Median error  Mean error     MEDx     MEDy     MEDz    CPM@5   CPM@10  CPM@20
+      propagated  3         1          0         7.164587      6.996116    7.164587 4.335333 1.977333 3.305667 0.333333 0.666667     1.0
+          hybrid  3         1          0         4.025961      3.419966    4.025961 1.984333 0.639667 3.253000 0.666667 1.000000     1.0
+    hybrid_plain  3         1          0         1.355938      1.561121    1.355938 0.672406 0.804651 0.723595 1.000000 1.000000     1.0
+      hybrid_tta  3         1          0         1.317287      1.177983    1.317287 0.389748 0.914129 0.742295 1.000000 1.000000     1.0
+propagated_plain  3         1          0         1.251423      1.217365    1.251423 0.682346 0.670981 0.439160 1.000000 1.000000     1.0
+  propagated_tta  3         1          0         1.271550      1.226939    1.271550 0.663061 0.737156 0.492999 1.000000 1.000000     1.0
+hybrid in window@56: 100.0%
+propagated_plain in window@56: 100.0%
+Results: runs/joint-restart-3467988/smoke
+Running full joint validation
+          method   n  patients  fallbacks  patient_mean_mm  Median error  Mean error     MEDx     MEDy       MEDz    CPM@5   CPM@10   CPM@20
+      propagated 208        28         14        39.623831     11.441644  142.351955 7.463620 8.159889 137.821933 0.355769 0.461538 0.634615
+          hybrid 208        28          0        10.325778      6.710310   10.750548 4.118553 5.319231   6.703216 0.379808 0.629808 0.860577
+    hybrid_plain 208        28          0         8.395837      4.155018    9.304894 3.581788 4.484165   5.699343 0.533654 0.745192 0.879808
+      hybrid_tta 208        28          0         7.923220      4.213331    8.739064 3.204431 4.331278   5.371180 0.586538 0.764423 0.884615
+propagated_plain 208        28          0        37.065524      5.225116  138.906097 6.202255 7.068569 135.146371 0.475962 0.620192 0.750000
+  propagated_tta 208        28          0        36.904868      5.107230  138.774707 6.196914 6.901384 135.170329 0.480769 0.620192 0.740385
+hybrid in window@56: 100.0%
+propagated_plain in window@56: 89.4%
+Results: runs/joint-restart-3467988/validation
+Finished. New checkpoint: runs/joint-restart-3467988/model/best.pt; results: runs/joint-restart-3467988/validation/summary.csv

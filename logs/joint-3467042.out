@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/gpfs/helios/home/karlvrtn/repos/ut-ml-2026-lesion-project/scripts/evaluate_joint.py", line 106, in <module>
+    main()
+    ~~~~^^
+  File "/gpfs/helios/home/karlvrtn/repos/ut-ml-2026-lesion-project/scripts/evaluate_joint.py", line 62, in main
+    predictor = PatchPredictor(a.ckpt, bl_mask=not a.no_bl_mask, template_k=a.template_k,
+                               tta=not a.no_tta, device=a.device)
+  File "/gpfs/helios/home/karlvrtn/repos/ut-ml-2026-lesion-project/src/lesionloc/prediction.py", line 33, in __init__
+    self.model.load_state_dict(torch.load(checkpoint, map_location=self.device, weights_only=True))
+                               ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/helios/home/karlvrtn/venvs/lesion/lib/python3.14/site-packages/torch/serialization.py", line 1565, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/gpfs/helios/home/karlvrtn/venvs/lesion/lib/python3.14/site-packages/torch/serialization.py", line 795, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/gpfs/helios/home/karlvrtn/venvs/lesion/lib/python3.14/site-packages/torch/serialization.py", line 776, in __init__
+    super().__init__(open(name, mode))  # noqa: SIM115
+                     ~~~~^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'runs/3288501/best.pt'
