@@ -1,7 +1,8 @@
 # Joint alignment and lesion localisation experiment
 
 Branch: `karl-joint-alignment-localisation`. This integrates Team 1 (`bad1a5d`)
-with Karl's Team 2 branch (`fd6de92`). No retraining is part of this experiment.
+with Karl's Team 2 branch (`fd6de92`). The experiment can train a fresh Team 2
+model or evaluate an existing checkpoint. The alignment stage stays independent.
 
 Question: does a frozen Team 2 checkpoint improve Team 1's predicted centres on
 real registration residuals, and how does it compare with dataset propagation?
@@ -70,6 +71,53 @@ the existing Team 1 jobs documented in `docs/wiki/Teams.md`, then
 Only do that in a separate output directory if preserving the original outputs.
 
 ## Run
+
+### Restart training from scratch (recommended when the old checkpoint is unavailable)
+
+```bash
+mkdir -p logs
+sbatch scripts/train_joint.sbatch
+```
+
+This starts a new SiameseNet from random weights with the run 6b configuration:
+50 epochs, batch 16, AdamW learning rate 3e-4, train-only offline augmentation,
+fresh 8 mm FU jitter, BL mask input, mask-loss weight 0.5, EMA 0.999 and template
+size 5. It uses the existing prepared data, never loads an old checkpoint, and
+keeps the test split untouched. Reusing Team 1's cached alignment outputs does
+not reuse Team 2 weights; uniGradICON remains a separate pretrained aligner.
+
+After training, the **same job** automatically runs the three-lesion joint smoke
+test and, if that succeeds, the full validation comparison. Outputs are new and
+never overwrite previous runs:
+
+```text
+runs/joint-restart-JOBID/model/best.pt
+runs/joint-restart-JOBID/smoke/summary.csv
+runs/joint-restart-JOBID/validation/summary.csv
+```
+
+Check progress with `tail -f logs/joint-restart-JOBID.out`. The first phase logs
+training epochs; later phases print the smoke and validation tables. Training
+command and Git state are recorded beside the new checkpoint. The training
+data format, patient splits and alignment-centre coverage are checked before
+training starts. `RAW`, `TEAM1`, `DATA`, `AUG_DATA`, `VENV`, `OUT`, `TRAIN_EPOCHS`
+and `BATCH_SIZE` can be overridden in the submission environment. Defaults
+expect `$RAW/Longitudinal-CT-processed-team2` and its `-aug` sibling.
+
+If the prepared data is missing or lacks `fu_big` / `fu_mask_big`, regenerate it
+with the existing independent CPU jobs, then submit training after both succeed:
+
+```bash
+prep_job=$(sbatch --parsable scripts/preprocess_team2.sbatch)
+aug_job=$(sbatch --parsable scripts/augment_team2.sbatch)
+sbatch --dependency=afterok:"$prep_job":"$aug_job" scripts/train_joint.sbatch
+```
+
+Those preparation jobs use their existing output defaults; set `RAW` and `OUT`
+when submitting them if your data lives elsewhere. They do not recompute Team 1
+alignment. No training or cluster evaluation has been launched by Codex locally.
+
+### Evaluate an existing checkpoint
 
 ```bash
 mkdir -p logs

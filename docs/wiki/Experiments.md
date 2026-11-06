@@ -5,6 +5,9 @@ cluster run pending. Compare dataset propagation and Team 1's hybrid centres,
 each alone and with frozen Team 2 run 6b (plain / flip TTA), on the same val cohort.
 See `docs/Joint-experiment.md` and `scripts/evaluate_joint.sbatch`. No joint accuracy
 result has been measured yet.
+Restart without an old checkpoint: `sbatch scripts/train_joint.sbatch` trains a
+fresh run 6b model, then evaluates its new best checkpoint automatically. This
+restart has not been submitted or measured yet.
 
 | # | Date | Issue | Model | Config | Split | Metric(s) | Result | Notes |
 |---|------|-------|-------|--------|-------|-----------|--------|-------|
