@@ -9,5 +9,6 @@ SimpleITK
 nibabel
 torch
 monai
+dynamic-network-architectures  # pretrained nnFoundationCNN encoder (--encoder resenc)
 jupyter
 pytest

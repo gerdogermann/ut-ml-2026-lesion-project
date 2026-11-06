@@ -46,13 +46,17 @@ def main():
     ap.add_argument("--bl-mask", action="store_true", help="must match the checkpoint's training run")
     ap.add_argument("--template-k", type=int, default=3, help="must match the checkpoint's training run")
     ap.add_argument("--prior-sd", type=float, default=0.0, help="must match the checkpoint's training run")
+    ap.add_argument("--encoder", default="small", help="must match the checkpoint's training run")
+    ap.add_argument("--coarse", action="store_true", help="must match the checkpoint's training run")
+    ap.add_argument("--enc-mask", action="store_true", help="must match the checkpoint's training run")
     ap.add_argument("--local-mm", type=float, default=8.0, help="local soft-argmax: half-width around the peak, mm")
     ap.add_argument("--top", type=int, default=20)
     ap.add_argument("--batch-size", type=int, default=8)
     a, _ = ap.parse_known_args()
 
     dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = SiameseNet(bl_mask=a.bl_mask, k=a.template_k, prior_sd=a.prior_sd).to(dev)
+    model = SiameseNet(bl_mask=a.bl_mask, k=a.template_k, prior_sd=a.prior_sd, encoder=a.encoder, coarse=a.coarse,
+                       enc_mask=a.enc_mask).to(dev)
     model.load_state_dict(torch.load(a.ckpt, map_location=dev))
     model.eval()
     ds = LesionDataset(a.root, a.split_file, a.split, masks=True)

@@ -7,20 +7,24 @@ Usage (from repo root):
 Team 2 (needs Longitudinal-CT-processed-team2, which has masks):
   ... --model siamese [--lambda-hm 1 --dist-warmup 5] [--bl-mask] [--lambda-mask 0.5] [--template-k 5] [--prior-sd 12]
       [--ema 0.999]
+  pretrained encoder (pip install dynamic-network-architectures): --encoder resenc --pretrained checkpoint_final.pth
+      [--coarse] [--enc-mask] [--freeze none|early|all] [--enc-lr 1e-4] [--warmup 0.1] [--amp]
 """
 import argparse
+import math
 import time
 from pathlib import Path
 
 import numpy as np
 import torch
 import torch.nn.functional as F
+from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
 from lesionloc.dataset import LesionDataset
 from lesionloc.losses import team2_loss
 from lesionloc.metrics import compute_metrics
-from lesionloc.model import LesionNet, SiameseNet
+from lesionloc.model import LesionNet, SiameseNet, load_nnfoundation
 
 
 def load_files(files, masks=False):
@@ -44,7 +48,17 @@ def step_loss(model, x, t, a, epoch):
     return team2_loss(delta, logits, t, x[:, 3:4], model.coords, a.lambda_hm, a.lambda_mask, w)
 
 
-def bench(model, opt, a, dev):
+def train_step(model, opt, scaler, x, t, a, epoch):
+    with torch.autocast(x.device.type, dtype=torch.float16, enabled=a.amp):
+        loss, parts = step_loss(model, x, t, a, epoch)
+    opt.zero_grad()
+    scaler.scale(loss).backward()
+    scaler.step(opt)
+    scaler.update()
+    return loss, parts
+
+
+def bench(model, opt, scaler, a, dev):
     x = torch.rand(a.batch_size, 4 if a.model == "siamese" else 2, 64, 64, 64, device=dev)
     y = torch.zeros(a.batch_size, 3, device=dev)
     for i in range(a.steps + 3):
@@ -52,10 +66,7 @@ def bench(model, opt, a, dev):
             if dev.type == "cuda":
                 torch.cuda.synchronize()
             t = time.perf_counter()
-        loss, _ = step_loss(model, x, y, a, a.epochs)
-        opt.zero_grad()
-        loss.backward()
-        opt.step()
+        train_step(model, opt, scaler, x, y, a, a.epochs)
     if dev.type == "cuda":
         torch.cuda.synchronize()
     ms = (time.perf_counter() - t) / a.steps * 1000
@@ -109,6 +120,16 @@ def main():
                     help="train split only: fresh FU offset each load, mm sd per axis (needs fu_big); 0 = stored jitter")
     ap.add_argument("--dist-warmup", type=int, default=0,
                     help="siamese: distance loss off for N epochs, then ramped in over N; 0 = always on")
+    ap.add_argument("--encoder", choices=["small", "resenc"], default="small",
+                    help="siamese: resenc = nnFoundationCNN stages 0-1 (+ stage 2 with --coarse)")
+    ap.add_argument("--pretrained", help="resenc: nnFoundationCNN checkpoint_final.pth; omit for random init")
+    ap.add_argument("--coarse", action="store_true", help="resenc: add the 8 mm stage-2 correlation map")
+    ap.add_argument("--enc-mask", action="store_true", help="resenc: BL mask as zero-initialised 2nd stem channel")
+    ap.add_argument("--freeze", choices=["none", "early", "all"], default="none",
+                    help="resenc: early = stem + stage 0, all = whole encoder")
+    ap.add_argument("--enc-lr", type=float, help="lr of the trainable encoder layers; default --lr")
+    ap.add_argument("--warmup", type=float, default=0.0, help="linear lr warmup, fraction of all steps")
+    ap.add_argument("--amp", action="store_true", help="fp16 autocast + grad scaling (CUDA)")
     ap.add_argument("--bench", action="store_true", help="random tensors, report time and memory per step")
     ap.add_argument("--steps", type=int, default=20, help="bench steps")
     a = ap.parse_args()
@@ -119,11 +140,23 @@ def main():
     print("device", dev, torch.cuda.get_device_name() if dev.type == "cuda" else "")
     print("args", vars(a))
     masks = a.model == "siamese"
-    model = (SiameseNet(bl_mask=a.bl_mask, k=a.template_k, prior_sd=a.prior_sd) if masks else LesionNet()).to(dev)
-    print(f"params {sum(p.numel() for p in model.parameters()) / 1e6:.2f} M")
-    opt = torch.optim.AdamW(model.parameters(), lr=a.lr, weight_decay=1e-4)
+    model = (SiameseNet(bl_mask=a.bl_mask, k=a.template_k, prior_sd=a.prior_sd, encoder=a.encoder, coarse=a.coarse,
+                        enc_mask=a.enc_mask) if masks else LesionNet())
+    if a.pretrained:
+        load_nnfoundation(model.encoder, a.pretrained)
+    if a.freeze != "none":
+        enc = model.encoder
+        (enc if a.freeze == "all" else nn.ModuleList([enc.stem, enc.stages[0]])).requires_grad_(False)
+    model = model.to(dev)
+    print(f"params {sum(p.numel() for p in model.parameters()) / 1e6:.2f} M, "
+          f"trainable {sum(p.numel() for p in model.parameters() if p.requires_grad) / 1e6:.2f} M")
+    is_enc = lambda n: n.startswith("encoder.")
+    groups = [{"params": [p for n, p in model.named_parameters() if p.requires_grad and not is_enc(n)]},
+              {"params": [p for n, p in model.named_parameters() if p.requires_grad and is_enc(n)], "lr": a.enc_lr or a.lr}]
+    opt = torch.optim.AdamW([g for g in groups if g["params"]], lr=a.lr, weight_decay=1e-4)
+    scaler = torch.amp.GradScaler(enabled=a.amp)
     if a.bench:
-        return bench(model, opt, a, dev)
+        return bench(model, opt, scaler, a, dev)
 
     if a.files:  # overfit check: train and "val" are the same files, no augmentation
         train_ds = val_ds = load_files(a.files, masks)
@@ -135,7 +168,11 @@ def main():
     loader = lambda ds, shuffle: DataLoader(ds, a.batch_size, shuffle=shuffle, num_workers=0 if a.files else a.workers,
                                             pin_memory=dev.type == "cuda")
     train_dl, val_dl = loader(train_ds, True), loader(val_ds, False)
-    sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, a.epochs * len(train_dl))
+    total = a.epochs * len(train_dl)
+    warm = int(a.warmup * total)
+    # linear warmup, then cosine to 0 (warm = 0: same as CosineAnnealingLR(opt, total))
+    sched = torch.optim.lr_scheduler.LambdaLR(
+        opt, lambda s: (s + 1) / warm if s < warm else 0.5 * (1 + math.cos(math.pi * (s - warm) / (total - warm))))
     # overfit mode takes 1 step per epoch: an EMA would lag far behind, so it is off there
     ema = (torch.optim.swa_utils.AveragedModel(model, multi_avg_fn=torch.optim.swa_utils.get_ema_multi_avg_fn(a.ema))
            if a.ema and not a.files else None)
@@ -147,10 +184,7 @@ def main():
     for epoch in range(1, a.epochs + 1):
         t0, losses, terms = time.perf_counter(), [], {}
         for x, t, _ in train_dl:
-            loss, parts = step_loss(model, x.to(dev), t.to(dev), a, epoch - 1)
-            opt.zero_grad()
-            loss.backward()
-            opt.step()
+            loss, parts = train_step(model, opt, scaler, x.to(dev), t.to(dev), a, epoch - 1)
             sched.step()
             if ema:
                 ema.update_parameters(model)

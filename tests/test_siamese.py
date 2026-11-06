@@ -134,3 +134,20 @@ def test_mask_loss_skips_empty_masks():
     _, both = team2_loss(delta, logits, t, m, c, lambda_mask=1.0)
     _, first = team2_loss(delta[:1], logits[:1], t[:1], m[:1], c, lambda_mask=1.0)
     assert torch.allclose(both["mask"], first["mask"]) and both["mask"] < 100
+
+
+def test_resenc_encoder_and_pretrained_stem(tmp_path):
+    import pytest
+    pytest.importorskip("dynamic_network_architectures")
+    from lesionloc.model import load_nnfoundation, resenc_encoder
+    torch.manual_seed(0)
+    delta, logits = SiameseNet(bl_mask=True, k=5, encoder="resenc", coarse=True)(torch.rand(1, 4, 64, 64, 64))
+    assert delta.shape == (1, 3) and logits.shape == (1, GRID, GRID, GRID) and torch.isfinite(delta).all()
+    # fake 1-channel checkpoint with an extra stage; a 2-channel stem gets zero weights for the mask channel
+    src = resenc_encoder(1, 4)
+    torch.save({"network_weights": {"encoder." + k: v for k, v in src.state_dict().items()}}, tmp_path / "c.pth")
+    net = SiameseNet(encoder="resenc", coarse=True, enc_mask=True)
+    load_nnfoundation(net.encoder, tmp_path / "c.pth")
+    w, w0 = net.encoder.stem.convs[0].all_modules[0].weight, src.stem.convs[0].all_modules[0].weight
+    assert torch.equal(w[:, :1], w0) and not w[:, 1:].any()
+    assert net.encoder.stem.convs[0].conv.weight is w  # alias used by forward is the loaded tensor
