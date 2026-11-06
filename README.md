@@ -55,6 +55,10 @@ pip install -e .
 The instructors flag this project as needing GPU/HPC for 3D image work — see the wiki
 page on compute for the agreed setup.
 
+For the frozen two-stage alignment + lesion prediction experiment, see
+[Joint experiment](docs/Joint-experiment.md). It compares dataset propagation
+and Team 1's hybrid centres, each alone and refined by the same Team 2 model.
+
 ## Workflow
 
 - Work is tracked in GitHub Issues; pick an issue, assign yourself, branch from `main`.

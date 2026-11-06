@@ -1,5 +1,11 @@
 # Experiments
 
+Joint experiment (branch `karl-joint-alignment-localisation`): implementation ready;
+cluster run pending. Compare dataset propagation and Team 1's hybrid centres,
+each alone and with frozen Team 2 run 6b (plain / flip TTA), on the same val cohort.
+See `docs/Joint-experiment.md` and `scripts/evaluate_joint.sbatch`. No joint accuracy
+result has been measured yet.
+
 | # | Date | Issue | Model | Config | Split | Metric(s) | Result | Notes |
 |---|------|-------|-------|--------|-------|-----------|--------|-------|
 | 0 | 2026-10-22 | | LesionNet (0.32 M params) | scripts/train.sbatch | train only | mean error (mm) | 2 files: 0.00 mm (zero baseline 14.04). 100 train files, 2000 steps, bs 8: 2.41 mm (zero baseline 4.78) | Overfit sanity check, not a real result. 100-file run not yet fully overfit; try smaller smooth-L1 beta / LR decay. Log: logs/train-2941892.out |
@@ -100,3 +106,27 @@ Train mean target_mm (x, y, z): [ 0.117 -0.945  0.661] mm
 | test (mock) | Baseline B (Train Mean) | has_propagated=True | 53 | 5.50 | 5.45 | 2.70 | 2.98 | 2.47 | 43.4% | 96.2% | 100.0% |
 | test (mock) | Baseline B (Train Mean) | has_propagated=False | 7 | 23.47 | 22.46 | 12.74 | 10.92 | 10.82 | 0.0% | 14.3% | 28.6% |
 $ 
+
+
+## Team 1 results
+
+
+All rows: every eligible lesion (`lesions.csv`, 2669 = the 2502 npz lesions + 167 that `skip_outside_window` dropped),
+error = ‖window centre − true FU centre‖ in mm, `scripts/team1_eval.py`. Val = 208 lesions / 28 patients; train =
+2173 / 227. Nothing is trained; settings are chosen on train, methods compared on val, test not used yet.
+In window@56 = every axis within 56 mm, i.e. the lesion survives `preprocess.py`. Full table:
+`/gpfs/helios/projects/ml_project_lesion_tracking/data/team1/eval_all.md`.
+
+| # | Date | Method | Code / job | Val mean / median (mm) | Val CPM@10 / CPM@20 | Val in window | Train median, in window | Notes |
+|---|------|--------|------------|------------------------|---------------------|---------------|-------------------------|-------|
+| T1-0 | 2026-11-03 | Same mm coordinates as BL | `team1_lesions.py` | 1094.64 / 984.11 | 0.0% / 0.0% | 6.7% | 575.69, 4.9% | BL and FU patient coordinates are unrelated (origins ~1 m apart). Not a usable baseline: every method needs a registration step |
+| T1-1 | 2026-11-03 | `cog_propagated` from the dataset (**the bar**), BL position when missing | `team1_lesions.py` | 142.35 / 11.44 | 46.2% / 63.5% | 89.4% | 4.82, 93.8% | Precise when it works (train median 4.8 mm), but 101 lesions have no propagated point (BL fallback, ~1 m) and some are far off: ~11% of val lesions fall outside the window |
+| T1-2a | 2026-11-03 | Rigid whole-scan registration | `team1_register.py`, job 3330170 | 17.02 / 12.97 | 40.9% / 68.3% | 99.5% | 9.08, 98.2% | SimpleITK, Mattes MI in a body mask, regular-step GD, 8→4→2 mm; start = best of identity, image centres, body centroids ± z sweep of 400 mm. 2 train pairs failed (46ba9f2a69, 6cdd60ea00): their 2 lesions scored at BL in 2a–2c and 4 |
+| T1-2b | 2026-11-03 | Affine whole-scan registration | same | 15.42 / 11.58 | 45.2% / 75.5% | 99.5% | 9.33, 98.0% | From rigid |
+| T1-2c | 2026-11-03 | Affine + rigid correction in a 160 mm cube around each lesion | same | **12.28** / 9.36 | 53.8% / 85.1% | **100%** | 6.54, 98.1% | Best val mean and in-window together. **Hand-over candidate** for `centres.csv` |
+| T1-3a | 2026-11-03 | Organ shift: BL→FU centroid shift of the host organ, else nearest | `team1_organs.py`, jobs 3330252 (TotalSegmentator `--fast`) + 3330695 | 12.39 / 10.59 | 45.7% / **85.6%** | **100%** | 7.65, 98.7% | 1912 / 2669 lesions moved by their host organ; 5 had no usable organ (BL kept). Organs cut by the scan range are never used |
+| T1-3b | 2026-11-03 | Organ affine: K nearest organs, weights exp(−d/σ), ridge λ towards a pure shift | same | 13.40 / 10.20 | 48.1% / 80.3% | **100%** | 7.02, 98.6% | K=8, σ=50 mm, λ=10⁴, picked on train from 12 settings (best train median and CPM@10). λ=10⁴ beat λ=10² for every K and σ: a near-pure weighted shift beats a full local affine |
+| T1-4 | 2026-11-03 | B-spline (8³ control grid) on top of affine | `team1_register.py`, job 3330170 | 13.56 / 10.71 | 47.6% / 82.2% | 99.5% | 6.53, 97.7% | Ties local on train, slightly behind on val |
+| T1-5a | 2026-11-03 | uniGradICON, network only | `team1_unigradicon.py`, job 3330685 | 45.41 / 11.00 | 46.6% / 63.9% | 81.7% | 8.69, 86.5% | Pretrained, no training. Heavy tail: ~18% of val lesions outside the window |
+| T1-5b | 2026-11-03 | uniGradICON + 50 instance-optimisation steps | jobs 3330731 (4-way array) + 3330738 | 38.77 / **7.73** | **56.7%** / 71.2% | 87.0% | 5.49, 91.0% | Best median and CPM@10 of all methods, but 13% of val lesions outside the window: either very close or badly off. Next: use it only where it agrees with T1-2c |
+| T1-5c | 2026-11-03 | `ugi_io50` gated by `local` ($\tau=25\text{ mm}$), fallback to `local` | `team1_combine.py` | **10.75** / **6.71** | **63.0%** / **86.1%** | **100%** | 5.08, 97.7% | Uses `ugi_io50` when within 25 mm of `local` (75.5% of val lesions), else `local`. Best val mean, median, CPM@10, CPM@20, and 100% in-window together. **Selected for `centres.csv` hand-over** |

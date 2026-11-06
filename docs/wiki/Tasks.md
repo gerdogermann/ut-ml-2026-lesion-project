@@ -38,19 +38,8 @@ Done when: every member can open a file from the new path, and the repo points t
 
 ## Gerdo — PyTorch Dataset and DataLoader
 
-Why: training and evaluation both need to feed the npz patches to PyTorch in batches. Doing it once in a shared module
-means the model, the training script and the evaluation code all see the same data, and the patient split is enforced in one place.
-That split is a course requirement: patients must never appear in both training and test.
-
-Goal: `src/lesionloc/dataset.py` with `LesionDataset(root, split_file, split)` returning `(x, target_mm, has_propagated)`.
-
-- Read the npz, cast to float32, stack `bl` and `fu` into a `(2,64,64,64)` tensor.
-- Filter files by patient using `split.json` (patient id is the filename prefix before `_`).
-- Assert there is no patient overlap between train, val and test.
-- Optional (stretch): flip/intensity augmentation. Careful: flipping an axis must flip the matching sign in `target_mm`.
-
-Done when: a `DataLoader` with batch size 2 yields tensors of the right shapes on the two example files, a small test checks
-the shapes and the patient-overlap assertion, and train/val/test counts match the preprocessing log (check on the cluster).
+`LesionDataset` and its tests are written (branch `first_e2e_pipeline`) but not yet on `main`.
+Remaining work: [#11](https://github.com/gerdogermann/ut-ml-2026-lesion-project/issues/11).
 
 ## Imre — Metrics and trivial baselines
 

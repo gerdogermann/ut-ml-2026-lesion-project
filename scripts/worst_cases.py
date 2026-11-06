@@ -10,7 +10,6 @@ the mean over all 8 flips (TTA), and both; plus the mean error per patient (pati
 Unknown flags are ignored, so train_siamese.sbatch can pass its train.py flags through.
 """
 import argparse
-import itertools
 from pathlib import Path
 
 import numpy as np
@@ -23,18 +22,8 @@ from lesionloc.losses import fu_radius_mm
 from lesionloc.metrics import compute_metrics
 from lesionloc.model import SiameseNet, local_soft_argmax, soft_argmax
 
-FLIPS = [f for n in range(4) for f in itertools.combinations(((4, 0), (3, 1), (2, 2)), n)]  # (image dim, target idx)
-
-
-def tta(model, x, readout):
-    """Mean prediction over the 8 flip combinations; a flip of an image axis negates that target component."""
-    out = 0
-    for f in FLIPS:
-        d = readout(model(x.flip([i for i, _ in f]) if f else x)[1]).clone()
-        for _, j in f:
-            d[:, j] = -d[:, j]
-        out = out + d
-    return out / len(FLIPS)
+# Shared inference readout used by the joint pipeline too.
+from lesionloc.prediction import flip_tta as tta
 
 
 def main():

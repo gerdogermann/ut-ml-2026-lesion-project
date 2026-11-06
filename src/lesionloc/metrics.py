@@ -45,6 +45,18 @@ def compute_metrics(pred_mm: np.ndarray, true_mm: np.ndarray) -> dict[str, float
     }
 
 
+WINDOW_MARGIN_MM = 56.0  # preprocess.py: SPACING * SIZE / 2 - 8, per axis (skip_outside_window)
+
+
+def window_metrics(pred_mm: np.ndarray, true_mm: np.ndarray) -> dict[str, float]:
+    """Team 1 metrics: compute_metrics plus the share of lesions whose FU window keeps them inside
+    (every axis within 56 mm of the window centre, as in preprocess.py's skip_outside_window)."""
+    m = compute_metrics(pred_mm, true_mm)
+    linf = np.abs(np.asarray(pred_mm, dtype=np.float64) - np.asarray(true_mm, dtype=np.float64)).max(axis=1)
+    m["In window@56"] = float(np.mean(linf <= WINDOW_MARGIN_MM)) if len(linf) else float("nan")
+    return m
+
+
 def _test_hand_computed() -> None:
     pred = np.zeros((4, 3), dtype=np.float64)
     true = np.array(

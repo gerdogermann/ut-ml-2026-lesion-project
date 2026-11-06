@@ -3,6 +3,7 @@
 Usage: python -m lesionloc.preprocess RAW_DIR OUT_DIR [--workers N] [--centre fu --jitter-sd 8]
 RAW_DIR must contain inputsTr/ (images, BL masks, csv), targetsTr/ (FU masks) and data_split.json (official split).
 --centre propagated: FU window at the registration guess (Experiment 1 data).
+--centre csv --centres-csv PATH: use physical centres from the independent alignment stage.
 --centre fu: FU window at the true FU lesion plus a random offset (Team 2 data; simulates Team 1's error).
 --augment K (with --centre fu): for train-split patients only, write K extra copies per lesion,
   <pid>_<lid>_a<k>.npz, with BL and FU each re-sampled from the raw scan at a random small rotation and scale.
@@ -13,6 +14,8 @@ import re
 from collections import Counter
 from multiprocessing import Pool
 from pathlib import Path
+
+from lesionloc.alignment import CentreTable
 
 import numpy as np
 import pandas as pd
@@ -106,7 +109,11 @@ def do_patient(args):
         ibl, ifu = load("BL", r["img_id_bl"]), load("FU", r["img_id_fu"])
         bl_mm, fu_mm = to_mm(ibl, bl), to_mm(ifu, fu)
         prop = parse_xyz(r.get("cog_propagated"))
-        if centre == "fu":
+        if centre == "csv":
+            centre_fu = a.centres.centre(pid, lid)
+            jitter = np.zeros(3)
+            stats["from_centres_csv"] += 1
+        elif centre == "fu":
             # true FU spot + offset, reproducible per lesion; target = -jitter
             rng = np.random.default_rng([seed, int(pid, 16), lid])
             jitter = np.clip(rng.normal(0, jitter_sd, 3), -jitter_max, jitter_max)
@@ -144,6 +151,7 @@ def do_patient(args):
         np.savez_compressed(out / "lesions" / f"{pid}_{lid}.npz", **big,
                             bl=patch(ibl, bl_mm), fu=patch(ifu, centre_fu), bl_mask=bl_mask, fu_mask=fu_mask,
                             target_mm=target.astype(np.float32), jitter_mm=jitter.astype(np.float32),
+                            centre_fu_mm=centre_fu, true_fu_mm=fu_mm, centre_source=centre,
                             has_propagated=prop is not None)
         stats["kept"] += 1
     return pid, stats
@@ -184,14 +192,18 @@ def main():
     ap.add_argument("raw")
     ap.add_argument("out")
     ap.add_argument("--workers", type=int, default=8)
-    ap.add_argument("--centre", choices=["propagated", "fu"], default="propagated")
+    ap.add_argument("--centre", choices=["propagated", "fu", "csv"], default="propagated")
     ap.add_argument("--jitter-sd", type=float, default=8.0, help="mm per axis, --centre fu only")
     ap.add_argument("--jitter-max", type=float, default=24.0, help="mm per axis, --centre fu only")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--augment", type=int, default=0, help="K rotated/scaled copies per train lesion (--centre fu)")
     ap.add_argument("--max-rot", type=float, default=15.0, help="degrees, --augment only")
     ap.add_argument("--max-scale", type=float, default=0.1, help="scale in 1 +- this, --augment only")
+    ap.add_argument("--centres-csv", help="Alignment-stage centres; required with --centre csv")
     a = ap.parse_args()
+    if a.centre == "csv" and not a.centres_csv:
+        ap.error("--centres-csv is required with --centre csv")
+    a.centres = CentreTable.read(a.centres_csv) if a.centre == "csv" else None
     assert not a.augment or a.centre == "fu", "--augment needs --centre fu"
     out = Path(a.out)
     (out / "lesions").mkdir(parents=True, exist_ok=True)
