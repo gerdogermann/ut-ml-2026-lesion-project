@@ -11,7 +11,7 @@ import SimpleITK as sitk
 import torch
 
 from lesionloc.alignment import CentreTable, gated_centres
-from lesionloc.joint_eval import evaluate, summarise
+from lesionloc.joint_eval import by_start, evaluate, summarise
 from lesionloc.model import SiameseNet
 from lesionloc.pipeline import LesionQuery, locate
 from lesionloc.prediction import flip_tta
@@ -121,7 +121,7 @@ def test_csv_preprocessing_preserves_masks_and_physical_target(case, tmp_path):
                        cog_fu="[31.5,31.5,31.5]", cog_propagated="")]).to_csv(raw / "inputsTr" / f"{pid}.csv", index=False)
     out = tmp_path / "patches"
     (out / "lesions").mkdir(parents=True)
-    a = argparse.Namespace(raw=raw, out=out, centre="csv", jitter_sd=8, jitter_max=24, seed=42,
+    a = argparse.Namespace(raw=raw, out=out, centre="csv", jitter_sd=8, jitter_max=24, big_max=24, seed=42,
                            augment=0, centres=table(pid, centre + [6, -4, 8]))
     _, stats = do_patient((pid, a, set()))
     assert stats["kept"] == stats["from_centres_csv"] == 1
@@ -168,3 +168,49 @@ def test_joint_cli_runs_with_real_checkpoint_interface(case, tmp_path):
     assert manifest["status"] == "complete" and manifest["smoke_test"]
     assert pd.read_csv(out / "summary.csv").n.tolist() == [1] * 6
     assert subprocess.run(command, capture_output=True).returncode != 0  # no overwrite
+
+
+class TwoStepPredictor:
+    """Returns a different offset and spread on each call: pass 1, then pass 2."""
+
+    def __init__(self, steps):
+        self.steps = iter(steps)
+
+    def predict(self, bl, fu, bl_mask):
+        offset, spread = next(self.steps)
+        return dict(plain=np.array(offset, float), tta=np.array(offset, float), spread=spread)
+
+
+@pytest.mark.parametrize("spread2, gated_is_pass2", [(1.0, True), (9.0, False)])
+def test_two_pass_recentres_and_gates_on_spread(case, spread2, gated_is_pass2):
+    raw, pid, image, mask, centre, lesions = case
+    alignment = table(pid, centre + [30, 0, 0])
+    predictor = TwoStepPredictor([([-20, 0, 0], 5.0), ([-10, 0, 0], spread2)])
+    result = locate(LesionQuery(pid, 1, tuple(centre)), image, image, mask, alignment, predictor, two_pass=True)
+    assert np.allclose(result["pass2"], centre)
+    assert np.allclose(result["pass2_gated"], centre if gated_is_pass2 else centre + [10, 0, 0])
+    assert result["spread"] == 5.0 and result["spread2"] == spread2
+
+
+def test_evaluate_two_pass_rows_and_start_bins(case):
+    raw, pid, _, _, centre, lesions = case
+    alignment = table(pid, centre + [30, 0, 0])
+    steps = [([-20, 0, 0], 5.0), ([-10, 0, 0], 1.0)]
+    predictions = evaluate(raw, lesions, alignment, TwoStepPredictor(steps), two_pass=True)
+    err = predictions.set_index("method").error_mm
+    assert err["pass2"] == err["pass2_gated"] == 0 and err["tta"] == 10
+    assert (predictions.label_pred == -1).all()  # no FU mask in this case: unknown, not background
+    start, where = by_start(predictions[predictions.method != "propagated"])
+    assert start.n.tolist() == [0, 0, 0, 1, 0] and start.loc[start.n == 1, "pass2"].item() == 0
+    assert where.empty
+
+
+def test_big_cube_other_lesions():
+    from lesionloc.preprocess import big_cube
+    lab = np.zeros((20,) * 3, np.uint16)
+    lab[9:11, 9:11, 9:11] = 3  # own lesion at the cube centre (9.5)
+    lab[9:11, 9:11, 15:17] = 7  # neighbour 6 voxels = 12 mm along +x
+    big = big_cube(lab, 3)
+    assert big["fu_mask_big"].sum() == big["fu_other_big"].sum() == 8
+    assert np.allclose(big["nbr_mm"], [[12, 0, 0]])
+    assert big_cube(np.where(lab == 3, 3, 0), 3)["nbr_mm"].shape == (0, 3)

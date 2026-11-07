@@ -20,8 +20,12 @@ def gaussian_target(t, sigma, coords):
     return q / q.flatten(1).sum(1)[:, None, None, None]
 
 
-def team2_loss(delta, logits, t, fu_mask, coords, lambda_hm=0.0, lambda_mask=0.0, w_dist=1.0):
-    """Returns (total, dict of per-term means). delta, t (B,3) mm; logits (B,32,32,32); fu_mask (B,1,64,64,64)."""
+def team2_loss(delta, logits, t, fu_mask, coords, lambda_hm=0.0, lambda_mask=0.0, w_dist=1.0, uniform_r=0.0,
+               fu_other=None, lambda_other=0.0):
+    """Returns (total, dict of per-term means). delta, t (B,3) mm; logits (B,32,32,32); fu_mask (B,1,64,64,64).
+    uniform_r > 0: lesions with r_FU > uniform_r mm get, as mask term, the CE to a uniform distribution over their mask
+    (its soft-argmax is the mask centre; a single peak anywhere inside no longer satisfies it).
+    lambda_other: penalty -log(1 - softmax mass on other FU lesions), fu_other (B,1,64,64,64)."""
     l_dist = torch.sqrt(((delta - t) ** 2).sum(1) + 0.1 ** 2).mean() / JITTER_SD
     logp = logits.float().flatten(1).log_softmax(1)
     terms = {"dist": l_dist}
@@ -31,13 +35,22 @@ def team2_loss(delta, logits, t, fu_mask, coords, lambda_hm=0.0, lambda_mask=0.0
         q = gaussian_target(t, (0.5 * r).clamp(4.0, 12.0), coords)
         terms["hm"] = -(q.flatten(1) * logp).sum(1).mean()
         total = total + lambda_hm * terms["hm"]
-    if lambda_mask:
+    if lambda_mask or lambda_other:
         m = F.max_pool3d(fu_mask, 4, stride=2, padding=1)  # same grid as SiameseNet's stem
         small = (r < 5.0)[:, None, None, None, None]
-        m = torch.where(small, F.max_pool3d(m, 3, stride=1, padding=1), m)  # tiny lesions: dilate 1 cell
+        m = torch.where(small, F.max_pool3d(m, 3, stride=1, padding=1), m).flatten(1)  # tiny lesions: dilate 1 cell
+    if lambda_mask:
         # skip samples whose window holds no FU mask (rare with re-drawn jitter): -1e4 fill would log a 1e4 loss
-        valid = m.flatten(1).any(1)
-        nll = -torch.logsumexp(logp.masked_fill(m.flatten(1) == 0, -1e4), 1) * valid
+        valid = m.any(1)
+        nll = -torch.logsumexp(logp.masked_fill(m == 0, -1e4), 1) * valid
+        if uniform_r:
+            ce = -(m * logp).sum(1) / m.sum(1).clamp_min(1)
+            nll = torch.where(r > uniform_r, ce, nll)
         terms["mask"] = nll.sum() / valid.sum().clamp_min(1)
         total = total + lambda_mask * terms["mask"]
+    if lambda_other:
+        o = F.max_pool3d(fu_other, 4, stride=2, padding=1).flatten(1) * (1 - m)  # never penalise the own lesion
+        mass = (logp.exp() * o).sum(1).clamp(max=1 - 1e-4)
+        terms["other"] = -torch.log1p(-mass).mean()
+        total = total + lambda_other * terms["other"]
     return total, terms

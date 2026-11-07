@@ -12,7 +12,7 @@
 #   pip install numpy pandas SimpleITK
 # Team 2 data: FU window centred on the true FU lesion + random offset (sd 8 mm, max 24 mm per axis), with masks.
 # Raw data is shared (read-only for the team); processed data goes next to it, also shared.
-# Run ONCE. Teammates just read OUT.
+# Run ONCE. Teammates just read OUT. Extra flags go to preprocess, e.g. OUT=...-big sbatch ... --big-max 56
 # Submit from the repo root:  mkdir -p logs && sbatch scripts/preprocess_team2.sbatch
 
 set -euo pipefail
@@ -25,5 +25,5 @@ RAW=${RAW:-/gpfs/helios/projects/ml_project_lesion_tracking/data}            # m
 OUT=${OUT:-/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2}
 
 PYTHONPATH=src python -m lesionloc.preprocess "$RAW" "$OUT" --workers "$SLURM_CPUS_PER_TASK" \
-    --centre fu --jitter-sd 8 --jitter-max 24 --seed 42
+    --centre fu --jitter-sd 8 --jitter-max 24 --seed 42 "$@"
 chmod -R o+rX "$OUT"

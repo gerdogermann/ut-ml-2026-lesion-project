@@ -13,7 +13,7 @@
 # Team 2 augmented train data: 4 copies per train-split lesion, BL and FU each re-sampled from the raw scan
 # at a random rotation (up to 15 deg) and scale (0.9-1.1). Use with train.py --aug-root OUT/lesions.
 # Raw data is shared (read-only for the team); processed data goes next to it, also shared.
-# Run ONCE. Teammates just read OUT.
+# Run ONCE. Teammates just read OUT. Extra flags go to preprocess, e.g. OUT=...-big sbatch ... --big-max 56
 # Submit from the repo root:  mkdir -p logs && sbatch scripts/augment_team2.sbatch
 
 set -euo pipefail
@@ -26,5 +26,5 @@ RAW=${RAW:-/gpfs/helios/projects/ml_project_lesion_tracking/data}            # m
 OUT=${OUT:-/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug}
 
 PYTHONPATH=src python -m lesionloc.preprocess "$RAW" "$OUT" --workers "$SLURM_CPUS_PER_TASK" \
-    --centre fu --jitter-sd 8 --jitter-max 24 --seed 42 --augment 4 --max-rot 15 --max-scale 0.1
+    --centre fu --jitter-sd 8 --jitter-max 24 --seed 42 --augment 4 --max-rot 15 --max-scale 0.1 "$@"
 chmod -R o+rX "$OUT"

@@ -9,8 +9,13 @@ Team 2 (needs Longitudinal-CT-processed-team2, which has masks):
       [--ema 0.999]
   pretrained encoder (pip install dynamic-network-architectures): --encoder resenc --pretrained checkpoint_final.pth
       [--coarse] [--enc-mask] [--freeze none|early|all] [--enc-lr 1e-4] [--warmup 0.1] [--amp]
+  training data (reports/Team 2 model and data improvements.md; needs data from preprocess --big-max 56):
+      [--offsets residuals.npy --offset-mix 0.4 0.4 0.2 --wide-mm 56] [--uniform-r 10] [--oversample-grown 2]
+      [--p-growth 0.3] [--p-distractor 0.2] [--lambda-other 0.2]
+Writes OUT/best.pt (best val mean), OUT/last.pt (final weights; EMA if --ema) and OUT/args.json.
 """
 import argparse
+import json
 import math
 import time
 from pathlib import Path
@@ -19,7 +24,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader, TensorDataset, WeightedRandomSampler
 
 from lesionloc.dataset import LesionDataset
 from lesionloc.losses import team2_loss
@@ -45,7 +50,8 @@ def step_loss(model, x, t, a, epoch):
     n = a.dist_warmup
     w = min(1.0, max(0.0, (epoch - n) / n)) if n else 1.0  # epoch is 0-based: 0 for n epochs, ramp over n, then 1
     delta, logits = model(x)
-    return team2_loss(delta, logits, t, x[:, 3:4], model.coords, a.lambda_hm, a.lambda_mask, w)
+    return team2_loss(delta, logits, t, x[:, 3:4], model.coords, a.lambda_hm, a.lambda_mask, w, a.uniform_r,
+                      x[:, 4:5] if x.shape[1] > 4 else None, a.lambda_other)
 
 
 def train_step(model, opt, scaler, x, t, a, epoch):
@@ -120,6 +126,20 @@ def main():
                     help="disable random training flips; does not disable rotations stored in --aug-root")
     ap.add_argument("--rejitter-sd", type=float, default=0.0,
                     help="train split only: fresh FU offset each load, mm sd per axis (needs fu_big); 0 = stored jitter")
+    ap.add_argument("--offsets", help="train: .npy (N,3) real window residuals (true FU - centre, mm) to bootstrap")
+    ap.add_argument("--offset-mix", type=float, nargs=3, default=[1.0, 0.0, 0.0], metavar=("GAUSS", "OFFSETS", "WIDE"),
+                    help="train: per-sample offset mixture weights: N(0, --rejitter-sd), --offsets rows, U(+-wide-mm)")
+    ap.add_argument("--wide-mm", type=float, default=56.0, help="train: half-range of the uniform offset component")
+    ap.add_argument("--p-distractor", type=float, default=0.0,
+                    help="train: probability of a window centred on/between a neighbouring FU lesion (<= 40 mm)")
+    ap.add_argument("--lambda-other", type=float, default=0.0,
+                    help="siamese: weight of -log(1 - softmax mass on other FU lesions)")
+    ap.add_argument("--uniform-r", type=float, default=0.0,
+                    help="siamese: r_FU (mm) above which the mask term is CE to uniform-over-mask; 0 = off")
+    ap.add_argument("--oversample-grown", type=float, default=1.0,
+                    help="train: sampling weight of pairs with volume ratio > 4 or MERGING (1 = plain shuffle)")
+    ap.add_argument("--p-growth", type=float, default=0.0, help="train: probability of the FU lesion growth/shrink warp")
+    ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--dist-warmup", type=int, default=0,
                     help="siamese: distance loss off for N epochs, then ramped in over N; 0 = always on")
     ap.add_argument("--encoder", choices=["small", "resenc"], default="small",
@@ -136,8 +156,8 @@ def main():
     ap.add_argument("--steps", type=int, default=20, help="bench steps")
     a = ap.parse_args()
 
-    torch.manual_seed(0)
-    np.random.seed(0)
+    torch.manual_seed(a.seed)
+    np.random.seed(a.seed)
     dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("device", dev, torch.cuda.get_device_name() if dev.type == "cuda" else "")
     print("args", vars(a))
@@ -164,13 +184,20 @@ def main():
         train_ds = val_ds = load_files(a.files, masks)
     else:
         roots = [a.root, a.aug_root] if a.aug_root else a.root
-        train_ds = LesionDataset(roots, a.split_file, "train", augment=not a.no_flips,
-                                 masks=masks, rejitter_sd=a.rejitter_sd)
+        train_ds = LesionDataset(roots, a.split_file, "train", augment=not a.no_flips, masks=masks,
+                                 rejitter_sd=a.rejitter_sd, offsets=np.load(a.offsets) if a.offsets else None,
+                                 mix=a.offset_mix, wide_mm=a.wide_mm, p_distractor=a.p_distractor,
+                                 other=a.lambda_other > 0, p_growth=a.p_growth)
         val_ds = LesionDataset(a.root, a.split_file, "val", masks=masks)
     print(f"train {len(train_ds)} lesions, val {len(val_ds)} lesions")
     loader = lambda ds, shuffle: DataLoader(ds, a.batch_size, shuffle=shuffle, num_workers=0 if a.files else a.workers,
                                             pin_memory=dev.type == "cuda")
     train_dl, val_dl = loader(train_ds, True), loader(val_ds, False)
+    if a.oversample_grown != 1:
+        w = train_ds.sample_weights(a.oversample_grown)
+        print(f"oversampling {int((w != 1).sum())} grown/merging train pairs x{a.oversample_grown:g}")
+        train_dl = DataLoader(train_ds, a.batch_size, sampler=WeightedRandomSampler(w, len(w)), num_workers=a.workers,
+                              pin_memory=dev.type == "cuda")
     total = a.epochs * len(train_dl)
     warm = int(a.warmup * total)
     # linear warmup, then cosine to 0 (warm = 0: same as CosineAnnealingLR(opt, total))
@@ -183,6 +210,7 @@ def main():
 
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    (out / "args.json").write_text(json.dumps(vars(a), indent=1))  # lesionloc.prediction rebuilds the model from it
     best = float("inf")
     for epoch in range(1, a.epochs + 1):
         t0, losses, terms = time.perf_counter(), [], {}
@@ -200,7 +228,8 @@ def main():
         if m["Mean error"] < best:
             best = m["Mean error"]
             torch.save(evaluated.state_dict(), out / "best.pt")
-    print(f"best val mean error {best:.2f} mm, checkpoint {out / 'best.pt'}")
+    torch.save(evaluated.state_dict(), out / "last.pt")  # fixed-schedule runs are judged on this one
+    print(f"best val mean error {best:.2f} mm, checkpoint {out / 'best.pt'}; final weights {out / 'last.pt'}")
 
     if a.test:
         evaluated.load_state_dict(torch.load(out / "best.pt", map_location=dev))

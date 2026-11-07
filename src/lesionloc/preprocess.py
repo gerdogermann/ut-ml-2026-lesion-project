@@ -63,12 +63,30 @@ def patch(img, center_mm, size=SIZE, direction=np.eye(3), spacing=SPACING):
     return ((a - HU_MIN) / (HU_MAX - HU_MIN)).astype(np.float16)  # [0,1], axes (z,y,x)
 
 
-def mask_patch(mask, center_mm, label, size=SIZE, direction=np.eye(3), spacing=SPACING):
-    """Same grid as patch(), nearest neighbour; 1 where the mask has this lesion's instance label."""
+def label_patch(mask, center_mm, size=SIZE, direction=np.eye(3), spacing=SPACING):
+    """Same grid as patch(), nearest neighbour; the instance label map, axes (z,y,x)."""
     out = sitk.Resample(mask, [size] * 3, sitk.Transform(), sitk.sitkNearestNeighbor,
                         grid_origin(center_mm, size, direction, spacing).tolist(),
                         [spacing] * 3, direction.flatten().tolist(), 0, sitk.sitkUInt16)
-    return (sitk.GetArrayFromImage(out) == label).astype(np.uint8)  # axes (z,y,x)
+    return sitk.GetArrayFromImage(out)
+
+
+def mask_patch(mask, center_mm, label, size=SIZE, direction=np.eye(3), spacing=SPACING):
+    """1 where the label_patch() has this lesion's instance label."""
+    return (label_patch(mask, center_mm, size, direction, spacing) == label).astype(np.uint8)
+
+
+def big_cube(lab, label):
+    """FU masks of a big cube centred on the true lesion: own mask, other lesions' mask (distractor penalty) and the
+    other lesions' centres of mass in patch mm (x,y,z) from the cube centre (distractor-centred windows)."""
+    other = (lab > 0) & (lab != label)
+    _, inv = np.unique(lab[other], return_inverse=True)
+    zyx = np.argwhere(other)  # same C order as lab[other]
+    com = np.stack([np.bincount(inv, zyx[:, k]) for k in range(3)], 1) / np.bincount(inv)[:, None] if len(zyx) \
+        else np.zeros((0, 3))
+    nbr = (com[:, ::-1] - (lab.shape[0] - 1) / 2) * SPACING
+    return dict(fu_mask_big=(lab == label).astype(np.uint8), fu_other_big=other.astype(np.uint8),
+                nbr_mm=nbr.astype(np.float32))
 
 
 def com_offset_mm(m):
@@ -141,28 +159,32 @@ def do_patient(args):
             continue
         if np.linalg.norm(com_offset_mm(fu_mask) - target) > 4:  # wrong label or axis order would show here
             stats["warn_mask_cog_far"] += 1
+        # FU/BL volume ratio and topology: training oversamples grown and merged lesions
+        meta = dict(vol_ratio=np.float32(r.get("volume_fu", np.nan) / r.get("volume_bl", np.nan)),
+                    merging=r["topology_class"] == "MERGING")
         if a.augment:
-            stats.update(augment(a, pid, lid, ibl, ifu, mbl, mfu, bl_mm, fu_mm, fu_label, jitter, out, prop is not None))
+            stats.update(augment(a, pid, lid, ibl, ifu, mbl, mfu, bl_mm, fu_mm, fu_label, jitter, out, prop is not None,
+                                 meta))
             continue
         big = {}
         if centre == "fu":  # FU cube centred on the true lesion, room for any jitter: lets training re-draw it
-            n = SIZE + 2 * int(np.ceil(jitter_max / SPACING))
-            big = dict(fu_big=patch(ifu, fu_mm, n), fu_mask_big=mask_patch(mfu, fu_mm, fu_label, n))
+            n = SIZE + 2 * int(np.ceil(a.big_max / SPACING))
+            big = dict(fu_big=patch(ifu, fu_mm, n), **big_cube(label_patch(mfu, fu_mm, n), fu_label))
         np.savez_compressed(out / "lesions" / f"{pid}_{lid}.npz", **big,
                             bl=patch(ibl, bl_mm), fu=patch(ifu, centre_fu), bl_mask=bl_mask, fu_mask=fu_mask,
                             target_mm=target.astype(np.float32), jitter_mm=jitter.astype(np.float32),
                             centre_fu_mm=centre_fu, true_fu_mm=fu_mm, centre_source=centre,
-                            has_propagated=prop is not None)
+                            has_propagated=prop is not None, **meta)
         stats["kept"] += 1
     return pid, stats
 
 
-def augment(a, pid, lid, ibl, ifu, mbl, mfu, bl_mm, fu_mm, fu_label, jitter, out, has_prop):
+def augment(a, pid, lid, ibl, ifu, mbl, mfu, bl_mm, fu_mm, fu_label, jitter, out, has_prop, meta):
     """K rotated + scaled copies of one lesion pair (BL and FU each get their own), same keys as the normal npz.
     Offsets are in patch mm (2 mm per patch voxel), as the model sees them; the fixed FU window sits at the
     lesion's own jitter rounded to whole voxels, cut from fu_big like LesionDataset's re-drawn jitter."""
     stats = Counter()
-    m = int(np.ceil(a.jitter_max / SPACING))
+    m = int(np.ceil(a.big_max / SPACING))
     n = SIZE + 2 * m
     s = np.clip(np.round(jitter / SPACING), -m, m).astype(int)  # (x,y,z) voxels
     win = tuple(slice(m + s[j], m + s[j] + SIZE) for j in (2, 1, 0))  # arrays are (z,y,x)
@@ -171,8 +193,8 @@ def augment(a, pid, lid, ibl, ifu, mbl, mfu, bl_mm, fu_mm, fu_label, jitter, out
         rb, rf = random_rotation(rng, a.max_rot), random_rotation(rng, a.max_rot)
         sb, sf = SPACING * rng.uniform(1 - a.max_scale, 1 + a.max_scale, 2)
         bl_mask = mask_patch(mbl, bl_mm, lid, SIZE, rb, sb)
-        fu_mask_big = mask_patch(mfu, fu_mm, fu_label, n, rf, sf)
-        fu_mask = fu_mask_big[win]
+        big = big_cube(label_patch(mfu, fu_mm, n, rf, sf), fu_label)
+        fu_mask = big["fu_mask_big"][win]
         if not bl_mask.any() or not fu_mask.any():
             stats["skip_empty_mask"] += 1
             continue
@@ -180,7 +202,7 @@ def augment(a, pid, lid, ibl, ifu, mbl, mfu, bl_mm, fu_mm, fu_label, jitter, out
         if np.linalg.norm(com_offset_mm(fu_mask) - target) > 4:
             stats["warn_mask_cog_far"] += 1
         fu_big = patch(ifu, fu_mm, n, rf, sf)
-        np.savez_compressed(out / "lesions" / f"{pid}_{lid}_a{k}.npz", fu_big=fu_big, fu_mask_big=fu_mask_big,
+        np.savez_compressed(out / "lesions" / f"{pid}_{lid}_a{k}.npz", fu_big=fu_big, **big, **meta,
                             bl=patch(ibl, bl_mm, SIZE, rb, sb), fu=fu_big[win], bl_mask=bl_mask, fu_mask=fu_mask,
                             target_mm=target, jitter_mm=-target, has_propagated=has_prop)
         stats["kept"] += 1
@@ -195,12 +217,16 @@ def main():
     ap.add_argument("--centre", choices=["propagated", "fu", "csv"], default="propagated")
     ap.add_argument("--jitter-sd", type=float, default=8.0, help="mm per axis, --centre fu only")
     ap.add_argument("--jitter-max", type=float, default=24.0, help="mm per axis, --centre fu only")
+    ap.add_argument("--big-max", type=float,
+                    help="mm per axis of room around the window in fu_big (training re-draws offsets up to this); "
+                         "default --jitter-max. 56 = the whole 128 mm window")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--augment", type=int, default=0, help="K rotated/scaled copies per train lesion (--centre fu)")
     ap.add_argument("--max-rot", type=float, default=15.0, help="degrees, --augment only")
     ap.add_argument("--max-scale", type=float, default=0.1, help="scale in 1 +- this, --augment only")
     ap.add_argument("--centres-csv", help="Alignment-stage centres; required with --centre csv")
     a = ap.parse_args()
+    a.big_max = max(a.big_max or a.jitter_max, a.jitter_max)
     if a.centre == "csv" and not a.centres_csv:
         ap.error("--centres-csv is required with --centre csv")
     a.centres = CentreTable.read(a.centres_csv) if a.centre == "csv" else None
