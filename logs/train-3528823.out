@@ -1,0 +1,123 @@
+Sat Nov  7 11:44:37 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-SXM2-32GB           Off |   00000000:3D:00.0 Off |                    0 |
+| N/A   40C    P0             41W /  300W |       0MiB /  32768MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+device cuda Tesla V100-SXM2-32GB
+args {'files': [], 'root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-big/lesions', 'split_file': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-big/split.json', 'epochs': 25, 'batch_size': 16, 'lr': 0.0003, 'workers': 8, 'out': 'runs/3528823', 'test': False, 'model': 'siamese', 'bl_mask': True, 'lambda_hm': 0.0, 'lambda_mask': 0.5, 'template_k': 5, 'prior_sd': 0.0, 'ema': 0.999, 'aug_root': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-big-aug/lesions', 'no_flips': False, 'rejitter_sd': 8.0, 'offsets': '/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-big/team1_residuals_train.npy', 'offset_mix': [0.4, 0.4, 0.2], 'wide_mm': 56.0, 'p_distractor': 0.0, 'lambda_other': 0.0, 'uniform_r': 10.0, 'oversample_grown': 2.0, 'p_growth': 0.0, 'seed': 0, 'dist_warmup': 0, 'encoder': 'resenc', 'pretrained': None, 'coarse': True, 'enc_mask': False, 'freeze': 'none', 'enc_lr': None, 'warmup': 0.1, 'amp': True, 'bench': False, 'steps': 20}
+params 4.00 M, trainable 4.00 M
+train 10769 lesions, val 207 lesions
+oversampling 2136 grown/merging train pairs x2
+/gpfs/helios/projects/ml_project_lesion_tracking/ut-ml-2026-lesion-project/scripts/train.py:219: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  sched.step()
+epoch 1 loss 4.137 dist 2.063 mask 4.148 (269 s)  val: mean 11.75 mm, median 10.50 mm, CPM@10 46.4%, has_propagated mean 11.75 mm  (zero baseline mean 12.47 mm)
+epoch 2 loss 3.518 dist 1.709 mask 3.617 (264 s)  val: mean 9.13 mm, median 7.50 mm, CPM@10 66.7%, has_propagated mean 9.02 mm  (zero baseline mean 12.47 mm)
+epoch 3 loss 3.280 dist 1.562 mask 3.437 (263 s)  val: mean 8.40 mm, median 6.50 mm, CPM@10 70.0%, has_propagated mean 8.19 mm  (zero baseline mean 12.47 mm)
+epoch 4 loss 3.069 dist 1.429 mask 3.280 (264 s)  val: mean 7.63 mm, median 5.75 mm, CPM@10 72.5%, has_propagated mean 7.41 mm  (zero baseline mean 12.47 mm)
+epoch 5 loss 2.912 dist 1.312 mask 3.201 (263 s)  val: mean 7.39 mm, median 5.04 mm, CPM@10 75.8%, has_propagated mean 7.23 mm  (zero baseline mean 12.47 mm)
+epoch 6 loss 2.776 dist 1.212 mask 3.129 (264 s)  val: mean 6.94 mm, median 4.63 mm, CPM@10 77.3%, has_propagated mean 6.75 mm  (zero baseline mean 12.47 mm)
+epoch 7 loss 2.746 dist 1.183 mask 3.127 (264 s)  val: mean 6.80 mm, median 4.71 mm, CPM@10 80.2%, has_propagated mean 6.63 mm  (zero baseline mean 12.47 mm)
+epoch 8 loss 2.590 dist 1.083 mask 3.014 (264 s)  val: mean 6.53 mm, median 4.41 mm, CPM@10 80.7%, has_propagated mean 6.41 mm  (zero baseline mean 12.47 mm)
+epoch 9 loss 2.549 dist 1.064 mask 2.970 (264 s)  val: mean 6.28 mm, median 4.13 mm, CPM@10 80.2%, has_propagated mean 6.14 mm  (zero baseline mean 12.47 mm)
+epoch 10 loss 2.473 dist 0.999 mask 2.948 (264 s)  val: mean 6.14 mm, median 4.05 mm, CPM@10 82.6%, has_propagated mean 6.01 mm  (zero baseline mean 12.47 mm)
+epoch 11 loss 2.373 dist 0.938 mask 2.869 (264 s)  val: mean 6.10 mm, median 3.96 mm, CPM@10 80.7%, has_propagated mean 5.96 mm  (zero baseline mean 12.47 mm)
+epoch 12 loss 2.283 dist 0.893 mask 2.780 (264 s)  val: mean 5.94 mm, median 3.86 mm, CPM@10 80.7%, has_propagated mean 5.79 mm  (zero baseline mean 12.47 mm)
+epoch 13 loss 2.247 dist 0.859 mask 2.777 (264 s)  val: mean 5.86 mm, median 3.77 mm, CPM@10 82.1%, has_propagated mean 5.75 mm  (zero baseline mean 12.47 mm)
+epoch 14 loss 2.213 dist 0.827 mask 2.774 (264 s)  val: mean 5.95 mm, median 3.61 mm, CPM@10 82.1%, has_propagated mean 5.86 mm  (zero baseline mean 12.47 mm)
+epoch 15 loss 2.120 dist 0.780 mask 2.681 (264 s)  val: mean 6.10 mm, median 3.67 mm, CPM@10 82.6%, has_propagated mean 5.99 mm  (zero baseline mean 12.47 mm)
+epoch 16 loss 2.084 dist 0.743 mask 2.682 (264 s)  val: mean 6.10 mm, median 3.56 mm, CPM@10 82.6%, has_propagated mean 5.97 mm  (zero baseline mean 12.47 mm)
+epoch 17 loss 2.086 dist 0.725 mask 2.721 (264 s)  val: mean 6.05 mm, median 3.50 mm, CPM@10 84.1%, has_propagated mean 5.92 mm  (zero baseline mean 12.47 mm)
+epoch 18 loss 1.963 dist 0.678 mask 2.569 (264 s)  val: mean 6.13 mm, median 3.37 mm, CPM@10 83.1%, has_propagated mean 6.01 mm  (zero baseline mean 12.47 mm)
+epoch 19 loss 1.959 dist 0.670 mask 2.578 (263 s)  val: mean 6.30 mm, median 3.39 mm, CPM@10 82.1%, has_propagated mean 6.17 mm  (zero baseline mean 12.47 mm)
+epoch 20 loss 1.925 dist 0.633 mask 2.584 (263 s)  val: mean 6.40 mm, median 3.42 mm, CPM@10 81.6%, has_propagated mean 6.26 mm  (zero baseline mean 12.47 mm)
+epoch 21 loss 1.852 dist 0.604 mask 2.496 (264 s)  val: mean 6.41 mm, median 3.49 mm, CPM@10 82.1%, has_propagated mean 6.25 mm  (zero baseline mean 12.47 mm)
+epoch 22 loss 1.875 dist 0.610 mask 2.531 (263 s)  val: mean 6.40 mm, median 3.43 mm, CPM@10 82.1%, has_propagated mean 6.24 mm  (zero baseline mean 12.47 mm)
+epoch 23 loss 1.867 dist 0.611 mask 2.511 (263 s)  val: mean 6.40 mm, median 3.41 mm, CPM@10 81.6%, has_propagated mean 6.24 mm  (zero baseline mean 12.47 mm)
+epoch 24 loss 1.860 dist 0.596 mask 2.528 (263 s)  val: mean 6.37 mm, median 3.47 mm, CPM@10 82.1%, has_propagated mean 6.22 mm  (zero baseline mean 12.47 mm)
+epoch 25 loss 1.867 dist 0.589 mask 2.556 (263 s)  val: mean 6.36 mm, median 3.47 mm, CPM@10 82.1%, has_propagated mean 6.21 mm  (zero baseline mean 12.47 mm)
+best val mean error 5.86 mm, checkpoint runs/3528823/best.pt; final weights runs/3528823/last.pt
+val: 207 lesions, mean 6.36 mm, median 3.47 mm; wrote runs/3528823/worst/errors.csv, heatmaps.npz (top 20)
+       lesion  err_mm      tx      ty      tz      px      py      pz  fu_radius_mm  peak_prob  has_propagated  err_local  err_tta  err_tta_local
+39059724f7_11  43.659   0.664   6.187   7.809 -25.554 -27.194  18.028        51.740      0.015            True     68.940   32.486         55.325
+ 7ef605fc8d_1  35.779   2.306   1.185  -0.456 -26.125   6.937  20.491        16.526      0.007            True     47.218   30.997         31.209
+ 39059724f7_3  35.722   2.385   2.106  -0.096  -9.114 -28.996  13.189        51.876      0.008            True     51.881   33.548         41.200
+e2c0be2456_10  34.765   4.874  -1.808   1.571  18.344  -9.839 -29.456         9.225      0.032            True     48.796   28.032         46.804
+ 39059724f7_6  34.023   3.099   9.801  -6.210 -22.723  -9.379   4.874        51.609      0.009            True     67.691   37.384         61.006
+e2c0be2456_47  33.377 -12.189   0.337  12.126 -20.088 -20.149 -13.013        17.199      0.008            True     50.859   32.941         45.405
+3988c7f88e_20  31.408   5.539 -12.743   0.193 -13.966  11.789  -1.860        32.562      0.007            True     40.049   33.896         36.561
+e2c0be2456_21  29.345  -2.500  14.004  -8.049  -1.249 -11.776   5.915        15.673      0.006            True     22.090   29.696         26.277
+e2c0be2456_31  25.812  10.391  20.851  -5.883   0.256  -1.090   3.179         9.951      0.061            True     31.554   25.867         31.087
+e2c0be2456_25  22.972   9.040   6.131  -2.035   1.289  -6.743  15.339        11.312      0.008            True     60.376   22.510         23.138
+e2c0be2456_12  20.414  -8.868  -5.061   2.360  -8.759  -5.231 -18.053        13.641      0.009            True      7.265   10.609          5.227
+e2c0be2456_19  20.299   6.790  -1.898   8.236  -1.319  -0.360 -10.309        14.321      0.023           False     13.786   14.738         13.566
+ e2c0be2456_7  20.210 -12.437  15.432   2.074 -11.458  -4.093  -3.046        20.100      0.016           False     19.176   17.484         18.441
+e2c0be2456_20  19.636   8.019  -6.613  13.198   2.048 -10.009  -5.197        12.698      0.006            True     30.427   14.341         10.998
+e2c0be2456_40  19.511  -6.419   2.288 -13.449 -11.285   3.389   5.414        11.880      0.029            True      7.710   19.659          5.592
+3988c7f88e_17  18.992   4.576   8.678  -0.652   8.455  -9.254   4.253         7.328      0.124            True     19.596   19.304         19.514
+e2c0be2456_14  18.829  -4.980   7.233   7.047 -17.809  -6.092   3.523        16.070      0.014            True     20.832   19.116         13.353
+ eda80a3d5b_3  18.321  -3.147   0.453 -17.388   0.543  -0.708   0.520         3.767      0.057            True     28.187   19.338         26.699
+ e2c0be2456_4  16.176  14.065   4.251  -1.786  25.675  12.985  -8.898        10.072      0.013            True     43.891   12.908          8.376
+ 84150c44ef_2  15.613   0.722   3.296   4.399  -5.961   3.724  -9.704        31.335      0.012            True     18.387   13.919         16.775
+
+readout (local = +-8 mm around the peak; per-patient = mean of 28 patient means):
+  plain      mean 6.36 mm, median 3.47 mm, CPM@10 82.1%, per-patient mean 5.85 mm
+  local      mean 7.60 mm, median 2.86 mm, CPM@10 83.1%, per-patient mean 6.87 mm
+  tta        mean 5.98 mm, median 3.22 mm, CPM@10 83.6%, per-patient mean 5.39 mm
+  tta_local  mean 6.23 mm, median 2.82 mm, CPM@10 85.0%, per-patient mean 5.62 mm
+
+worst patients (plain readout):
+            count  mean  median
+lesion                         
+7ef605fc8d      1 35.78   35.78
+39059724f7      9 14.32    1.94
+e2c0be2456     50 10.48    7.20
+84150c44ef      2 10.16   10.16
+cf2e4f52be      4  7.89    8.25
+48aedb8880      5  6.85    4.54
+ebf11048b1      3  6.78    4.23
+38b18881fc      2  6.25    6.25
+            method   n  patients  fallbacks  patient_mean_mm  Median error  Mean error     MEDx     MEDy       MEDz    CPM@5   CPM@10   CPM@20
+        propagated 208        28         14        39.623831     11.441644  142.351955 7.463620 8.159889 137.821933 0.355769 0.461538 0.634615
+            hybrid 208        28          0        10.325778      6.710310   10.750548 4.118553 5.319231   6.703216 0.379808 0.629808 0.860577
+      hybrid_plain 208        28          0         6.757441      3.640608    7.044133 3.253588 3.685673   3.745653 0.596154 0.774038 0.942308
+        hybrid_tta 208        28          0         6.565017      3.937922    6.879794 3.131581 3.605043   3.601352 0.625000 0.798077 0.927885
+      hybrid_pass2 208        28          0         6.587170      3.460503    6.933757 3.211436 3.637194   3.620624 0.634615 0.802885 0.937500
+hybrid_pass2_gated 208        28          0         6.666542      3.524687    6.901483 3.215492 3.644178   3.555008 0.644231 0.807692 0.923077
+  propagated_plain 208        28          0        35.649511      4.398029  135.054026 6.072118 6.246406 131.808848 0.528846 0.673077 0.807692
+    propagated_tta 208        28          0        35.331822      4.486097  135.182116 6.395796 5.747966 132.011937 0.509615 0.697115 0.817308
+
+Mean error (count) by start error |centre - truth|, mm:
+method          n  hybrid  hybrid_pass2  hybrid_pass2_gated  hybrid_plain  hybrid_tta
+start                                                                                
+[0.0, 10.0)   131    4.49          4.22                4.08          3.94        3.77
+[10.0, 20.0)   48   13.47          8.64                8.59          8.83        8.78
+[20.0, 30.0)   18   24.04         14.86               15.52         16.61       16.05
+[30.0, 40.0)    2   34.94         21.45               21.45         19.92       18.65
+[40.0, inf)     9   55.34         18.32               18.51         20.69       21.09
+
+Misses > 10 mm: share inside the own FU lesion / inside another FU lesion (swap):
+                    misses  own  swap
+method                               
+hybrid                  77 0.21  0.04
+hybrid_plain            47 0.43  0.02
+hybrid_tta              42 0.36  0.02
+hybrid_pass2            41 0.32  0.05
+hybrid_pass2_gated      40 0.35  0.03
+hybrid in window@56: 100.0%
+propagated_plain in window@56: 89.4%
+Results: runs/3528823/joint
