@@ -3,7 +3,7 @@
 Usage (from repo root):
   PYTHONPATH=src python scripts/worst_cases.py --ckpt runs/<job>/best.pt --root DATA/lesions \
       --split-file DATA/split.json [--bl-mask] [--top 20] [--split val]
-Writes next to the checkpoint, in worst/: errors.csv (every lesion, worst first) and heatmaps.npz
+Writes next to the checkpoint, in worst/ (worst-<split>/ for other splits): errors.csv (every lesion, worst first) and heatmaps.npz
 (32^3 probability maps of the top N). CT is not copied: the notebook reads it from --root.
 Also compares readouts without retraining: plain soft-argmax, local soft-argmax (--local-mm around the peak),
 the mean over all 8 flips (TTA), and both; plus the mean error per patient (patients with many lesions weigh less).
@@ -72,7 +72,7 @@ def main():
     df = pd.DataFrame(rows).sort_values("err_mm", ascending=False)
     m = compute_metrics(df[["px", "py", "pz"]].to_numpy(), df[["tx", "ty", "tz"]].to_numpy())
     assert np.isclose(m["Mean error"], df.err_mm.mean(), atol=1e-3)
-    out = Path(a.ckpt).parent / "worst"
+    out = Path(a.ckpt).parent / ("worst" if a.split == "val" else f"worst-{a.split}")  # keep val errors.csv intact
     out.mkdir(exist_ok=True)
     df.to_csv(out / "errors.csv", index=False, float_format="%.3f")
     np.savez_compressed(out / "heatmaps.npz", **{n: maps[n] for n in df.lesion[:a.top]})
