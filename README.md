@@ -96,14 +96,14 @@ Team 1 also tried rigid, affine, organ-based and B-spline registration, and uniG
 
 ## Next steps
 
-1. **Calculate paired bootstrap confidence intervals** on `runs/*/joint/predictions.csv` for rows 20–25. Do this before you choose between the runs.
+1. **Calculate paired bootstrap confidence intervals** on the joint `predictions.csv` files of rows 20–25 (cluster, `experiments/02*/runs/*/joint/`). Do this before you choose between the runs.
 2. **Ensemble N0 + N3.** N0 is better for near starts, and N3 is better for far starts. As an alternative, train with a narrower offset mix (`--offset-mix 0.6 0.3 0.1`).
 3. **Decrease the Team 1 tail.** In N3, lesions that start 20–30 mm off still have a mean error of 17.1 mm. Lesions that start 40 mm or more off have 20.9 mm. A better start position helps these lesions most.
 4. **Improve the result for grown lesions.**
 5. **Check the 20–30 mm start bin.** It became worse in N1 (13.2 → 19.0 mm). Check each lesion in it.
 6. **Run the planned no-flips training** (`scripts/train_siamese_no_flips.sbatch`). It is ready but not submitted.
 7. **Fill [Decisions](docs/wiki/Decisions.md):** primary metric, lesions that are not visible at follow-up, and the baseline.
-8. **Reorganise experiments:** one directory per experiment in git, checkpoints on the shared cluster folder (in progress).
+8. **Finish the experiments reorganisation:** move the Team 2 data folders to `processed/`, and test `scripts/run.sbatch` on the cluster.
 
 ## Metrics
 
@@ -127,17 +127,15 @@ A lesion is eligible when the dataset marks it UNCHANGED or MERGING, the BL–FU
 src/lesionloc/     package: preprocess, dataset, model, losses, registration, organs,
                    alignment (hybrid gate), prediction (TTA), pipeline, joint_eval, metrics
 scripts/           entry points (*.py) and SLURM jobs (*.sbatch)
+  run.sbatch       one SLURM job for Team 2 runs: train or eval
   team1_*.py       Team 1 registration, organs, uniGradICON, combine, eval
-  train.py         Team 2 training
+  train.py         Team 2 training (--experiment <row>_<name>)
   worst_cases.py   per-lesion errors on Team 2 patches
-  evaluate_joint.py, test_final.sbatch
-configs/           default config (most settings are still CLI flags)
+  evaluate_joint.py
 docs/wiki/         project wiki: Experiments, Teams, Team2-Model, Compute, Decisions
 docs/              Joint-experiment.md
 reports/           written analyses (joint results, losses, pretrained encoders, improvements)
 research_notes/    literature notes for the reports
-runs/<job_id>/     small per-run outputs: errors.csv, joint predictions.csv
-logs/              SLURM logs (to move out of git)
 notebooks/         example lesions, worst cases
 tests/             pytest
 data/              lesion metadata CSVs and 2 example patches (scans are not in git)
@@ -149,8 +147,10 @@ data/              lesion metadata CSVs and 2 example patches (scans are not in 
 - Dataset download: <https://fdat.uni-tuebingen.de/records/qe950-g4h94>
 - Cluster: UT HPC `rocket.hpc.ut.ee`. You can connect only from the university network or the UT VPN. See [Compute](docs/wiki/Compute.md).
 - Shared project folder: `/gpfs/helios/projects/ml_project_lesion_tracking/`
-  - `data/`: raw scans, `data_split.json`, Team 1 outputs (`team1/`)
-  - `experiments/_legacy/runs/<job_id>/`: Team 2 checkpoints (`best.pt`, `last.pt`)
+  - `data/`: raw scans and `data_split.json`
+  - `processed/`: derived data, for example Team 1 outputs (`team1/`). The old paths in `data/` are symlinks.
+  - `experiments/<row>_<name>/runs/<job_id>/`: checkpoints (`best.pt`, `last.pt`), `args.json`, results and `slurm.log`. The row is the row number in [Experiments](docs/wiki/Experiments.md).
+  - `scratch/`: temporary files
   - `pretrained/`: external weights (nnFoundationCNN, uniGradICON)
   - `totalseg_home/`: TotalSegmentator cache
 
@@ -169,10 +169,11 @@ PYTHONPATH=src pytest
 On the cluster, run from the repository root:
 
 ```bash
-mkdir -p logs
-sbatch scripts/evaluate_joint.sbatch   # joint val evaluation of a checkpoint (set CKPT)
-sbatch scripts/train_eval_joint.sbatch # train a Team 2 model, then joint val evaluation
+sbatch scripts/run.sbatch train <row>_<name> [train.py flags]
+sbatch scripts/run.sbatch eval <row>_<name> <job_id> last.pt
 ```
+
+Each run writes to `experiments/<row>_<name>/runs/<job_id>/` in the shared project folder. `args.json` there has all options and the git commit.
 
 ## Workflow
 
@@ -180,7 +181,7 @@ sbatch scripts/train_eval_joint.sbatch # train a Team 2 model, then joint val ev
 - Make a branch from `main`.
 - Branch names: `<issue-number>-short-description`, for example `12-baseline-displacement`.
 - Open a pull request that references the issue (`Closes #12`). Get one review before you merge.
-- Add each run as one row in [Experiments](docs/wiki/Experiments.md), with its job id.
+- Add one row in [Experiments](docs/wiki/Experiments.md) for each run. Use `<row>_<name>` as the experiment name.
 
 ## References
 

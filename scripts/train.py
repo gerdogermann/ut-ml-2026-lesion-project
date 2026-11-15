@@ -13,10 +13,15 @@ Team 2 (needs Longitudinal-CT-processed-team2, which has masks):
       [--offsets residuals.npy --offset-mix 0.4 0.4 0.2 --wide-mm 56] [--uniform-r 10] [--oversample-grown 2]
       [--p-growth 0.3] [--p-distractor 0.2] [--lambda-other 0.2]
 Writes OUT/best.pt (best val mean), OUT/last.pt (final weights; EMA if --ema) and OUT/args.json.
+--experiment <row>_<name> sets OUT to $LESION_STORE/experiments/<row>_<name>/runs/<job id>/ (shared cluster folder).
 """
 import argparse
+import datetime
 import json
 import math
+import os
+import re
+import subprocess
 import time
 from pathlib import Path
 
@@ -112,6 +117,7 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--out", default="runs", help="best checkpoint goes to OUT/best.pt")
+    ap.add_argument("--experiment", help="<row>_<name>: OUT = $LESION_STORE/experiments/<row>_<name>/runs/<job id>")
     ap.add_argument("--test", action="store_true", help="also report the test split with the best checkpoint")
     ap.add_argument("--model", choices=["cnn", "siamese"], default="cnn")
     ap.add_argument("--bl-mask", action="store_true", help="siamese: BL mask as input + mask-pooled template")
@@ -155,6 +161,12 @@ def main():
     ap.add_argument("--bench", action="store_true", help="random tensors, report time and memory per step")
     ap.add_argument("--steps", type=int, default=20, help="bench steps")
     a = ap.parse_args()
+    if a.experiment:
+        if not re.fullmatch(r"\d{3}_[a-z0-9]+(-[a-z0-9]+)*", a.experiment):
+            ap.error(f"--experiment {a.experiment!r} is not <row>_<name>, e.g. 026_my-idea")
+        store = os.environ.get("LESION_STORE", "/gpfs/helios/projects/ml_project_lesion_tracking")
+        job = os.environ.get("SLURM_JOB_ID") or "local-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        a.out = f"{store}/experiments/{a.experiment}/runs/{job}"
 
     torch.manual_seed(a.seed)
     np.random.seed(a.seed)
@@ -210,7 +222,9 @@ def main():
 
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "args.json").write_text(json.dumps(vars(a), indent=1))  # lesionloc.prediction rebuilds the model from it
+    git = lambda *c: subprocess.run(["git", *c], capture_output=True, text=True).stdout.strip()
+    info = dict(git_commit=git("rev-parse", "HEAD"), git_dirty=bool(git("status", "--porcelain", "--untracked-files=no")))
+    (out / "args.json").write_text(json.dumps({**vars(a), **info}, indent=1))  # lesionloc.prediction rebuilds the model from it
     best = float("inf")
     for epoch in range(1, a.epochs + 1):
         t0, losses, terms = time.perf_counter(), [], {}

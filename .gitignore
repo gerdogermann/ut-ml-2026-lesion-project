@@ -21,3 +21,10 @@ venv/
 .idea/
 .DS_Store
 runs/
+
+# Weights, patches and SLURM logs live on the cluster ($LESION_STORE), not in git
+*.pt
+*.pth
+*.npz
+!data/example_lesions/*.npz
+logs/
