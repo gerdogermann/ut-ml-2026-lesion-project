@@ -1,7 +1,7 @@
 
 ```
-RAW DATA(readable to everybody): /gpfs/helios/home/kristiat/data/Longitudinal-CT/
-PREPROCESSED DATA (readable to everybody): /gpfs/helios/home/kristiat/data/Longitudinal-CT-processed/
+RAW DATA(readable to everybody): /gpfs/helios/projects/ml_project_lesion_tracking/data/
+PREPROCESSED DATA (readable to everybody): /gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed/
   lesions/
 ```
 
@@ -25,3 +25,28 @@ Goal: for each lesion in the baseline (BL) scan, predict where it is in the foll
    (kept and each skip reason).
 9. **Split**: official `data_split.json`, filtered to patients with samples, written to `split.json`.
    The script fails if a processed patient is missing from the official split.
+## Team 2 data (`scripts/preprocess_team2.sbatch`)
+
+Output: `/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2/`. Same steps as above, run with
+`--centre fu`: the FU window is centred on the true FU lesion plus a random offset (Gaussian, sd 8 mm per axis,
+clipped to ±24 mm, fixed per lesion by `--seed`), which simulates Team 1's error. So `target_mm = -jitter_mm`.
+
+Extra fields per npz:
+- `bl_mask`, `fu_mask`: uint8 (z, y, x), 1 for this lesion's instance only (nearest-neighbour resampling).
+  For `MERGING` lesions the FU mask is the lesion it merged into (`merged_into`).
+- `jitter_mm`: the offset of the window centre from the true FU position, mm, (x, y, z).
+- `fu_big`, `fu_mask_big`: 88³ FU CT and mask centred exactly on the true FU lesion (64 + 2·12 voxels, room for the
+  ±24 mm jitter). `train.py --rejitter-sd 8` cuts the 64³ window from these at a fresh offset every epoch
+  (train split only; val/test keep the stored `fu`, `fu_mask`, `target_mm`).
+
+Extra log counters: `skip_no_mask` (mask file missing), `skip_empty_mask` (label not in BL or FU patch),
+`warn_mask_cog_far` (FU mask centre of mass > 4 mm from `target_mm`; a large count means a label or axis bug).
+
+## Augmented train data (`scripts/augment_team2.sbatch`)
+
+Output: `/gpfs/helios/projects/ml_project_lesion_tracking/data/Longitudinal-CT-processed-team2-aug/`, train-split
+patients only. Per train lesion, 4 files `<patient>_<lesion>_a<k>.npz` with the same keys as the Team 2 data.
+BL and FU are each re-sampled from the raw scan with their own random rotation (up to 15°, random axis) and
+scale (0.9–1.1). Offsets are in patch mm (2 mm per patch voxel), the units the model sees. The fixed FU window is
+the lesion's stored jitter rounded to whole voxels. Use with `train.py --aug-root <dir>/lesions`
+(added to the train split only).
