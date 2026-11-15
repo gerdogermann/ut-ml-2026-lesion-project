@@ -44,9 +44,9 @@ LesionLocator does not track with a learned similarity search. It warps the base
 ### Inferences
 - The challenge's `cog_propagated` field is effectively what our jittered window centre simulates. In the real challenge, the FU prompt comes from a propagation step, probably registration, not from Gaussian jitter.
 - An honest "registration-only" baseline on our data would be the error of `cog_propagated` versus `cog_fu`. Computing it on our train/val lesions is cheap if the raw CSVs are available. It would tell us whether our 5.58 mm beats what the organisers' propagation already gives.
-- LesionLocator as a zero-shot baseline is feasible but awkward:
-  - It needs whole scans at 0.8 mm. We would have to run it on the original autoPET IV volumes and then map predicted mask centroids back into our patch frame.
-  - It solves a different problem: it propagates the whole BL prompt via registration, not from a jittered window.
+- LesionLocator as a zero-shot baseline is feasible (set up in `scripts/lesionlocator.sbatch`):
+  - It runs on whole raw scans (it resamples to 1 × 0.8 × 0.8 mm itself). It does not use our patches. Its output masks are in the raw FU scan grid, so the mask centre of mass is a SimpleITK physical point, in the same frame as `lesions.csv`. No mapping to the patch frame is needed.
+  - It replaces Team 1 and Team 2 together: it propagates the whole BL prompt by its own registration, not from a jittered window. Compare it with the joint pipeline on the same `lesions.csv` cohort, not with Team 2 alone.
   - Possible data leakage, unchecked: the LesionLocator pretraining and fine-tuning pool, and its "intra-institutional" melanoma set, may include UKT/autoPET scans.
 - Extracting only the ResEnc encoder from LesionLocator or nnU-Net/MultiTalent is possible. That encoder was trained for segmentation at 0.8–1 mm, about 30–100 M parameters. That is very different from our 2 mm, 64³, 0.12 M-param setup. Expect a resampling/scale mismatch and a far bigger model.
 
