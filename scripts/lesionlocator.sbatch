@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J lesionlocator
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:tesla:1
+#SBATCH --gres=gpu:h200-141g:1     # ~3x faster than a V100 (tesla): ~3.5 min per scan pair vs ~11 min
 #SBATCH -t 12:00:00
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
